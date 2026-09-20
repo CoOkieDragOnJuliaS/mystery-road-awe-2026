@@ -68,7 +68,7 @@ directly.
 
 **Questions** (depend on the tasks above)
 
-- [ ] What is the difference between a classic `<script>` and a `<script type="module">`? Name at
+- [x] What is the difference between a classic `<script>` and a `<script type="module">`? Name at
       least two behavioral differences that are relevant to this app.
       
       > The top-level variables have been var and function declarations become properties of window. Each module has its own scope, so the window declarations inline "onclick" from index.html do not work anymore. Bugfix needed in Demo 2, where the views are really clickable, by being exported or attached to window
@@ -78,9 +78,11 @@ directly.
       >     setup.js:14 Uncaught TypeError: Cannot read properties of undefined (reading 'getAttribute')
       >     at HTMLButtonElement.<anonymous> (setup.js:14:38)
 
+      ![alt text](error_window_reference.png)
+
       > By having modules they act with "strict-mode". Meaning, that (like inn DevTool), a typ like missing an l in localStorage.js throws an ReferenceError at the line where it is thrown. No global variables, rather exporting functions and importing function/variables from other modules.
 
-- [ ] Before your refactor, `allEvidence` was a global `var`, readable and writable from anywhere in
+- [x] Before your refactor, `allEvidence` was a global `var`, readable and writable from anywhere in
       `app.js`. After splitting into modules, what has to happen for a different module to read or
       change that value? What error do you get if you forget, and why is that error actually
       useful?
@@ -88,7 +90,7 @@ directly.
       > What needs to happen is something like in Java - a private, mutable variable that can only be accessed via exported functions to manipulate (or not) the actual element. Getter/Setter behaviour to read and change the value. If I forget, which I did - or because I wrote the name wrong - the error tells me that there is no 
       > I would get a TypeError if I try to assign a value to a variable that is not exported correctly or if I forgot the setter
 
-- [ ] What's the difference between a named export and a default export? Point to one place in your
+- [x] What's the difference between a named export and a default export? Point to one place in your
       refactor where you chose one over the other, and explain why.
 
       > A named export is usually the preference in my view - just because it makes refactoring safer and I can identify where and what I really use and where it comes from.
@@ -97,7 +99,7 @@ directly.
       > A default export can be imported with any name I choose, for example a module can have only one default export, which could be an object of the method collection
       > But the problem is, that if I want to export many functions I don't have the named functions that the IDE can help me out with and have to navigate in between the modules to find out what I am looking for
 
-- [ ] Why won't `type="module"` scripts run at all if you open `index.html` directly from disk
+- [x] Why won't `type="module"` scripts run at all if you open `index.html` directly from disk
       (`file://...`) instead of through a local HTTP server? (You already need a server for
       `fetch()` — is this the same reason, a different one, or both?)
 
