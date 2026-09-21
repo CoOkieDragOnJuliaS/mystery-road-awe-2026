@@ -78,7 +78,7 @@ directly.
       >     setup.js:14 Uncaught TypeError: Cannot read properties of undefined (reading 'getAttribute')
       >     at HTMLButtonElement.<anonymous> (setup.js:14:38)
 
-      ![alt text](error_window_reference.png)
+      ![alt text](/resources/documentation_images/error_window_reference.png)
 
       > By having modules they act with "strict-mode". Meaning, that (like inn DevTool), a typ like missing an l in localStorage.js throws an ReferenceError at the line where it is thrown. No global variables, rather exporting functions and importing function/variables from other modules.
 

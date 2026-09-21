@@ -1,4 +1,5 @@
 import * as state from "../state/globalState.js";
+import { evidenceMentionsPerson } from "../utils/lookupHelpers.js";
 import { navigateTo } from "../navigation/router.js";
 import { renderEvidenceList } from "./evidenceBasic.js";
 // ---------------------------------------------------------------------
@@ -6,7 +7,7 @@ import { renderEvidenceList } from "./evidenceBasic.js";
 // ---------------------------------------------------------------------
 
 export function switchPeopleTab(tab) {
-  currentPeopleTab = tab;
+  state.setCurrentPeopleTab(tab);
   var peoplePanel = document.getElementById("peoplePanel");
   var locationsPanel = document.getElementById("locationsPanel");
   var peopleTabBtn = document.getElementById("tabPeopleBtn");

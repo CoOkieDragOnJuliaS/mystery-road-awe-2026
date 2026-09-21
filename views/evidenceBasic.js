@@ -1,4 +1,7 @@
 import * as state from "../state/globalState.js";
+import { findEvidenceById, findPersonById, evidenceMentionsPerson, formatDate, getStatusBadgeClass, getRelevanceBadgeClass } from "../utils/lookupHelpers.js";
+import { saveBookmarksToStorage } from "../storage/localStorage.js";
+import { openEvidenceDetail } from "./evidenceDetails.js";
 // ---------------------------------------------------------------------
 // EVIDENCE CATALOGUE
 // ---------------------------------------------------------------------
@@ -43,6 +46,7 @@ export function getFilteredEvidence() {
   var relevanceVal = document.getElementById("filterRelevance").value;
 
   var results = [];
+  var allEvidence = state.getAllEvidence();
   for (var i = 0; i < allEvidence.length; i++) {
     var item = allEvidence[i];
     var matches = true;
@@ -63,7 +67,7 @@ export function getFilteredEvidence() {
     if (matches) results.push(item);
   }
 
-  filteredEvidence = results;
+  state.setFilteredEvidence(results);
   return results;
 }
 
@@ -72,7 +76,7 @@ export function renderEvidenceList() {
   if (!container) return;
 
   var loadingIndicator = document.getElementById("evidenceLoadingIndicator");
-  if (evidenceViewLoading) {
+  if (state.getEvidenceViewLoading()){
     if (loadingIndicator) loadingIndicator.classList.remove("hidden");
     container.innerHTML = "";
     return;
@@ -96,6 +100,7 @@ export function renderEvidenceList() {
 
 
 export function renderEvidenceCardHTML(ev) {
+  var bookmarks = state.getBookmarks();
   var isBookmarked = bookmarks.indexOf(ev.id) !== -1;
   var html = '<div class="evidence-card" data-id="' + ev.id + '">';
   html += '<button class="bookmark-btn ' + (isBookmarked ? "active" : "") + '" data-action="bookmark" data-id="' + ev.id + '" aria-label="Toggle bookmark for ' + ev.title + '"><span class="bookmark-icon">' + (isBookmarked ? "★" : "☆") + "</span></button>";
@@ -135,7 +140,7 @@ export function handleEvidenceListClick(event) {
 export function handleBookmarkClick(evidenceId) {
   var ev = findEvidenceById(evidenceId);
   if (!ev) return;
-
+  var bookmarks = state.getBookmarks();
   if (bookmarks.indexOf(evidenceId) === -1) {
     bookmarks.push(evidenceId);
     ev.bookmarked = true;
@@ -160,6 +165,7 @@ export function applyStoredBookmarkFlags() {
 export function handleSortChange() {
   var sortValue = document.getElementById("sortEvidence").value;
 
+  var filteredEvidence = getFilteredEvidence(); 
   if (sortValue === "title-asc") {
     filteredEvidence.sort(function (a, b) {
       return a.title.localeCompare(b.title);

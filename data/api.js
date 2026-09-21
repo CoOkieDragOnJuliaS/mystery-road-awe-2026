@@ -54,6 +54,7 @@ export function loadEvidenceData() {
     .then(function (data) {
       state.setAllEvidence(data);
       evidence.applyStoredBookmarkFlags();
+      state.setEvidenceViewLoading(false);
       state.getFilteredEvidence();
       renderDashboard();
       populateAllDropdowns();

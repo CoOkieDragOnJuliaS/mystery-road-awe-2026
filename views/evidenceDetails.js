@@ -1,3 +1,12 @@
+import { findEvidenceById, findPersonById, findLocationById, formatDate } from "../utils/lookupHelpers.js";
+import { loadNoteForEvidence, saveNoteForEvidence} from "../storage/localStorage.js";
+import * as state from "../state/globalState.js";
+import { renderEvidenceList } from "./evidenceBasic.js";
+
+// Window information for onclick?
+window.saveCurrentNote = saveCurrentNote;
+window.closeEvidenceDetail = closeEvidenceDetail;
+
 // ---------------------------------------------------------------------
 // EVIDENCE DETAIL
 // ---------------------------------------------------------------------
@@ -5,7 +14,7 @@
 export function openEvidenceDetail(evidenceId) {
   var ev = findEvidenceById(evidenceId);
   if (!ev) return;
-  selectedEvidence = ev;
+  state.setSelectedEvidence(ev);
 
   var section = document.getElementById("evidenceDetailSection");
   section.classList.remove("hidden");
@@ -18,7 +27,7 @@ export function closeEvidenceDetail() {
   var section = document.getElementById("evidenceDetailSection");
   section.classList.add("hidden");
   section.innerHTML = "";
-  selectedEvidence = null;
+  state.setSelectedEvidence(null);
 }
 
 export function renderEvidenceDetail(ev) {
@@ -86,12 +95,13 @@ export function renderEvidenceDetail(ev) {
   document.getElementById("detailStatusSelect").addEventListener("change", function (e) {
     ev.status = e.target.value; // direct mutation of the loaded evidence object
     renderEvidenceDetail(ev);
-    if (viewRendered.evidence) renderEvidenceList();
+    // uncaught reference error
+    if (state.getViewRendered().evidence) renderEvidenceList();
   });
   document.getElementById("detailRelevanceSelect").addEventListener("change", function (e) {
     ev.relevance = e.target.value;
     renderEvidenceDetail(ev);
-    if (viewRendered.evidence) renderEvidenceList();
+    if (state.getViewRendered().evidence) renderEvidenceList();
   });
 }
 
@@ -101,7 +111,7 @@ function statusOptionHTML(current, value, label) {
   return '<option value="' + value + '"' + selected + ">" + label + "</option>";
 }
 
-export function saveCurrentNote() {
+function saveCurrentNote() {
   var textarea = document.getElementById("evidenceNoteInput");
   if (!textarea) return;
   var evidenceId = textarea.getAttribute("data-evidence-id"); // note id is read back off the DOM
