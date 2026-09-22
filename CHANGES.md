@@ -221,8 +221,43 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 - Because the arrays and objects get "reassigned" instead of added or changed inside the globalState.js (which I would change in the next phase), they need the let because of the changes
 - It would have been better to assign const to the arrays and the object and change/replace only the content instead of the whole array or object
 - with .push() at arrays and resetting the length or at objects with deleting each element inside
+
+        Example of allEvidence:
+        const allEvidence = [];
+ 
+        export function getAllEvidence() {
+        return allEvidence; //keeping the original array and returning it
+        }
+        
+        export function setAllEvidence(evidence) {
+        const newEvidence = [...evidence];
+        
+        allEvidence.length = 0; //making a copy and replace the content instead of = evidence
+        allEvidence.push(...newEvidence);
+        }
+
 - because of setting "= evidence e.g." inside the array it replaces it completely instead of adding or deleting elements inside of the array
 
+        Example of an object:
+        const caseData = {};
+
+        export function getCaseData() {
+            return caseData; //keeping the original object
+        }
+
+        export const setCaseData = (data) => {
+            Object.assign(caseData, data);
+        }
+
+        //or other version: 
+        export function setCaseData(data) {
+            const newData = { ...data }; //like in arrays
+            Object.keys(caseData).forEach((key) => {    //getting the keys and deleting the elements with their corresponding keys
+                delete caseData[key];
+            })
+
+            Object.assign(caseData, newData); //Reassigning the data in the object, rather than just plow through it with = data
+        }
 
 ## Code smells
 
@@ -234,7 +269,7 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 
 > Another code smell: duplication of eventListeners
 
-- I found the same addEventListener() in two different .js files
+- I found the same addEventListener() in two different .js files (setup.js and app.js) --> for the hashFunction
 - I can safely remove one, because the eventListener is already added and works throughout the application
 
 - An action/event trigger should only be done by one - not more
@@ -278,7 +313,13 @@ Inside everything we hide the loading step, render the dashboard and populateAll
 an async function but also no parallel behaviour - so the exact same without the nested chain
 
 
-# Demo 10 
+# Demo 10 Arrow functions
+> All refactored arrow functions have been marked with a comment
+> I looked for smaller functions, just because it is easier to distinguish what to do
+
+All other changes and questions answered are in the Exercise.md file!
+
+
 
 
 

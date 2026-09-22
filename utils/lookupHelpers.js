@@ -27,10 +27,12 @@ export function findLocationById(id) {
   return null;
 }
 
-export function evidenceMentionsPerson(ev, person) {
+// Refactor to arrow function
+export const evidenceMentionsPerson = (ev, person) => {
   if (!ev.personIds) return false;
-  return ev.personIds.indexOf(person.id) !== -1 || ev.personIds.indexOf(person.name) !== -1;
-}
+  return ev.personIds.indexOf(person.id) !== -1 ||
+   ev.personIds.indexOf(person.name) !== -1;
+};
 
 export function formatDate(ts) {
   if (!ts) return "Unknown date";
@@ -40,15 +42,19 @@ export function formatDate(ts) {
     " " + d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
 }
 
-export function getStatusBadgeClass(status) {
-  var s = (status || "").toLowerCase();
+// Refactor to arrow function
+export const getStatusBadgeClass = (status) => {
+  const s = (status || "").toLowerCase();
+ 
   if (s === "reviewed") return "badge-reviewed";
   if (s === "flagged") return "badge-flagged";
+  
   return "badge-unreviewed";
-}
+};
 
-export function getRelevanceBadgeClass(relevance) {
-  var r = (relevance || "").toLowerCase();
+// Refactor to arrow function
+export const getRelevanceBadgeClass = (relevance) => {
+  const r = (relevance || "").toLowerCase();
   if (r === "relevant") return "badge-relevant";
   return "badge-unreviewed";
-}
+};

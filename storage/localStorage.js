@@ -7,9 +7,13 @@ export const STORAGE_KEY_HYPOTHESIS = "remotion_hypothesis";
 // LOCAL STORAGE HELPERS (bookmarks & notes)
 // ---------------------------------------------------------------------
 
-export function saveBookmarksToStorage() {
-  localStorage.setItem(STORAGE_KEY_BOOKMARKS, JSON.stringify(state.getBookmarks()));
-}
+//Refactor arrow function
+export const saveBookmarksToStorage = () => {
+  localStorage.setItem(
+    STORAGE_KEY_BOOKMARKS, 
+    JSON.stringify(state.getBookmarks())
+  );
+};
 
 export function loadBookmarksFromStorage() {
   try {

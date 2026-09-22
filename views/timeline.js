@@ -86,9 +86,10 @@ export function renderTimeline() {
   }
   container.innerHTML = html;
 
+  // Refactor to arrow function
   var linkButtons = container.querySelectorAll(".evidence-link-btn");
   for (var b = 0; b < linkButtons.length; b++) {
-    linkButtons[b].addEventListener("click", function (e) {
+    linkButtons[b].addEventListener("click", (e) => {
       openEvidenceModal(e.target.getAttribute("data-evidence-id"));
     });
   }

@@ -420,29 +420,54 @@ A guided tour, so you know where things live before you need them.
 
 **Tasks**
 
-- [ ] Choose at least two functions currently written as `function name(...) { ... }` or
+- [x] Choose at least two functions currently written as `function name(...) { ... }` or
       `function(...) { ... }`, and rewrite them as arrow functions — pick ones that are actually
       good candidates.
-- [ ] Convert at least one anonymous `function(e) { ... }` callback passed to `addEventListener`
+
+- [x] Convert at least one anonymous `function(e) { ... }` callback passed to `addEventListener`
       into an arrow function.
-- [ ] Identify **one** function you deliberately did *not* convert (or would refuse to, if asked),
+
+      > Marked with a comment
+
+- [x] Identify **one** function you deliberately did *not* convert (or would refuse to, if asked),
       and be ready to explain why it would be unsafe or incorrect as an arrow function.
+
+      > I refused to or did not want to convert long or big functions. It could be, through the arrow functions, that the conversion creates a problem instead of reducing it
+      > Also, if changing it to a const arrow function, other calls could not modify the elements behind it - in my case for example window variables (because I did not change it yet) or other situations where a const arrow function could cause problems
+
+      --> e.g. loadEvidence --> not only because it is a nested promise fetch, but also because it is bigger than the other ones I changed
 
 **Questions** (depend on the tasks above)
 
-- [ ] What is different about how arrow functions handle `this` compared to regular functions? Why
+- [x] What is different about how arrow functions handle `this` compared to regular functions? Why
       does that make arrow functions risky as object methods, but often preferable as callbacks?
-- [ ] Arrow functions can't be used as constructors (no `new`) and have no `arguments` object of
+
+      > this is either from the object that calls the function or from the surrounding area
+      > It mattered not really in my refactoring, but if I pampered more with the (e) methods, I would definitely need the this comparison
+
+- [x] Arrow functions can't be used as constructors (no `new`) and have no `arguments` object of
       their own. Did either limitation affect which functions you were able to convert? Which one,
       and how?
-- [ ] Function declarations (`function foo() {}`) are hoisted, so you can call them before they
+
+      > No, none did affect me - no method of mine which I changed needed the new or constructor feature
+
+- [x] Function declarations (`function foo() {}`) are hoisted, so you can call them before they
       appear later in the file; a `const`/`let` arrow function is not. Did this matter anywhere in
       your refactor? Explain why or why not.
-- [ ] Show a concrete before/after of one function you converted. Is there any behavioral difference
+
+     > Yes, to be honest it matters in my unchanged window elements. The methods are often used before initialization - if I use the arrow function for them it would not work (const arrow function)
+
+- [x] Show a concrete before/after of one function you converted. Is there any behavioral difference
       at runtime, or is this purely a readability/style change? Justify your answer.
-- [ ] This codebase mixes function declarations, function expressions, and (after this exercise)
+
+      > Almost all of my changed functions had one / 2 changed made to them. Nothing changed in the behaviour or the inside of the function itself - so it was purely a readability/style change. If I changed a bigger function, it would surely be more profitable
+
+- [x] This codebase mixes function declarations, function expressions, and (after this exercise)
       arrow functions, with no single consistent rule. Propose one rule your team could adopt for
       "when do we use which," and justify it.
+
+      > This is difficult, because only "one" rule never applies.. especially in development
+      > Probably: We use Arrow functions for short callbacks to not overcomplicate things and simple helper functions for extended use while splitting the code into it's use cases to form modules?"
 
 ---
 
