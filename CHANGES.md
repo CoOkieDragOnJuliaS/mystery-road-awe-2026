@@ -108,7 +108,10 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 - I could return the evidence data or wait for all operations that they return the Promise before loading everything - so only if everything is loaded into the web page?
 
 - Resolving with return in loadEvidenceData() did not work
-- Resolving with maybe waiting with Promise.all()? worked i api.js
+- **Resolving with maybe waiting with Promise.all()? worked in api.js**
+
+> evidence.json was pending it's fetch, because loadAllData() rendered the people/workspace with return without waiting for the promise. The empty evidence array was read by them.
+> renderPeople() ran in breakpoints before the setAllEvidence() call. By fetching the promise and awaiting everything loads beforehand with Promise.all() (Internetrecherche) the evidence is loaded
 
 ## The bug for Demo 4 - a silent bug
 

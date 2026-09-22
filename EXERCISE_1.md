@@ -174,6 +174,7 @@ testing session. Find a bug that produces **no visible change in the UI** — on
 - [ ] How did you notice this bug in the first place, given that nothing looked broken? Why is
       "nothing looks broken" not the same as "nothing is broken"?
 
+
 ---
 
 ## Demo 5 — Bug hunt: full walkthrough & reflection
@@ -227,14 +228,32 @@ actual debugger or a VS Code extension for debugging — ideally on one of the b
 
 - [ ] What's the difference between "Step over" and "Step into"? Give a concrete example from this
       app where using the wrong one would waste your time.
+
+      > Step over executes the breakpoint function without entering it - Step into steps right "into" the function and pauses at the first line. I debugged for example the loading and could step into the loading functions of api.js
+      > You could easily waste time if you step into everything and go for example into functions that are basic functions of JavaScript, which can be time-consuming and not necessary. Watching the variables, debug call stack can help more than that
+
 - [ ] What is the call stack, and how did reading it help you figure out where a value came from or
       why a function ran when it did?
+
+      > The call stack shows hot the breakpoint is reached, for example called by the function above or by app.js. It helped immensely when I tried to see which was called beforehand after the evidence where not shown when reloading the pages
+
 - [ ] What is a conditional breakpoint, and why is it more efficient than repeatedly hitting
       "resume" to reach the case you care about?
+
+      > conditional --> what if's can be used if you want to set maybe a trigger to see a breakpoint only if a certain area is null or a value you want to expect is really going through the stages and breakpoints as expected
+
 - [ ] What's the difference between a breakpoint you set in the DevTools UI and a `debugger;`
       statement written directly in the source code? When would you prefer one over the other?
+
+      > A debugger statement can be used for specific and long-winding testing throughout big applications - also interesting to use it together with a logger.
+      > UI debugging or debugging through clicking and setting the breakpoints is easier to find a certain area - because debugger lines can become "lost" if you forget about them. Sometimes the same with debugging and logging in Java
+
+
 - [ ] Describe a moment where `console.log` alone would *not* have been enough to find a bug, but
       stepping through with the debugger was. What did the debugger show you that logging couldn't?
+
+      > The console and the Network tab of the DevTool did not show at all why the evidence wasn't loading in correctly or why there was a 0 at the people.
+      > Pending did only show for an insignificant amount of time when I set it to e.g. 3G, BUT the debugging shows when and how a method or a loading zone was called - which was more significant for this demo bug. Was searching for a loong time beforehand.. I am not that good with JavaScript 
 
 ---
 
@@ -244,30 +263,46 @@ A guided tour, so you know where things live before you need them.
 
 **Tasks**
 
-- [ ] **Console:** filter down to only errors, then only warnings, using the log-level filter. Use
+- [x] **Console:** filter down to only errors, then only warnings, using the log-level filter. Use
       the text filter box to search for one specific message. Try "Preserve log" and explain what
       it changes.
-- [ ] **Network:** reload with the Network tab open, find the requests for the app's JSON data
+- [x] **Network:** reload with the Network tab open, find the requests for the app's JSON data
       files, and for one request inspect its status code, response body, and timing. Throttle the
       connection (e.g. "Slow 3G") and reload.
-- [ ] **Application** (Chrome) / **Storage** (Firefox): find this app's `localStorage` entries,
+- [x] **Application** (Chrome) / **Storage** (Firefox): find this app's `localStorage` entries,
       inspect their values, edit one directly in DevTools, and reload to see the effect. Replace a
       value with text that isn't valid JSON and see what happens.
-- [ ] **Elements:** inspect a rendered evidence card or person card in the DOM, and connect what you
+- [x] **Elements:** inspect a rendered evidence card or person card in the DOM, and connect what you
       see there back to the code that generated it.
 
 **Questions** (depend on the tasks above)
 
-- [ ] What's the practical difference between `console.log`, `console.warn`, and `console.error`,
+- [x] What's the practical difference between `console.log`, `console.warn`, and `console.error`,
       beyond just the color?
+
+      > It can be filtered, which makes it waaaay easier if you want to see it in the console of the DevTool during runtime. Logs can often be ignored and the console can fill up quickly if you don't "split" it
+
 - [ ] Using the Network tab, explain what "Status," "Type," and "Time" tell you about one of the
       app's `fetch()` requests. If that request returned a 404 instead of a 200, how would the app
       currently react?
+
+      > Status is e.g. success or failing - type tells you for example if it is a fetch request (which it did a lot) and time shows the duration how long it took, which is interesting to see if you put in 3G.
+      > 404 is bad - so the web page would log an error and if not caught the web page could be "broken", unusable
+
 - [ ] List this app's `localStorage` keys and what each one is for. What happens if you manually
       corrupt one of them and reload — and *why* does that happen, according to the code that reads
       it back out?
+
+      > remotion_bookmarks and remotion_notes and remotion_hypothesis are the only ones there is, but I didn't use or see bookmarks, only notes and hypothesis, because I edited them
+      > Bookmark, as I can see in the code, are for the bookmarks if set and there is a try catch already there, even before I put in a try catch afterwards through a demo, so nothing would happen - you wouldn't see the bookmarks
+      > Invalid notes threw an error /the site was endlessly loading because I didn'T put in a try catch until later - so there would be an error logged and shown - same with the hypothesis
+      > which i didn't fix (as I am seeing now)
+      The JSON.parse() throws the error if the JSON is invalid, e.g. with a typo
+
 - [ ] After throttling your network and reloading, what did you observe about which parts of the UI
       populate first, last, or briefly show wrong/empty values? Why does the order matter here?
+
+      > The network tab and reloading briefly shows the different stages of loading - but I couldn't see it clearly without the debugger, because my internet, even with 3G, was too fast for the human eye to see a slower "Pending" status
 
 ---
 
