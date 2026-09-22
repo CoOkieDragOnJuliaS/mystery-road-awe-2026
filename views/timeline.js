@@ -121,6 +121,11 @@ export function openEvidenceModal(evidenceId) {
   modal.addEventListener("click", function (e) {
     if (e.target.classList.contains("modal-close-btn") || e.target.classList.contains("modal-backdrop")) {
       modal.innerHTML = "";
+      // Trying out the counter for modal close listeners bug in Demo 4
+      // by passing the event to the removeEventListener function it works as expected
+      modal.removeEventListener("click", e);
+      state.decrementModalCloseListenerCount();
+      console.log("modal closed, active close listeners:", state.getModalCloseListenerCount());
     }
     if (e.target.getAttribute && e.target.getAttribute("data-open-full")) {
       modal.innerHTML = "";

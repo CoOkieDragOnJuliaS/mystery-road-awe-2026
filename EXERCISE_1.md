@@ -30,7 +30,7 @@ your fix works.
 
 | # | Demo | Ready? |
 |---|---|---|
-| 1 | Split the app into JS modules | ☐ |
+| 1 | Split the app into JS modules | x |
 | 2 | Bug hunt — mutation/reference bug | ☐ |
 | 3 | Bug hunt — an asynchronous/Promise-handling bug | ☐ |
 | 4 | Bug hunt — silent (console-only) bug | ☐ |
@@ -188,9 +188,9 @@ same filter twice. Keep going past Demos 2–4 — this app does not have only t
 
 **Tasks**
 
-- [ ] For every bug you find (beyond the three already covered), write down: reproduction steps,
+- [x] For every bug you find (beyond the three already covered), write down: reproduction steps,
       expected vs. actual behavior, root cause, the fix, and how you verified it.
-- [ ] Pick one bug from your full list (any of them, including Demos 2–4) and prepare to show it
+- [x] Pick one bug from your full list (any of them, including Demos 2–4) and prepare to show it
       live: the broken behavior, then your fix. **Commit the pre-fix state (or note its commit
       hash) so you can diff broken vs. fixed on demand in class.**
 

@@ -22,15 +22,25 @@ window.saveHypothesis = storage.saveHypothesis;
 // ---------------------------------------------------------------------
 
 function initApp() {
+  //No try-catch causes errors if JSON storage is manipulated
+  try{
   storage.loadBookmarksFromStorage();
   storage.loadNotesFromStorage();
+  } catch (error) {
+    console.error("Error loading data from localStorage:", error);
+  }
   setupEventListeners();
 
+  //Try catch error for the loading of all data for JSON storage manipulation
+  try{
   api.loadAllData().then(function () {
     router.handleHashChange();
-    var firstNote = storage.loadNoteAsync("E01");
-    console.log("First note preview:", firstNote);
+    storage.loadNoteAsync("E01").then(function (firstNote) {
+    console.log("First note preview:", firstNote)});
   });
+  }  catch (error) {
+    console.error("Error loading all data:", error);
+  }
 }
 
 window.addEventListener("DOMContentLoaded", initApp);

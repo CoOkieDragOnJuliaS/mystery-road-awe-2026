@@ -93,6 +93,7 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 
 **How to resolve it**?
 
+
 ## The bug for Demo 3 - async
 
  > Important to know is, that I need to find something where the async or the loading of the data does not match with the loading of another data. Maybe if a request is called even though the entry is different?
@@ -103,6 +104,11 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
  - In the network tab all the pages are loading / 304 status, not 200 - but if I render the dashboard first the correct status is inside the people page or the note inside the workspace.
 
 **How to resolve it**?
+- Probable root cause: loading workspace and people beforehand uses a fetch without a return, so the callback inside the loading of all data runs too early. The people view and the workspace view renders before the evidence has arrived to the count goes to zero. 
+- I could return the evidence data or wait for all operations that they return the Promise before loading everything - so only if everything is loaded into the web page?
+
+- Resolving with return in loadEvidenceData() did not work
+- Resolving with maybe waiting with Promise.all()? worked i api.js
 
 ## The bug for Demo 4 - a silent bug
 
@@ -113,5 +119,40 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 
 **How to resolve it**?
 
+> I should look into the console.log elements to find the cause of the Promise in the console window
+> Resolution is by attaching a callback to the app.js right before the console.log of the first note preview
+
+> The modal which is called is attached to the addEventListener, so I have to find it and fix it for the adding up the count
+    > > By also removing the event listener with the event passed into and decrement the count the counting works as expected, opening evidence still works
+    
+         modal.addEventListener("click", function (e) {
+        if (e.target.classList.contains("modal-close-btn") || e.target.classList.contains("modal-backdrop")) {
+        modal.innerHTML = "";
+        // Trying out the counter for modal close listeners bug in Demo 4
+        // by passing the event to the removeEventListener function it works as expected
+        modal.removeEventListener("click", e);
+        state.decrementModalCloseListenerCount();
+        console.log("modal closed, active close listeners:", state.getModalCloseListenerCount());
+
  ## Demo 5 walkthrough - maybe Demo 4 or Demo 3 because it is easier to show?
+
+ > Another bug I found was the rendering of the localStorage information, like the note in the Workspace tab. If changed, the value does not change, except if I reload the entire app and then go back to workspace - the modified value does stay there
+
+ > Expected behaviour: The change should be immediate, instead of after reloading if a localStorage change was made
+ > Actual behaviour: The change is not seen until a full reload of the whole webpage (localStorage stays in browser)
+
+- Probable root cause: no automatic synchronization/update with JavaScript memory or the DOM. Load only happens in app.js during initialization (with loadNotes for example)
+- I think this cause can also be applied to a lot of other loading zones where storage information is loaded into the web page
+- It could also NOT be a bug, but I would prefer instant loading with live synchro rather than manual reload
+
+> New bug found by mistyping the localStorage JSON 
+![alt text](/resources/documentation_images/mistyping_bug_JSON.png)
+
+- Root cause: mistyping leads to error, which is not caught by a try/catch clause
+- Unfortunately, changing the remotion_notes back leads though to no notes displayed, even if there are more notes and no errors shown, but going to dashboard/evidence and then workspace brings the notes back (except an empty note in E02), as previously stated in another Demo note because of the pre-loading 
+
+- Inserting try-catch will at least not prevent the site from loading in in app.js
+- Fixing one bug meant to see another way of enhancing the experience - it solved a specific problem, but there are a lot of bugs inside the app itself when it comes to saving notes, clicking on stuff or synchronizing behaviour. The initial loading and the no-synchronization throws me off a little bit
+
+
 

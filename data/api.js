@@ -88,9 +88,13 @@ export function loadTimelineData() {
 export function loadAllData() {
   showLoadingOverlay("Loading case file…");
   state.setLoadingStepsRemaining(2);
+
+  // Changed to Promise.all() to wait for everything to load before loading web page
   return loadCorePeopleAndLocations().then(function () {
-    loadEvidenceData();
-    loadTimelineData();
+    return Promise.all([
+    loadEvidenceData(),
+    loadTimelineData()
+  ]);
   });
 }
 
