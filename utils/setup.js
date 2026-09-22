@@ -1,4 +1,4 @@
-import { handleHashChange } from "../navigation/router.js";
+import { handleHashChange, navigateTo } from "../navigation/router.js";
 import * as evidence from "../views/evidenceBasic.js";
 import * as timeline from "../views/timeline.js";
 // ---------------------------------------------------------------------
@@ -8,13 +8,15 @@ import * as timeline from "../views/timeline.js";
 export function setupEventListeners() {
   window.addEventListener("hashchange", handleHashChange);
 
-  var navButtons = document.querySelectorAll(".nav-btn");
-  for (var i = 0; i < navButtons.length; i++) {
-    navButtons[i].addEventListener("click", function () {
-      var targetView = navButtons[i].getAttribute("data-view");
-      console.log("nav clicked:", targetView);
+  // Demo 8 change for eventListeners - first refactor
+  var navButtons = document.querySelectorAll("button[data-view]");
+  
+  navButtons.forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      navigateTo(e.currentTarget.dataset.view);
     });
-  }
+  });
+
 
   document.getElementById("evidenceSearch").addEventListener("input", evidence.handleSearchInput);
 

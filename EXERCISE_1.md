@@ -324,13 +324,32 @@ A guided tour, so you know where things live before you need them.
 - [ ] What is the difference between `var`, `let`, and `const` in terms of scope and reassignment?
       Give a concrete example — from this codebase or a hypothetical grounded in a pattern you saw
       — of a bug that `var`'s scoping rules make *possible* and `let` would prevent.
+
+      > var = can be redeclared, but is function scoped
+      > let = you can mutate over it, so reassign the value or replace it whole
+      > const = does not let you replace/reassign values --> constant value (except arrays and objects / inner)
+
+      > One example is in the old_app.js I would say. The navigation loop has callbacks with eventListeners that share the same variable i. With var, which is function scoped, the index changes according to the whole function
+      - if changed to let it has another binding for each go through and has a index that is more reliable?
+
 - [ ] What is an "accidental global," and how does non-strict-mode JavaScript allow it to happen by
       simply forgetting a keyword? Now that your code runs as ES modules (which are always strict
       mode), what happens instead if you make that same mistake?
+
+      > Without modules, the accidental global is e.g. created if I assign something without declaring it. Would not throw an error
+      > Because of the modules & the strict-mode an ReferenceError is thrown (which is what happened aaa looot in bugfixing the split)
+
+
 - [ ] "The code technically works" and "the code is clean" are not the same bar. Give one concrete
       example from this app of something that worked correctly but was still worth refactoring —
       and explain what real cost the messy version has (bug risk, onboarding time, review
       difficulty...).
+
+      > inline onclick() handlers. Using JavaScript + inline HTML click-handlers is frown upon. Same when coding e.g. in JSF
+      > I had errors with window, because it worked before the module split - afterwards I had to change to accomodate the html inline code with assigning the methods to the window handlers
+      > Refactored because of Demo 8
+
+      - using the data-view, which already exists through the router.js - only needing to import to setup.js for the router
 
 ---
 

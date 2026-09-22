@@ -98,8 +98,8 @@ export function renderEvidenceList() {
   container.addEventListener("click", handleEvidenceListClick);
 }
 
-
-export function renderEvidenceCardHTML(ev) {
+//Code Smell 1 - not needed
+function renderEvidenceCardHTML(ev) {
   var bookmarks = state.getBookmarks();
   var isBookmarked = bookmarks.indexOf(ev.id) !== -1;
   var html = '<div class="evidence-card" data-id="' + ev.id + '">';
@@ -122,7 +122,8 @@ export function renderEvidenceCardHTML(ev) {
   return html;
 }
 
-export function handleEvidenceListClick(event) {
+// Code Smell 2 - not needed
+function handleEvidenceListClick(event) {
   var target = event.target;
 
   if (target.dataset && target.dataset.action === "bookmark") {
@@ -137,7 +138,8 @@ export function handleEvidenceListClick(event) {
   }
 }
 
-export function handleBookmarkClick(evidenceId) {
+// Code Smell 3 - not needed
+function handleBookmarkClick(evidenceId) {
   var ev = findEvidenceById(evidenceId);
   if (!ev) return;
   var bookmarks = state.getBookmarks();

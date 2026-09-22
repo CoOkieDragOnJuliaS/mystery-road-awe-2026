@@ -157,5 +157,86 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 - Inserting try-catch will at least not prevent the site from loading in in app.js
 - Fixing one bug meant to see another way of enhancing the experience - it solved a specific problem, but there are a lot of bugs inside the app itself when it comes to saving notes, clicking on stuff or synchronizing behaviour. The initial loading and the no-synchronization throws me off a little bit
 
+# Demo 8 notes
+        var allEvidence = [];
+        var filteredEvidence = [];
+        var selectedEvidence = null;
+        var bookmarks = [];
+        var currentPage = "dashboard";
+
+        var allPeople = [];
+        var allLocations = [];
+        var allTimeline = [];
+        var caseData = {};
+
+        var currentPeopleTab = "people";
+        var loadingStepsRemaining = 2; 
+
+        var evidenceViewLoading = true;
+
+        var viewRendered = {
+        dashboard: false,
+        evidence: false,
+        people: false,
+        timeline: false,
+        workspace: false
+        };
+
+        var notesStore = {}; 
+        var modalCloseListenerCount = 0; 
+
+        var STORAGE_KEY_BOOKMARKS = "remotion_bookmarks";
+        var STORAGE_KEY_NOTES = "remotion_notes";
+        var STORAGE_KEY_HYPOTHESIS = "remotion_hypothesis";
+
+> Question to answer:
+> For at least three of them,
+> explain what could go wrong if two unrelated 
+> pieces of code both tried to use a variable with
+> that name — and how your module split from Demo 1 > already prevents (or doesn't yet prevent)
+> that.
+
+- One variable which is used in multiple occurrences is currentPage, which is used by api.js, router.js and the evidence.js in my new solution
+- - wrong assignment of currentPage could pass the wrong value and render the wrong view
+
+- Another variable is allEvidence, which is used in a looot of code blocks
+- -  If it is replaced in a different way than expected, it could affect multiple views, filters or counts
+
+- One more: notesStore
+- - It is modified, used for viewing notes and more and could - the viewing of notes could be changed in the workspace because of the direct manipulation at the wrong time
+
+> Module split prevents most collisions, but not all, because each module has its own scope. globalState.js is my state which exports getters and setters in a way that no modifying is done without knowledge of the function access - also easier for debugging (to know which calls the getter/setter methods) - making the variables private and "mutable" with let, but at the same time only accessible via functions
+
+## Changing the variables
+> Task:
+> Go through the codebase and replace `var` with 
+> `const` or `let` everywhere it's declared,
+> deciding `const` vs. `let` deliberately for each one.
+
+**One rule could be applied: using const, when the variable is never reassigned, using let when the variable is mutable and could receive a value later. Arrays or objects can be const, even if the value changes! Good to know**
+
+- Even though the rules could be applied to my globalState.js - I don't do it.
+- Because the arrays and objects get "reassigned" instead of added or changed inside the globalState.js (which I would change in the next phase), they need the let because of the changes
+- It would have been better to assign const to the arrays and the object and change/replace only the content instead of the whole array or object
+- with .push() at arrays and resetting the length or at objects with deleting each element inside
+- because of setting "= evidence e.g." inside the array it replaces it completely instead of adding or deleting elements inside of the array
+
+
+## Code smells
+
+> One code smell is the exports which are unnecessary. 
+
+- Leaving exports in, even though they are not wanted, can lead to exploiting the details of the method if not needed
+- Unwanted access so to speak
+
+
+> Another code smell: duplication of eventListeners
+
+- I found the same addEventListener() in two different .js files
+- I can safely remove one, because the eventListener is already added and works throughout the application
+
+- An action/event trigger should only be done by one - not more
+
+
 
 

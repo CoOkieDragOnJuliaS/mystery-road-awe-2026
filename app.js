@@ -44,4 +44,6 @@ function initApp() {
 }
 
 window.addEventListener("DOMContentLoaded", initApp);
-window.addEventListener("hashchange", router.handleHashChange);
+
+// Code smell - already handled by setup.js
+//window.addEventListener("hashchange", router.handleHashChange);
