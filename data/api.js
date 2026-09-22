@@ -22,28 +22,24 @@ export function hideLoadingStep() {
   }
 }
 
-export function loadCorePeopleAndLocations() {
-  return fetch("data/case.json").then(function (caseRes) {
-    return caseRes.json().then(function (caseJson) {
-      state.setCaseData(caseJson);
+export async function loadCorePeopleAndLocations() {
+  const caseRes = await fetch("data/case.json");
+  const caseJson = await caseRes.json();
+  state.setCaseData(caseJson);
 
-      return fetch("data/people.json").then(function (peopleRes) {
-        return peopleRes.json().then(function (peopleJson) {
-          state.setAllPeople(peopleJson);
+  //or maybe also refactor it by state.setCaseData(await caseRes.json()) instead of the extra variable? But more readable perhaps with more? I will use more
 
-          return fetch("data/locations.json").then(function (locationsRes) {
-            return locationsRes.json().then(function (locationsJson) {
-              state.setAllLocations(locationsJson);
+  const peopleRes = await fetch("data/people.json");
+  const peopleJson = await peopleRes.json();
+  state.setAllPeople(peopleJson);
 
-              hideLoadingStep();
-              renderDashboard();
-              populateAllDropdowns();
-            });
-          });
-        });
-      });
-    });
-  });
+  const locationsRes = await fetch("data/locations.json");
+  const locationsJson = await locationsRes.json();
+  state.setAllLocations(locationsJson);
+
+  hideLoadingStep();
+  renderDashboard();
+  populateAllDropdowns();
 }
 
 export function loadEvidenceData() {
@@ -66,23 +62,24 @@ export function loadEvidenceData() {
     });
 }
 
-export function loadTimelineData() {
-  return fetch("data/timeline.json")
-    .then(function (res) {
-      return res.json();
-    })
-    .then(function (data) {
-      state.setAllTimeline(data);
-      renderDashboard();
-      if (state.getCurrentPage() === "timeline") timeline.renderTimeline();
-      populateAllDropdowns();
-    })
-    .catch(function (err) {
+export async function loadTimelineData() {
+  try {
+    const res = await fetch("data/timeline.json");
+    const data = await res.json();
+    state.setAllTimeline(data);
+    renderDashboard();
+    
+    if (state.getCurrentPage() === "timeline") timeline.renderTimeline();
+    
+    populateAllDropdowns();
+    
+  }catch(err) {
       console.log("timeline load error", err);
-    })
-    .finally(function () {
+
+  }finally {
       hideLoadingStep();
-    });
+
+  }
 }
 
 export function loadAllData() {

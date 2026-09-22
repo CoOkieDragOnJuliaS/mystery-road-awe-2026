@@ -310,18 +310,18 @@ A guided tour, so you know where things live before you need them.
 
 **Tasks**
 
-- [ ] List every top-level `var` at the top of the original `app.js`. For at least three of them,
+- [x] List every top-level `var` at the top of the original `app.js`. For at least three of them,
       explain what could go wrong if two unrelated pieces of code both tried to use a variable with
       that name — and how your module split from Demo 1 already prevents (or doesn't yet prevent)
       that.
-- [ ] Go through the codebase and replace `var` with `const` or `let` everywhere it's declared,
+- [x] Go through the codebase and replace `var` with `const` or `let` everywhere it's declared,
       deciding `const` vs. `let` deliberately for each one.
-- [ ] Identify at least two more "code smells" anywhere in the app, beyond the globals above. Fix
+- [x] Identify at least two more "code smells" anywhere in the app, beyond the globals above. Fix
       them, and explain why they were bad and how your fix addresses that.
 
 **Questions** (depend on the tasks above)
 
-- [ ] What is the difference between `var`, `let`, and `const` in terms of scope and reassignment?
+- [x] What is the difference between `var`, `let`, and `const` in terms of scope and reassignment?
       Give a concrete example — from this codebase or a hypothetical grounded in a pattern you saw
       — of a bug that `var`'s scoping rules make *possible* and `let` would prevent.
 
@@ -332,15 +332,15 @@ A guided tour, so you know where things live before you need them.
       > One example is in the old_app.js I would say. The navigation loop has callbacks with eventListeners that share the same variable i. With var, which is function scoped, the index changes according to the whole function
       - if changed to let it has another binding for each go through and has a index that is more reliable?
 
-- [ ] What is an "accidental global," and how does non-strict-mode JavaScript allow it to happen by
+- [x] What is an "accidental global," and how does non-strict-mode JavaScript allow it to happen by
       simply forgetting a keyword? Now that your code runs as ES modules (which are always strict
       mode), what happens instead if you make that same mistake?
 
-      > Without modules, the accidental global is e.g. created if I assign something without declaring it. Would not throw an error
+      > Without modules, the accidental global is e.g. created if I assign something without declaring it. Would not throw an error (e.g. evidence assigning a value?)
       > Because of the modules & the strict-mode an ReferenceError is thrown (which is what happened aaa looot in bugfixing the split)
 
 
-- [ ] "The code technically works" and "the code is clean" are not the same bar. Give one concrete
+- [x] "The code technically works" and "the code is clean" are not the same bar. Give one concrete
       example from this app of something that worked correctly but was still worth refactoring —
       and explain what real cost the messy version has (bug risk, onboarding time, review
       difficulty...).
@@ -357,16 +357,18 @@ A guided tour, so you know where things live before you need them.
 
 **Tasks**
 
-- [ ] Find the most deeply nested chain of `.then()` calls in the data-loading code. Before
+- [x] Find the most deeply nested chain of `.then()` calls in the data-loading code. Before
       touching it, sketch/describe its shape (how many levels deep, and what has to succeed before
       the next level even starts).
-- [ ] Rewrite it as an `async` function using `await`, preserving its exact current behavior —
+
+- [x] Rewrite it as an `async` function using `await`, preserving its exact current behavior —
       **including** that it currently loads its requests one after another rather than in parallel
       (don't fix that yet, that's a later exercise).
-- [ ] Do the same conversion for at least one more place in the app that currently uses
+
+- [x] Do the same conversion for at least one more place in the app that currently uses
       `.then()`/`.catch()`/`.finally()`, making sure any error handling the original had is still
       present.
-- [ ] Verify with the debugger (a breakpoint inside your new `async` function, stepping through with
+- [x] Verify with the debugger (a breakpoint inside your new `async` function, stepping through with
       the Call Stack panel open) that the order of operations is unchanged from before your
       refactor.
 
@@ -374,19 +376,43 @@ A guided tour, so you know where things live before you need them.
 
 - [ ] Explain, in your own words, why the nested `.then()` chain you sketched is harder to reason
       about than the `async`/`await` version — even though they run identically.
+
+
+      > It is very difficult to read. If I write is exactly like now (which is slower, but readable), I understand what is happening and what comes after what. While as in those nested .then() calls I had to analyze first what stacks are inside those and what is called afterwards.
+
 - [ ] What does the `await` keyword actually do to the execution of the `async` function it's
       inside? What is the rest of the *program* doing while that function is "waiting"?
+
+      > Await is duh, waiting, but for the function to work through - so until the Promise (which is underlying of the function) is finished and the processing of those other async functions can happen
+
+      > The rest of the program tries to wait, sequentially, for a trigger - like the trigger that a Promise is done from one async function and then can work again
+
 - [ ] An `async` function always returns a Promise, even if the code inside it does
       `return someValue;` for a plain value. Prove you understand this: what do you get if you call
       `.then()` on the result of your refactored function, and log it?
+
+      > If I call .then() on the function right now nothing would happen as I understand it - or at least it would not get a return value - beforehand the export had return functions inside of it. But now, there are only await calls inside an async function - without any "return someValue" behind it. 
+
+      > I think if I would log it it would either come as null or undefined, because there is nothing for .then() to process
+
 - [ ] What is the `async`/`await` equivalent of a `.catch()`? What happens at runtime if you forget
       it and the `await`ed operation rejects?
+
+      > A simple try catch condition in JavaScript. The IDE itself automatically wants an try catch if you change the export to export async function - probably am error without it, because a .catch() catches errors
+
 - [ ] Is `async`/`await` code *faster* than the equivalent `.then()` chain? Explain precisely what
       does and doesn't change about execution when you do this kind of refactor.
+
+      > The execution is the same from the order and the movement
+      > It should't be faster, because I am still working in sequential order, as ordered in the Demo
+
 - [ ] Deliberately break your own refactor by removing one `await` you just added (leaving the
       function still `async`). What breaks, and how does that relate to a category of bug you may
       have already dealt with in Demos 2–5 (a Promise being treated as if it were already-resolved
       data)?
+
+      > Ahh.. I see, the variable itself is only a Promise and will be logged as such - like the note in the console.log from an earlier demo
+      > Instead of the actual variable data I want
 
 ---
 

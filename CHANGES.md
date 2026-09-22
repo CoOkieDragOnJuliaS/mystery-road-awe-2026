@@ -157,7 +157,9 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 - Inserting try-catch will at least not prevent the site from loading in in app.js
 - Fixing one bug meant to see another way of enhancing the experience - it solved a specific problem, but there are a lot of bugs inside the app itself when it comes to saving notes, clicking on stuff or synchronizing behaviour. The initial loading and the no-synchronization throws me off a little bit
 
+----------------------------------------------------------------------------------------------------------
 # Demo 8 notes
+
         var allEvidence = [];
         var filteredEvidence = [];
         var selectedEvidence = null;
@@ -215,7 +217,7 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 
 **One rule could be applied: using const, when the variable is never reassigned, using let when the variable is mutable and could receive a value later. Arrays or objects can be const, even if the value changes! Good to know**
 
-- Even though the rules could be applied to my globalState.js - I don't do it.
+- Even though the rules could be applied to my globalState.js - I didn't do it.
 - Because the arrays and objects get "reassigned" instead of added or changed inside the globalState.js (which I would change in the next phase), they need the let because of the changes
 - It would have been better to assign const to the arrays and the object and change/replace only the content instead of the whole array or object
 - with .push() at arrays and resetting the length or at objects with deleting each element inside
@@ -236,6 +238,47 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 - I can safely remove one, because the eventListener is already added and works throughout the application
 
 - An action/event trigger should only be done by one - not more
+
+
+# Demo 9 - Nested promises
+
+> Find the most deeply nested chain of `.then()`
+
+![alt text](/resources/documentation_images/then_nested_chain.png)
+When looking for then(), you get a lot of then() in api.js
+
+The most deeply nested from then was the method loadCorePeopleAndLocations()
+- fetch case, then caseRes.json (parsing) -> up to returning again a fetch of people and parsing the json
+- Afterwards again --> fetching all locations and then parse those too --> deep in callbacks
+
+Inside everything we hide the loading step, render the dashboard and populateAllDropdowns. Problem with this is, that each operation has to wait for the other one to finish beforehand to be used
+
+> Rewritten in the way that is needed:Rewrite it as an `async` function using `await`, preserving its exact current behavior **including** that it currently loads its requests one after another rather than in parallel
+
+        export async function loadCorePeopleAndLocations() {
+        const caseRes = await fetch("data/case.json");
+        const caseJson = await caseRes.json();
+        state.setCaseData(caseJson);
+
+        //or maybe also refactor it by state.setCaseData(await caseRes.json()) instead of the extra variable? But more readable perhaps with more? I will use more
+
+        const peopleRes = await fetch("data/people.json");
+        const peopleJson = await peopleRes.json();
+        state.setAllPeople(peopleJson);
+
+        const locationsRes = await fetch("data/locations.json");
+        const locationsJson = await locationsRes.json();
+        state.setAllLocations(locationsJson);
+
+        hideLoadingStep();
+        renderDashboard();
+        populateAllDropdowns();
+        }
+
+an async function but also no parallel behaviour - so the exact same without the nested chain
+
+
+# Demo 10 
 
 
 
