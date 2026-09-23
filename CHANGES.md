@@ -219,6 +219,8 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 > `const` or `let` everywhere it's declared,
 > deciding `const` vs. `let` deliberately for each one.
 
+![alt text](/resources/documentation_images/book_variables.png)
+
 **One rule could be applied: using const, when the variable is never reassigned, using let when the variable is mutable and could receive a value later. Arrays or objects can be const, even if the value changes! Good to know**
 
 - Even though the rules could be applied to my globalState.js - I didn't do it.
