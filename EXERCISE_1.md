@@ -329,8 +329,34 @@ A guided tour, so you know where things live before you need them.
       > let = you can mutate over it, so reassign the value or replace it whole
       > const = does not let you replace/reassign values --> constant value (except arrays and objects / inner)
 
+            Example:
+            function scopeDemo() {
+                  var a = 1;
+                  var a = 2;           // var can be redeclared
+
+                  let b = 1;
+                  b = 2;               // let can be reassigned
+                  // let b = 3;        // Error: cannot redeclare
+
+                  const c = { value: 1 };
+                  c.value = 2;         // object contents can change
+                  // c = {};           // Error: cannot reassign the binding (overwrite)
+            }
+
       > One example is in the old_app.js I would say. The navigation loop has callbacks with eventListeners that share the same variable i. With var, which is function scoped, the index changes according to the whole function
-      - if changed to let it has another binding for each go through and has a index that is more reliable?
+      - if changed to let it has another binding for each go through and has a index that is more reliable
+
+            Example:
+            function attachListeners() {
+                  var buttons = document.querySelectorAll("button");
+                  
+                  for (var i = 0; i < buttons.length; i++) {
+                        buttons[i].addEventListener("click", function () {
+                              console.log("button index:", i);
+                        });
+                  }
+            }
+                  If there are 3 buttons, every button will log: button index: 3 (i is 3 after the loop)
 
 - [x] What is an "accidental global," and how does non-strict-mode JavaScript allow it to happen by
       simply forgetting a keyword? Now that your code runs as ES modules (which are always strict
@@ -338,6 +364,12 @@ A guided tour, so you know where things live before you need them.
 
       > Without modules, the accidental global is e.g. created if I assign something without declaring it. Would not throw an error (e.g. evidence assigning a value?)
       > Because of the modules & the strict-mode an ReferenceError is thrown (which is what happened aaa looot in bugfixing the split)
+
+            Example:
+            x = 1;
+            console.log(window.x); // 1, because global property
+
+            In module: x = 1; // ReferenceError
 
 
 - [x] "The code technically works" and "the code is clean" are not the same bar. Give one concrete
@@ -350,6 +382,29 @@ A guided tour, so you know where things live before you need them.
       > Refactored because of Demo 8
 
       - using the data-view, which already exists through the router.js - only needing to import to setup.js for the router
+
+            Example:
+                  <button
+                        type="button"
+                        class="nav-btn"
+                        data-view="dashboard"
+                        onclick="navigateTo('dashboard')">
+                        Dashboard
+                  </button>
+
+                  --> needing a global function navigateTo, which sets the window.element that triggers the navigateTo()
+                  --> with my module split it didn't work because of the non-global values
+
+            Refactor:
+                  <button
+                        type="button"
+                        class="nav-btn"
+                        data-view="dashboard">
+                        Dashboard
+                  </button>
+
+                  --> button receives data-view and I register it through javascript to add the click eventHandler
+                  --> why? data-view? --> because HTML described what the button is and knowing it's name, using it by accessing it through documentQuery button[data-view]
 
 ---
 
