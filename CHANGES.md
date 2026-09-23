@@ -209,6 +209,10 @@ Now the real bug-hunting can begin, because the evidences are loading and I can 
 
 > Module split prevents most collisions, but not all, because each module has its own scope. globalState.js is my state which exports getters and setters in a way that no modifying is done without knowledge of the function access - also easier for debugging (to know which calls the getter/setter methods) - making the variables private and "mutable" with let, but at the same time only accessible via functions
 
+*In other words: every change goes through a named function, so you can search for the named function to see who accesses it and how - easier for debugging. AND: The actual variable itself stays private inside the module.*
+
+> But! - and this is the problem I currently have: If you replace a whole array for instance the risk is not gone, just easier to find with the named functions (which are also better to use regarding the book information).
+
 ## Changing the variables
 > Task:
 > Go through the codebase and replace `var` with 
