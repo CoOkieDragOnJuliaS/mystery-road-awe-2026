@@ -358,6 +358,16 @@ A guided tour, so you know where things live before you need them.
             }
                   If there are 3 buttons, every button will log: button index: 3 (i is 3 after the loop)
 
+
+
+> Hoisting:
+> var is uninitialized gehoistet (undefined) und wenn wir im Code versuchen den Wert zu verwenden
+> Mechanismus: Nimm alle Deklarationen und schieb sie zu Beginn des Scope-Kontexts (const und let --> uninitialized ReferenceError),
+> var just throws undefined and no error at all!
+
+HOISTING example:
+var ist eine global variable (in windows von der App)
+
 - [x] What is an "accidental global," and how does non-strict-mode JavaScript allow it to happen by
       simply forgetting a keyword? Now that your code runs as ES modules (which are always strict
       mode), what happens instead if you make that same mistake?
