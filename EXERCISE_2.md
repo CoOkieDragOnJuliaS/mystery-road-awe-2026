@@ -204,37 +204,35 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
             - noUncheckedIndexedAccess indexed array access is treated as potentially undefined.
 
 - [x] Convert 2–3 of your smallest/utility modules from Exercise 1 (e.g. formatting or lookup helpers) from `.js` to `.ts`, with **no `any`**, and get them compiling with zero errors.
-            I tried to change the lookupHelper to get the badge to export it to a .ts file to learn TypeScript
-            Debugging with lint and knowing helped me, that the information in dashboard and evidenceBasic.js needed help because of the new typescript change
-            I also added a new typescript file for the dateFormatter, but had to change a lot after searching for the import of the lookup, where the date was handled
-
+      I tried to change the lookupHelper to get the badge to export it to a .ts file to learn TypeScript
+      Debugging with lint and knowing helped me, that the information in dashboard and evidenceBasic.js needed help because of the new typescript change
+      I also added a new typescript file for the dateFormatter, but had to change a lot after searching for the import of the lookup, where the date was handled
 
 - [x] Wire TypeScript into your `build`/`dev` scripts from Demo 4 so type errors are actually surfaced by your tooling, not just by your editor.
-            I changed the package.json to get tsc --noEmit into build and dev to work together with eslint
+      I changed the package.json to get tsc --noEmit into build and dev to work together with eslint
 
 **Questions** (depend on the tasks above)
 
 - [x] What does the `strict` option in `tsconfig.json` actually turn on? Name at least two individual checks bundled under it, and say whether you kept it on and why.
-            //Enables all strict type-checking options, which helps catch potential errors and enforce better coding practices -- e.g. noImpliciAny, NullChecks, etc.
-            Which means for example that typescript reports variables that would receive an any type and null as well as undefined could be handled explicitly, so separate.
+      //Enables all strict type-checking options, which helps catch potential errors and enforce better coding practices -- e.g. noImpliciAny, NullChecks, etc.
+      Which means for example that typescript reports variables that would receive an any type and null as well as undefined could be handled explicitly, so separate.
 
             I kept it on, because I do not trust myself in TypeScript to know wrong from right right now - needing extra strict help and checks to prevent errors
             One example was the badgeClass --> it had to describe EvidenceStatus (the new) | null and | undefined - it threw an any error
             "Argument of type 'undefined' is not assignable to parameter of type 'EvidenceStatus'."
 
 - [x] What is the difference between a compile-time type error and the runtime bugs you fixed in Exercise 1? Could TypeScript alone have caught any of those specific bugs? Why or why not?
-            Compile-time error is detected before the application runs, so as the code compiles - e.g. if I have a type string | null or | undefined in TypeScript and want to call the method with a number, the TypeScript compiler can see that it is no a required format and react!
+      Compile-time error is detected before the application runs, so as the code compiles - e.g. if I have a type string | null or | undefined in TypeScript and want to call the method with a number, the TypeScript compiler can see that it is no a required format and react!
 
-            A Runtime bug does happen while the application is running - e.g. if I click something and a bug happens which I did not see beforehand. 
+            A Runtime bug does happen while the application is running - e.g. if I click something and a bug happens which I did not see beforehand.
             TypeScript alone could never have found all those bugs, because a valid Typescript argument cannot see that a property is sending a null result if I click on a button for example - which happened with findEvidenceById or findAllEvidence() - Promises could return nothing, but the TypeScript would not check that.
             So if event listeners are working there TypeScript can help before in compile-time and in debugging, but can never replace runtime-debugging with console and explorative testing
 
 - [x] What does `any` do to TypeScript's checking for a value, and why did you avoid it in this first pass even though it would have been faster to just silence the errors with it?
-            ANY - is the type that can be almost anything. It can be another type, any type, be called as a function or passed to a function. It is no safety whatsoever what type is used or how the function is called - I could call a string function with a number - it would probably throw errors along the way, but for TypeScript it is working for the check
+      ANY - is the type that can be almost anything. It can be another type, any type, be called as a function or passed to a function. It is no safety whatsoever what type is used or how the function is called - I could call a string function with a number - it would probably throw errors along the way, but for TypeScript it is working for the check
 
             So I avoided it in getStatusBadgeClass, because I want to have the value known to me, like unreviewed, reviewed, flagged and catch errors / variables types known to me,like undefined or null
 
-            
 ---
 
 ## Demo 6 — Typing the domain data
@@ -281,8 +279,7 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
       I converted the active modules to TypeScript: `app.ts`, `state/globalState.ts`, `navigation/router.ts`, `storage/localStorage.ts`, `utils/dom.ts`, `utils/lookupHelpers.ts`, `utils/setup.ts`, and all six `views/*.ts` files. `index.html` now loads `app.ts`.
       The old `.js` files are only thin compatibility `export *` shims so old imports cannot accidentally use stale duplicate implementations. `npx tsc --noEmit`, `npm run lint`, and `npm run build` all complete without TypeScript or lint errors.
 
-- [x] Find at least 3 real spots where the compiler flagged something you had to actually think about (a union type, a possibly-`undefined` value, an implicit `any`, etc.). For each, decide and record whether it pointed at a real latent bug or was "just" the compiler being pedantic.
-      1. **DOM elements could be `null`.** `document.getElementById(...)` returns `HTMLElement | null`, but the old code immediately accessed `.value`, `.classList`, or `.innerHTML`. This produced `Object is possibly 'null'`. I added `getElement()` and `getRequiredElement()` in `utils/dom.ts`. For elements that must exist in `index.html`, the required helper fails explicitly; for optional containers, the code keeps the early return. This was partly pedantic because the current HTML contains those elements, but it also makes the dependency on the DOM explicit.
+- [x] Find at least 3 real spots where the compiler flagged something you had to actually think about (a union type, a possibly-`undefined` value, an implicit `any`, etc.). For each, decide and record whether it pointed at a real latent bug or was "just" the compiler being pedantic. 1. **DOM elements could be `null`.** `document.getElementById(...)` returns `HTMLElement | null`, but the old code immediately accessed `.value`, `.classList`, or `.innerHTML`. This produced `Object is possibly 'null'`. I added `getElement()` and `getRequiredElement()` in `utils/dom.ts`. For elements that must exist in `index.html`, the required helper fails explicitly; for optional containers, the code keeps the early return. This was partly pedantic because the current HTML contains those elements, but it also makes the dependency on the DOM explicit.
 
       2. **DOM values are only strings.** `dataset.view`, `dataset.evidenceId`, select `.value`, and `dataset.personId` do not automatically have domain types. TypeScript therefore reported errors when those values were passed to functions expecting `ViewName`, `EvidenceId`, or `PersonId`. I added type guards such as `isViewName`, `isEvidenceId`, `isPersonId`, `isEvidenceStatus`, and `isEvidenceRelevance` instead of casting or using `any`. This exposed that the old JavaScript assumed every DOM attribute had a valid domain value.
 
@@ -330,13 +327,25 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 - [ ] Write a GitHub Actions workflow that triggers on push (and/or pull request), checks out the repo, sets up Node.js at the right version, installs dependencies (with dependency caching), and runs your `lint` and a format-check (e.g. `prettier --check`).
 - [ ] Push a commit that deliberately fails lint or format, and show the workflow **failing** in the Actions tab.
+      Well, it failed - not deliberately, but it did
 - [ ] Fix it and push again, and show the same workflow **passing**.
+
+            Got it to pass
 
 **Questions** (depend on the tasks above)
 
 - [ ] What is the difference between a workflow, a job, and a step in GitHub Actions? Point to one of each in your workflow file.
+      A **workflow** is the complete automation definition stored in `.github/workflows/`, for example `.github/workflows/development.yml`. It defines when GitHub should run the automation through `on:` and which jobs it contains.
+      A **job** is a named unit inside `jobs:` that runs on one runner. In the development workflow, the job would be the block that runs on `ubuntu-latest`, checks out the repository, installs Node.js and dependencies, and performs the checks.
+      A **step** is one command or action inside that job's `steps:` list. Examples would be `uses: actions/checkout@v...` for checking out the repository, `uses: actions/setup-node@v...` for configuring Node.js, and `run: npm run lint` for executing the linter. The hierarchy is workflow → jobs → steps.
+
 - [ ] Why should lint/format run in CI at all, if it already runs (or could run) on every developer's own machine before they push?
+      Local checks are helpful, but CI is the shared source of truth. A developer can forget to run `npm run lint` or `prettier --check`, use a different tool version, have an incomplete local checkout, or push code that only works because of uncommitted files.
+      Running the checks in GitHub Actions means every `push` and pull request is checked in a clean environment with the same Node.js version and the same locked dependencies. The result is visible to everyone in the Actions tab and can block a broken pull request before it reaches the main branch. It also creates an auditable run history that can be shown in class.
+
 - [ ] What is dependency caching doing in your workflow, and what would happen (both correctness- and speed-wise) if you removed it?
+      Dependency caching stores the npm cache between workflow runs. With `actions/setup-node`, the cache is normally keyed from `package-lock.json`, so a new dependency installation reuses previously downloaded packages when the lock file has not changed.
+      Removing it should not normally change correctness because `npm ci` still reads `package-lock.json` and installs the dependency versions recorded there. The difference is speed and network usage: every run would have to download the dependency packages again. If `npm ci` were used without a lock file, that would be a correctness problem, but the project has `package-lock.json`, so the main effect of deleting the cache would be slower and more fragile CI runs.
 
 ---
 
@@ -345,14 +354,23 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 **Tasks**
 
 - [ ] Write a second workflow that, on push to your main branch (or another trigger you choose and can justify), checks out the repo, installs dependencies, lints, builds (`vite build`), and deploys the `dist/` output to GitHub Pages (or an equivalent static host).
+      I have to create a Github Pages site
 - [ ] Confirm the deployed URL actually serves the working app end-to-end, not just that the workflow reports success.
 - [ ] Make a real change, push it, and show it going live via the workflow without any manual deployment step.
 
 **Questions** (depend on the tasks above)
 
 - [ ] Why does the deploy workflow re-run lint and build itself, instead of trusting "it already passed on my machine" or reusing Demo 8's workflow's result directly?
+      Deployment is the workflow that publishes real output, so it must verify the exact commit it is about to deploy. A green development workflow on an earlier commit does not prove that the current commit is valid, and GitHub Actions does not automatically hand a passing result or a build artifact from one workflow run to another unrelated deployment run.
+      Re-running `npm run lint` and `npm run build` also protects against differences between local machines, missing files, stale `node_modules`, or a manual push that bypassed the pull-request checks. Most importantly, `vite build` creates the `dist/` directory that the deploy step publishes, so the build has to happen inside the deploy workflow anyway.
+
 - [ ] What is the actual mechanism your deploy workflow uses to publish to GitHub Pages (e.g. a dedicated deploy action publishing an artifact, pushing to a `gh-pages` branch, or something else)? Explain, concretely, what it does.
+      The intended mechanism is GitHub's official Pages deployment flow with `actions/configure-pages`, `actions/upload-pages-artifact`, and `actions/deploy-pages`. After `npm run build`, the workflow packages the generated `dist/` directory as a Pages artifact. `actions/upload-pages-artifact` uploads that directory as the site content, and `actions/deploy-pages` publishes the uploaded artifact to the repository's GitHub Pages environment.
+      This is different from pushing the generated files to a `gh-pages` branch. The deploy action publishes the artifact through GitHub Pages' deployment API, while the repository itself only needs the workflow file and source code. GitHub Pages also needs to be configured in the repository settings to use **GitHub Actions** as its source.
+
 - [ ] What would you need to change in this workflow if you were deploying to a different static host instead (e.g. Netlify, Vercel, a plain server over SFTP)? What would stay the same?
+      The beginning of the workflow would stay almost identical: trigger on the chosen branch, check out the repository, install Node.js, run `npm ci`, run lint/format/type checks, and run `npm run build` to produce `dist/`.
+      Only the publication part would change. For Netlify or Vercel, the final steps would use the provider's CLI or a dedicated action and provider-specific secrets such as an API token and site/project ID. For SFTP, the workflow would upload the contents of `dist/` with an SSH/SFTP action or command and would need secrets for the host, username, key/password, and target directory. The build output remains the same, but the credentials, destination, and deploy command are host-specific.
 
 ---
 
@@ -367,8 +385,16 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 **Questions** (depend on the tasks above)
 
 - [ ] When your build step fails, does the previously-deployed version of the app stay live, get taken down, or something else? Is that the behavior you want, and why?
+      With GitHub Pages, a failed build normally leaves the previously deployed version live. The workflow stops before `actions/deploy-pages`, so no new artifact is uploaded or published. GitHub Pages does not take the old site down just because a newer commit failed to build.
+      That is the desired behavior for this project: a broken commit should not deploy, but it also should not remove the last working version. The failed workflow run still makes the problem visible, so the broken commit can be fixed and pushed again.
+
 - [ ] What GitHub Actions permission(s) or secret(s) does your deploy workflow actually need, and where did you grant/store them? What's the security risk of over-granting permissions here?
+      For the official `actions/deploy-pages` mechanism, the deploy job needs a small `permissions:` block such as `contents: read`, `pages: write`, and `id-token: write`. `contents: read` lets the job read the repository checkout, `pages: write` lets it create the Pages deployment, and `id-token: write` lets GitHub issue the OIDC token used by the Pages deployment flow. GitHub Pages must also be configured in the repository's **Settings → Pages** area to use GitHub Actions.
+      No long-lived personal access token is needed for that approach; the workflow uses the short-lived `GITHUB_TOKEN` and the OIDC identity. Over-granting permissions such as `contents: write`, broad `actions` permissions, or storing a powerful personal token as a secret would increase the damage a compromised workflow or dependency could do. With write access to the repository or other resources, malicious workflow code could modify code, releases, or deployments rather than only publishing the current site.
+
 - [ ] What's the difference between triggering a workflow `on: push`, `on: pull_request`, and `on: workflow_dispatch`? Which did you use for the development workflow (Demo 8) and which for the deployment workflow (Demo 9), and why is that pairing the right one?
+      `on: push` runs after commits are pushed to the selected branches. `on: pull_request` runs when a pull request is opened or updated, so it checks the proposed merge result before the code reaches the main branch. `on: workflow_dispatch` adds a manual **Run workflow** button, which is useful for demonstrations or a controlled redeploy.
+      The development workflow should run on `push` and `pull_request` so both direct commits and proposed changes are checked before they are relied on. The deployment workflow should run on `push` to `main`, optionally with `workflow_dispatch` for a manual redeploy. This pairing is appropriate because pull requests get feedback before merge, while only the accepted `main` branch is published automatically.
 
 ---
 

@@ -147,15 +147,15 @@ Types describe the intended shape but do not validate data at runtime.
 
 ## Common tasks
 
-| Task | Start here |
-|---|---|
-| Add/change a view | `index.html`, `navigation/router.ts`, relevant `views/*.ts`, `styles.css` |
-| Change filtering/search | `views/evidenceBasic.ts` and `utils/lookupHelpers.ts` |
-| Change loaded data/schema | `types/domain.ts`, `public/data/*.json`, `data/api.ts` |
+| Task                       | Start here                                                                  |
+| -------------------------- | --------------------------------------------------------------------------- |
+| Add/change a view          | `index.html`, `navigation/router.ts`, relevant `views/*.ts`, `styles.css`   |
+| Change filtering/search    | `views/evidenceBasic.ts` and `utils/lookupHelpers.ts`                       |
+| Change loaded data/schema  | `types/domain.ts`, `public/data/*.json`, `data/api.ts`                      |
 | Bookmarks/notes/hypothesis | `storage/localStorage.ts`, `views/workspace.ts`, `views/evidenceDetails.ts` |
-| Global state | `state/globalState.ts` |
-| Event wiring | `utils/setup.ts`, plus window declarations in `app.ts` |
-| Exercise demos | `EXERCISE_1.md`, `EXERCISE_2.md` |
+| Global state               | `state/globalState.ts`                                                      |
+| Event wiring               | `utils/setup.ts`, plus window declarations in `app.ts`                      |
+| Exercise demos             | `EXERCISE_1.md`, `EXERCISE_2.md`                                            |
 
 ## Conventions
 
