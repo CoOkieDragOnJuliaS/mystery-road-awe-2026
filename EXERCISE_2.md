@@ -354,6 +354,7 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 **Tasks**
 
 - [ ] Write a second workflow that, on push to your main branch (or another trigger you choose and can justify), checks out the repo, installs dependencies, lints, builds (`vite build`), and deploys the `dist/` output to GitHub Pages (or an equivalent static host).
+      I have to create a Github Pages site
 - [ ] Confirm the deployed URL actually serves the working app end-to-end, not just that the workflow reports success.
 - [ ] Make a real change, push it, and show it going live via the workflow without any manual deployment step.
 
