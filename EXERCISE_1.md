@@ -25,21 +25,21 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 able to present in the Moodle course. **Before class, go through and tick only what you can
 genuinely demonstrate or answer on the spot, live.** An unticked box is fine, but remember that you
 need to at least tick ~70% of tasks on all exercises for a positive course grade. "I fixed it" is
-not enough for any bug-related item: you need to be able to explain *why* it was broken and *why*
+not enough for any bug-related item: you need to be able to explain _why_ it was broken and _why_
 your fix works.
 
-| # | Demo | Ready? |
-|---|---|---|
-| 1 | Split the app into JS modules | x |
-| 2 | Bug hunt — mutation/reference bug | ☐ |
-| 3 | Bug hunt — an asynchronous/Promise-handling bug | ☐ |
-| 4 | Bug hunt — silent (console-only) bug | ☐ |
-| 5 | Bug hunt — full walkthrough & reflection | ☐ |
-| 6 | Use the JavaScript debugger | ☐ |
-| 7 | DevTools tour (Console/Network/Application/Elements) | ☐ |
-| 8 | Clean coding: globals, `var`/`let`/`const`, code smells | ☐ |
-| 9 | Refactor nested Promises to `async`/`await` | ☐ |
-| 10 | Refactor to arrow functions | ☐ |
+| #   | Demo                                                    | Ready? |
+| --- | ------------------------------------------------------- | ------ |
+| 1   | Split the app into JS modules                           | x      |
+| 2   | Bug hunt — mutation/reference bug                       | ☐      |
+| 3   | Bug hunt — an asynchronous/Promise-handling bug         | ☐      |
+| 4   | Bug hunt — silent (console-only) bug                    | ☐      |
+| 5   | Bug hunt — full walkthrough & reflection                | ☐      |
+| 6   | Use the JavaScript debugger                             | ☐      |
+| 7   | DevTools tour (Console/Network/Application/Elements)    | ☐      |
+| 8   | Clean coding: globals, `var`/`let`/`const`, code smells | ☐      |
+| 9   | Refactor nested Promises to `async`/`await`             | ☐      |
+| 10  | Refactor to arrow functions                             | ☐      |
 
 A demo only counts as "Ready" once **every** task and question checkbox inside it (below) is
 ticked — the table above is just a fast overview, tick the boxes inside each demo first.
@@ -70,7 +70,7 @@ directly.
 
 - [x] What is the difference between a classic `<script>` and a `<script type="module">`? Name at
       least two behavioral differences that are relevant to this app.
-      
+
       > The top-level variables have been var and function declarations become properties of window. Each module has its own scope, so the window declarations inline "onclick" from index.html do not work anymore. Bugfix needed in Demo 2, where the views are really clickable, by being exported or attached to window
       > Namely error:
       >index.html:29 Uncaught ReferenceError: navigateTo is not defined
@@ -87,7 +87,7 @@ directly.
       change that value? What error do you get if you forget, and why is that error actually
       useful?
 
-      > What needs to happen is something like in Java - a private, mutable variable that can only be accessed via exported functions to manipulate (or not) the actual element. Getter/Setter behaviour to read and change the value. If I forget, which I did - or because I wrote the name wrong - the error tells me that there is no 
+      > What needs to happen is something like in Java - a private, mutable variable that can only be accessed via exported functions to manipulate (or not) the actual element. Getter/Setter behaviour to read and change the value. If I forget, which I did - or because I wrote the name wrong - the error tells me that there is no
       > I would get a TypeError if I try to assign a value to a variable that is not exported correctly or if I forgot the setter
 
 - [x] What's the difference between a named export and a default export? Point to one place in your
@@ -126,7 +126,7 @@ to be independent turn out to be linked).
 
 **Questions** (depend on the task above)
 
-- [ ] Explain — in your own words — the difference between a *reference* and a *copy* in
+- [ ] Explain — in your own words — the difference between a _reference_ and a _copy_ in
       JavaScript, and how that distinction explains what you observed.
 - [ ] Walk through the exact user actions and system state that trigger the bug. Could you have
       found it by reading the code top-to-bottom without running it? Why or why not?
@@ -139,7 +139,7 @@ Find and fix a bug caused by how the app handles a Promise-based operation — f
 something that should update once an async operation finishes but doesn't, or state that gets
 checked before (or without ever) being properly set by an async callback. This does not have to be
 flaky or timing-sensitive to reproduce. The point is that you can't explain the root cause without talking about
-*when*, relative to a Promise/callback, something did or didn't happen.
+_when_, relative to a Promise/callback, something did or didn't happen.
 
 **Tasks**
 
@@ -159,7 +159,7 @@ flaky or timing-sensitive to reproduce. The point is that you can't explain the 
 
 ## Demo 4 — Bug hunt: a silent bug
 
-Open DevTools *before* you start clicking around, and keep the Console tab visible for your entire
+Open DevTools _before_ you start clicking around, and keep the Console tab visible for your entire
 testing session. Find a bug that produces **no visible change in the UI** — only console output
 (an error, a warning, or an unexpected logged value).
 
@@ -173,7 +173,6 @@ testing session. Find a bug that produces **no visible change in the UI** — on
 
 - [ ] How did you notice this bug in the first place, given that nothing looked broken? Why is
       "nothing looks broken" not the same as "nothing is broken"?
-
 
 ---
 
@@ -207,7 +206,7 @@ same filter twice. Keep going past Demos 2–4 — this app does not have only t
 
 ## Demo 6 — Use the JavaScript debugger
 
-`console.log` is a debugging tool, not *the* debugging tool. This demo is about using the browser's
+`console.log` is a debugging tool, not _the_ debugging tool. This demo is about using the browser's
 actual debugger or a VS Code extension for debugging — ideally on one of the bugs from Demos 2–5.
 
 **Tasks**
@@ -248,12 +247,11 @@ actual debugger or a VS Code extension for debugging — ideally on one of the b
       > A debugger statement can be used for specific and long-winding testing throughout big applications - also interesting to use it together with a logger.
       > UI debugging or debugging through clicking and setting the breakpoints is easier to find a certain area - because debugger lines can become "lost" if you forget about them. Sometimes the same with debugging and logging in Java
 
-
-- [ ] Describe a moment where `console.log` alone would *not* have been enough to find a bug, but
+- [ ] Describe a moment where `console.log` alone would _not_ have been enough to find a bug, but
       stepping through with the debugger was. What did the debugger show you that logging couldn't?
 
       > The console and the Network tab of the DevTool did not show at all why the evidence wasn't loading in correctly or why there was a 0 at the people.
-      > Pending did only show for an insignificant amount of time when I set it to e.g. 3G, BUT the debugging shows when and how a method or a loading zone was called - which was more significant for this demo bug. Was searching for a loong time beforehand.. I am not that good with JavaScript 
+      > Pending did only show for an insignificant amount of time when I set it to e.g. 3G, BUT the debugging shows when and how a method or a loading zone was called - which was more significant for this demo bug. Was searching for a loong time beforehand.. I am not that good with JavaScript
 
 ---
 
@@ -290,7 +288,7 @@ A guided tour, so you know where things live before you need them.
       > 404 is bad - so the web page would log an error and if not caught the web page could be "broken", unusable
 
 - [ ] List this app's `localStorage` keys and what each one is for. What happens if you manually
-      corrupt one of them and reload — and *why* does that happen, according to the code that reads
+      corrupt one of them and reload — and _why_ does that happen, according to the code that reads
       it back out?
 
       > remotion_bookmarks and remotion_notes and remotion_hypothesis are the only ones there is, but I didn't use or see bookmarks, only notes and hypothesis, because I edited them
@@ -323,7 +321,7 @@ A guided tour, so you know where things live before you need them.
 
 - [x] What is the difference between `var`, `let`, and `const` in terms of scope and reassignment?
       Give a concrete example — from this codebase or a hypothetical grounded in a pattern you saw
-      — of a bug that `var`'s scoping rules make *possible* and `let` would prevent.
+      — of a bug that `var`'s scoping rules make _possible_ and `let` would prevent.
 
       > var = can be redeclared, but is function scoped
       > let = you can mutate over it, so reassign the value or replace it whole
@@ -349,7 +347,7 @@ A guided tour, so you know where things live before you need them.
             Example:
             function attachListeners() {
                   var buttons = document.querySelectorAll("button");
-                  
+
                   for (var i = 0; i < buttons.length; i++) {
                         buttons[i].addEventListener("click", function () {
                               console.log("button index:", i);
@@ -357,8 +355,6 @@ A guided tour, so you know where things live before you need them.
                   }
             }
                   If there are 3 buttons, every button will log: button index: 3 (i is 3 after the loop)
-
-
 
 > Hoisting:
 > var is uninitialized gehoistet (undefined) und wenn wir im Code versuchen den Wert zu verwenden
@@ -380,7 +376,6 @@ var ist eine global variable (in windows von der App)
             console.log(window.x); // 1, because global property
 
             In module: x = 1; // ReferenceError
-
 
 - [x] "The code technically works" and "the code is clean" are not the same bar. Give one concrete
       example from this app of something that worked correctly but was still worth refactoring —
@@ -442,11 +437,10 @@ var ist eine global variable (in windows von der App)
 - [ ] Explain, in your own words, why the nested `.then()` chain you sketched is harder to reason
       about than the `async`/`await` version — even though they run identically.
 
-
       > It is very difficult to read. If I write is exactly like now (which is slower, but readable), I understand what is happening and what comes after what. While as in those nested .then() calls I had to analyze first what stacks are inside those and what is called afterwards.
 
 - [ ] What does the `await` keyword actually do to the execution of the `async` function it's
-      inside? What is the rest of the *program* doing while that function is "waiting"?
+      inside? What is the rest of the _program_ doing while that function is "waiting"?
 
       > Await is duh, waiting, but for the function to work through - so until the Promise (which is underlying of the function) is finished and the processing of those other async functions can happen
 
@@ -456,7 +450,7 @@ var ist eine global variable (in windows von der App)
       `return someValue;` for a plain value. Prove you understand this: what do you get if you call
       `.then()` on the result of your refactored function, and log it?
 
-      > If I call .then() on the function right now nothing would happen as I understand it - or at least it would not get a return value - beforehand the export had return functions inside of it. But now, there are only await calls inside an async function - without any "return someValue" behind it. 
+      > If I call .then() on the function right now nothing would happen as I understand it - or at least it would not get a return value - beforehand the export had return functions inside of it. But now, there are only await calls inside an async function - without any "return someValue" behind it.
 
       > I think if I would log it it would either come as null or undefined, because there is nothing for .then() to process
 
@@ -465,7 +459,7 @@ var ist eine global variable (in windows von der App)
 
       > A simple try catch condition in JavaScript. The IDE itself automatically wants an try catch if you change the export to export async function - probably am error without it, because a .catch() catches errors
 
-- [ ] Is `async`/`await` code *faster* than the equivalent `.then()` chain? Explain precisely what
+- [ ] Is `async`/`await` code _faster_ than the equivalent `.then()` chain? Explain precisely what
       does and doesn't change about execution when you do this kind of refactor.
 
       > The execution is the same from the order and the movement
@@ -494,7 +488,7 @@ var ist eine global variable (in windows von der App)
 
       > Marked with a comment
 
-- [x] Identify **one** function you deliberately did *not* convert (or would refuse to, if asked),
+- [x] Identify **one** function you deliberately did _not_ convert (or would refuse to, if asked),
       and be ready to explain why it would be unsafe or incorrect as an arrow function.
 
       > I refused to or did not want to convert long or big functions. It could be, through the arrow functions, that the conversion creates a problem instead of reducing it
@@ -520,7 +514,7 @@ var ist eine global variable (in windows von der App)
       appear later in the file; a `const`/`let` arrow function is not. Did this matter anywhere in
       your refactor? Explain why or why not.
 
-     > Yes, to be honest it matters in my unchanged window elements. The methods are often used before initialization - if I use the arrow function for them it would not work (const arrow function)
+  > Yes, to be honest it matters in my unchanged window elements. The methods are often used before initialization - if I use the arrow function for them it would not work (const arrow function)
 
 - [x] Show a concrete before/after of one function you converted. Is there any behavioral difference
       at runtime, or is this purely a readability/style change? Justify your answer.
@@ -539,5 +533,5 @@ var ist eine global variable (in windows von der App)
 ## What to bring to class
 
 For each of the 10 demos: your changed code (ideally as commits you can diff live), and the ticked
-checkboxes above reflecting what you can genuinely demonstrate and answer *right now*. Be ready to
+checkboxes above reflecting what you can genuinely demonstrate and answer _right now_. Be ready to
 open DevTools live on request, not just describe what you did.

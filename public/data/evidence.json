@@ -45,7 +45,7 @@
     "timestamp": "2026-10-16T07:03:00Z",
     "summary": "Camera DC-04 is missing from Equipment Storage.",
     "content": "Morning inventory check of Equipment Storage found that depth camera DC-04 is not on its assigned shelf. There is no active checkout entry for the unit in the storage log. Last confirmed sighting was in the Immersive Systems Studio two evenings prior.",
-    "personIds": ["Nova Byte"],
+    "personIds": ["nova-byte"],
     "locationIds": ["L05", "L03"],
     "tags": ["equipment", "camera"],
     "status": "unreviewed",
@@ -152,8 +152,8 @@
     "personIds": ["signal-scholar"],
     "locationIds": ["L04"],
     "tags": ["release", "deployment", "critical"],
-    "status": "Reviewed",
-    "relevance": "Unknown"
+    "status": "reviewed",
+    "relevance": "unknown"
   },
   {
     "id": "E13",
@@ -227,7 +227,13 @@
     "timestamp": "2026-10-15T23:59:00Z",
     "summary": "Several team members had legitimate reasons to access the laboratory or infrastructure the previous evening.",
     "content": "Combined badge access summary, 2026-10-15 evening:\nKernel Colt - L01 18:50-19:40 (approved maintenance window)\nRefactor Rex - L01 17:50-18:55 (dashboard update)\nNova Byte - L03, L05 17:00-17:30 (studio session)\nRoot Harbor - L04 19:45-23:35, L05 20:03-20:10 (migration + backup media)\nSignal Scholar - no badge activity recorded after 18:00\nNote: svc-remotion shared maintenance account was active 20:00-23:31 and does not map to an individual badge holder.",
-    "personIds": ["kernel-colt", "refactor-rex", "nova-byte", "root-harbor", "signal-scholar"],
+    "personIds": [
+      "kernel-colt",
+      "refactor-rex",
+      "nova-byte",
+      "root-harbor",
+      "signal-scholar"
+    ],
     "locationIds": ["L01", "L03", "L04", "L05"],
     "tags": ["access", "infrastructure"],
     "status": "unreviewed",
