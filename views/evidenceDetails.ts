@@ -174,9 +174,7 @@ function statusOptionHTML(
 }
 
 function saveCurrentNote(): void {
-  const textarea = getRequiredElement<HTMLTextAreaElement>(
-    "evidenceNoteInput",
-  );
+  const textarea = getRequiredElement<HTMLTextAreaElement>("evidenceNoteInput");
   const evidenceIdValue = textarea.dataset.evidenceId;
   //Demo 7: the DOM only stores strings, so the note key must be a valid EvidenceId.
   if (!evidenceIdValue || !isEvidenceId(evidenceIdValue)) return;

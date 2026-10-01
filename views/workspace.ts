@@ -1,12 +1,10 @@
 import * as storage from "../storage/localStorage.ts";
 import * as state from "../state/globalState.ts";
+//Demo7-bug: these functions were referenced without imports in workspace.js.
 import { navigateTo } from "../navigation/router.ts";
 import { openEvidenceDetail } from "./evidenceDetails.ts";
 import { getElement } from "../utils/dom.ts";
-import {
-  isEvidenceId,
-  type EvidenceId,
-} from "../types/domain.ts";
+import { isEvidenceId, type EvidenceId } from "../types/domain.ts";
 // ---------------------------------------------------------------------
 // WORKSPACE
 // ---------------------------------------------------------------------

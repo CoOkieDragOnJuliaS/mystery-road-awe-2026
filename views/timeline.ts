@@ -1,8 +1,5 @@
 import * as state from "../state/globalState.ts";
-import {
-  findLocationById,
-  findEvidenceById,
-} from "../utils/lookupHelpers.ts";
+import { findLocationById, findEvidenceById } from "../utils/lookupHelpers.ts";
 import { formatDate } from "../utils/dateHelper.ts";
 import { openEvidenceDetail } from "./evidenceDetails.ts";
 import { navigateTo } from "../navigation/router.ts";
@@ -19,9 +16,7 @@ import {
 // ---------------------------------------------------------------------
 
 export function populateTimelineDropdowns(): void {
-  const personSelect = getElement<HTMLSelectElement>(
-    "timelinePersonFilter",
-  );
+  const personSelect = getElement<HTMLSelectElement>("timelinePersonFilter");
   const locationSelect = getElement<HTMLSelectElement>(
     "timelineLocationFilter",
   );
@@ -37,11 +32,7 @@ export function populateTimelineDropdowns(): void {
   locationSelect.innerHTML = '<option value="">All locations</option>';
   for (const location of state.getAllLocations()) {
     locationSelect.innerHTML +=
-      '<option value="' +
-      location.id +
-      '">' +
-      location.id +
-      "</option>";
+      '<option value="' + location.id + '">' + location.id + "</option>";
   }
 
   const types: string[] = [];
@@ -68,17 +59,14 @@ export function renderTimeline(): void {
   const locationFilter = getRequiredElement<HTMLSelectElement>(
     "timelineLocationFilter",
   ).value;
-  const typeFilter = getRequiredElement<HTMLSelectElement>(
-    "timelineTypeFilter",
-  ).value;
+  const typeFilter =
+    getRequiredElement<HTMLSelectElement>("timelineTypeFilter").value;
 
   let events: TimelineEvent[] = [];
   for (const timelineEvent of state.getAllTimeline()) {
     if (
       personFilter &&
-      !timelineEvent.personIds.some(
-        (personId) => personId === personFilter,
-      )
+      !timelineEvent.personIds.some((personId) => personId === personFilter)
     )
       continue;
     if (
@@ -114,9 +102,7 @@ export function renderTimeline(): void {
     const eventLocationNames: string[] = [];
     for (const locationId of item.locationIds) {
       const eventLocation = findLocationById(locationId);
-      eventLocationNames.push(
-        eventLocation ? eventLocation.name : locationId,
-      );
+      eventLocationNames.push(eventLocation ? eventLocation.name : locationId);
     }
     if (eventLocationNames.length > 0) {
       html +=
@@ -141,9 +127,8 @@ export function renderTimeline(): void {
   container.innerHTML = html;
 
   // Refactor to arrow function
-  const linkButtons = container.querySelectorAll<HTMLElement>(
-    ".evidence-link-btn",
-  );
+  const linkButtons =
+    container.querySelectorAll<HTMLElement>(".evidence-link-btn");
   linkButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
       const target = e.currentTarget;
@@ -230,9 +215,7 @@ export function openEvidenceModal(evidenceId: EvidenceId): void {
   modal.addEventListener("click", handleModalClick);
 }
 
-function certaintyBadgeClass(
-  certainty: TimelineCertainty | string,
-): string {
+function certaintyBadgeClass(certainty: TimelineCertainty | string): string {
   //Demo 7: DOM-facing certainty values are narrowed to the known union.
   const normalizedCertainty = isTimelineCertainty(certainty)
     ? certainty

@@ -243,6 +243,7 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 - [x] Define TypeScript types/interfaces for the case's data model (evidence, people, locations, timeline events) that match the shape of `data/*.json`.
       I created `types/domain.ts` and used interfaces for `CaseData`, `Evidence`, `Person`, `Location`, and `TimelineEvent`. I used type aliases for restricted values like `PersonId`, `EvidenceStatus`, `EvidenceRelevance`, and `TimelineCertainty`.
+      Why domain.ts? --> because I tried to add JSON data and information for TypeScript to get from one specific location. EvidenceStatus inside badgeHelper is the class used by the UI, while the EvidenceStatus in domain.ts describes the value in the domain data --> it is defined in two places, but could be changed to be only in domain.ts (single source of truth)
 
 - [x] Convert your data-loading module to use these types instead of untyped `fetch().json()` results.
       I moved the implementation into `data/api.ts` and added a generic `fetchJson<T>()` helper. The loaders now specify their expected results, for example `fetchJson<CaseData>("data/case.json")`, `fetchJson<Person[]>("data/people.json")`, and `fetchJson<TimelineEvent[]>("data/timeline.json")`.
@@ -276,15 +277,50 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 **Tasks**
 
-- [ ] Convert the remaining `.js` modules to `.ts`, and get the **entire app** compiling with zero TypeScript errors under the strictness settings from Demo 5.
-- [ ] Find at least 3 real spots where the compiler flagged something you had to actually think about (a union type, a possibly-`undefined` value, an implicit `any`, etc.). For each, decide and record whether it pointed at a real latent bug or was "just" the compiler being pedantic.
-- [ ] Confirm the app still behaves identically to the working JavaScript version — a type-safe app that behaves differently is not a successful migration.
+- [x] Convert the remaining `.js` modules to `.ts`, and get the **entire app** compiling with zero TypeScript errors under the strictness settings from Demo 5.
+      I converted the active modules to TypeScript: `app.ts`, `state/globalState.ts`, `navigation/router.ts`, `storage/localStorage.ts`, `utils/dom.ts`, `utils/lookupHelpers.ts`, `utils/setup.ts`, and all six `views/*.ts` files. `index.html` now loads `app.ts`.
+      The old `.js` files are only thin compatibility `export *` shims so old imports cannot accidentally use stale duplicate implementations. `npx tsc --noEmit`, `npm run lint`, and `npm run build` all complete without TypeScript or lint errors.
+
+- [x] Find at least 3 real spots where the compiler flagged something you had to actually think about (a union type, a possibly-`undefined` value, an implicit `any`, etc.). For each, decide and record whether it pointed at a real latent bug or was "just" the compiler being pedantic.
+      1. **DOM elements could be `null`.** `document.getElementById(...)` returns `HTMLElement | null`, but the old code immediately accessed `.value`, `.classList`, or `.innerHTML`. This produced `Object is possibly 'null'`. I added `getElement()` and `getRequiredElement()` in `utils/dom.ts`. For elements that must exist in `index.html`, the required helper fails explicitly; for optional containers, the code keeps the early return. This was partly pedantic because the current HTML contains those elements, but it also makes the dependency on the DOM explicit.
+
+      2. **DOM values are only strings.** `dataset.view`, `dataset.evidenceId`, select `.value`, and `dataset.personId` do not automatically have domain types. TypeScript therefore reported errors when those values were passed to functions expecting `ViewName`, `EvidenceId`, or `PersonId`. I added type guards such as `isViewName`, `isEvidenceId`, `isPersonId`, `isEvidenceStatus`, and `isEvidenceRelevance` instead of casting or using `any`. This exposed that the old JavaScript assumed every DOM attribute had a valid domain value.
+
+      3. **Date subtraction is not typed arithmetic.** The old sort code subtracted `Date` objects directly: `new Date(a.timestamp) - new Date(b.timestamp)`. TypeScript requires numeric operands, so I changed it to `.getTime()`. This was mostly pedantic because JavaScript coerces `Date` objects at runtime, but the typed version documents that the intended operation is comparing timestamps as numbers.
+
+      4. **Indexed access can produce `undefined`.** With `noUncheckedIndexedAccess`, expressions like `allEvidence[i]` and `select.options[i]` are `T | undefined`. I converted many indexed loops to `for...of`, `forEach`, or `Array.from(...)` where that made the code safer and clearer. This was mostly pedantic for the loops with bounds checks, but it removed a whole class of potential undefined errors.
+
+      5. **Two real latent issues were made explicit.** `workspace.ts` needed real imports for `navigateTo` and `openEvidenceDetail`; previously those names were only undefined globals. In `evidenceBasic.ts`, bookmark removal assigned a filtered array to a local variable without updating global state, which is why I now call `state.setBookmarks(...)`. The second issue was shown by linting (`no-useless-assignment`) and the typed state API rather than TypeScript directly.
+
+- [x] Confirm the app still behaves identically to the working JavaScript version — a type-safe app that behaves differently is not a successful migration.
+      I kept the app's rendering style, hash routing, localStorage keys, loading behavior, and inline event-handler contract. The only intentional behavior corrections are the bookmark state update and explicit imports for the workspace evidence link. `vite build`, `tsc --noEmit`, and `eslint .` all pass. For final visual confirmation, the five views still need a manual click-through in the browser.
 
 **Questions** (depend on the tasks above)
 
-- [ ] Show one specific type error you had to actually think about (not just silence with `any` or the `!` non-null assertion). What did it tell you about your code that plain JS review or testing hadn't?
-- [ ] When (if ever) is reaching for `any` the right call during a migration like this, versus a sign you should model the type properly? Where did you draw that line?
-- [ ] Did the migration reveal anything that was a genuine, previously-unnoticed bug (as opposed to just noise)? If yes, explain it. If no, explain how you're confident it was only noise.
+- [x] Show one specific type error you had to actually think about (not just silence with `any` or the `!` non-null assertion). What did it tell you about your code that plain JS review or testing hadn't?
+      A representative error was the equivalent of:
+
+      `Argument of type 'string | undefined' is not assignable to parameter of type 'EvidenceId'`
+
+      It occurred where a `data-open-evidence` or `data-evidence-id` attribute was read from the DOM and passed to `openEvidenceDetail()`. In plain JavaScript, the DOM value was simply assumed to be a valid evidence ID. TypeScript forced me to notice that `dataset` gives `string | undefined`: the attribute could be absent, malformed, or any unrelated string.
+
+      I handled it with `isEvidenceId()` and returned early for invalid values. This is more accurate than an `any` parameter or `dataset.id!`, because neither of those checks what is actually present in the DOM. It showed that the app has a real boundary between trusted domain IDs and untrusted string-valued DOM attributes.
+
+- [x] When (if ever) is reaching for `any` the right call during a migration like this, versus a sign you should model the type properly? Where did you draw that line?
+      `any` is useful temporarily when an external API has no declarations or when a migration is blocked and the team needs a working intermediate state. It can also appear inside a carefully isolated adapter, as long as the rest of the application receives a better type afterward.
+
+      I did not use `any` in this migration because the problematic values had knowable domain shapes. `JSON.parse()` and `response.json()` were treated as `unknown`, then narrowed with guards or modelled with explicit interfaces. DOM strings were narrowed with `isEvidenceId`, `isPersonId`, `isViewName`, `isEvidenceStatus`, and `isEvidenceRelevance`. This took more work than writing `any`, but it preserved the benefit of TypeScript instead of hiding the uncertainty.
+
+      I would draw the line like this: `any` is acceptable as a temporary bridge in one small, visible place; it is not acceptable for domain models or frequently used helpers. `unknown` plus a type guard is usually the better boundary type because it still forces validation before the value is used.
+
+- [x] Did the migration reveal anything that was a genuine, previously-unnoticed bug (as opposed to just noise)? If yes, explain it. If no, explain how you're confident it was only noise.
+      Yes. The migration exposed two concrete issues:
+
+      1. `workspace.js` called `navigateTo` and `openEvidenceDetail` without importing them. In ES-module/strict scope, that is a real `ReferenceError`, not only a style issue. `workspace.ts` now imports both functions explicitly.
+
+      2. `evidenceBasic.js` removed a bookmark by assigning `bookmarks = bookmarks.filter(...)`. That only replaced the local variable; it did not update `state.getBookmarks()`, so the removed bookmark could still be saved from the stale shared array. The typed state API made the intended mutation boundary clearer, and the TypeScript version now calls `state.setBookmarks(...)`.
+
+      The migration also found noise that was not necessarily a bug: DOM elements that always exist in `index.html` still needed null handling, and valid `Date` coercion needed `.getTime()` because TypeScript does not allow arithmetic between `Date` objects directly. Those checks improve clarity even where the old runtime behavior happened to work.
 
 ---
 

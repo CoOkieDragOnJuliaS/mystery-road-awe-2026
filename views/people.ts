@@ -3,11 +3,7 @@ import { evidenceMentionsPerson } from "../utils/lookupHelpers.ts";
 import { navigateTo } from "../navigation/router.ts";
 import { renderEvidenceList } from "./evidenceBasic.ts";
 import { getElement, getRequiredElement } from "../utils/dom.ts";
-import {
-  isPersonId,
-  type Person,
-  type PeopleTab,
-} from "../types/domain.ts";
+import { isPersonId, type Person, type PeopleTab } from "../types/domain.ts";
 // ---------------------------------------------------------------------
 // PEOPLE & LOCATIONS
 // ---------------------------------------------------------------------
@@ -86,9 +82,7 @@ export function renderPeople(): void {
   }
   container.innerHTML = html;
 
-  const links = container.querySelectorAll<HTMLElement>(
-    ".evidence-count-link",
-  );
+  const links = container.querySelectorAll<HTMLElement>(".evidence-count-link");
   links.forEach((link) => {
     link.addEventListener("click", function (e) {
       const target = e.currentTarget;

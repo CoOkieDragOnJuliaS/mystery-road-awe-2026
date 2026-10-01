@@ -52,9 +52,7 @@ export function isEvidenceRelevance(value: string): value is EvidenceRelevance {
   return (EVIDENCE_RELEVANCES as readonly string[]).includes(value);
 }
 
-export function isTimelineCertainty(
-  value: string,
-): value is TimelineCertainty {
+export function isTimelineCertainty(value: string): value is TimelineCertainty {
   return (TIMELINE_CERTAINTIES as readonly string[]).includes(value);
 }
 

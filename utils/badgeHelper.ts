@@ -2,10 +2,8 @@ export type EvidenceStatus = "unreviewed" | "reviewed" | "flagged";
 export type EvidenceRelevance = "unknown" | "relevant" | "irrelevant";
 
 export type StatusBadgeClass =
-  | "badge-unreviewed"
-  | "badge-reviewed"
-  | "badge-flagged";
-  
+  "badge-unreviewed" | "badge-reviewed" | "badge-flagged";
+
 export type RelevanceBadgeClass = "badge-unreviewed" | "badge-relevant";
 
 // Refactor to arrow function

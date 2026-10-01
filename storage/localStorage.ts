@@ -58,7 +58,10 @@ export function loadBookmarksFromStorage(): void {
   }
 }
 
-export function saveNoteForEvidence(evidenceId: EvidenceId, text: string): void {
+export function saveNoteForEvidence(
+  evidenceId: EvidenceId,
+  text: string,
+): void {
   const notesStore = { ...state.getNotesStore() };
   notesStore[evidenceId] = text;
   state.setNotesStore(notesStore);
@@ -105,8 +108,7 @@ export function loadHypothesisFromStorage(): void {
   getRequiredElement<HTMLTextAreaElement>("hypAlternative").value =
     draft.alternative;
 
-  const evidenceSelect =
-    getRequiredElement<HTMLSelectElement>("hypEvidence");
+  const evidenceSelect = getRequiredElement<HTMLSelectElement>("hypEvidence");
   const savedIds = draft.evidenceIds;
   Array.from(evidenceSelect.options).forEach((option) => {
     option.selected = savedIds.includes(option.value as EvidenceId);
@@ -125,11 +127,10 @@ export function saveHypothesis(): void {
     confidence: Number(
       getRequiredElement<HTMLInputElement>("hypConfidence").value,
     ),
-    explanation: getRequiredElement<HTMLTextAreaElement>(
-      "hypExplanation",
-    ).value,
-    alternative: getRequiredElement<HTMLTextAreaElement>("hypAlternative")
-      .value,
+    explanation:
+      getRequiredElement<HTMLTextAreaElement>("hypExplanation").value,
+    alternative:
+      getRequiredElement<HTMLTextAreaElement>("hypAlternative").value,
     savedAt: new Date().toISOString(),
   };
 

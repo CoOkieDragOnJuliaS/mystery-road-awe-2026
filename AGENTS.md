@@ -4,142 +4,166 @@ Guidance for AI agents working in this repository.
 
 ## What this project is
 
-A **vanilla-JavaScript single-page application** (no frameworks, no bundler, no
-`package.json`, no build step, no tests) built for a university course
-(Advanced Web Engineering). It presents a fictional investigation case: an
-AI-assisted rehabilitation robot loaded the wrong calibration profile and
-emergency-stopped. The user browses evidence, people, locations, and a timeline,
-and drafts a hypothesis.
+A framework-free investigation portal for a university course (Advanced Web
+Engineering). It presents a fictional case: an AI-assisted rehabilitation robot
+loaded the wrong calibration profile and emergency-stopped. The user browses
+evidence, people, locations, and a timeline, and drafts a hypothesis.
 
-**Important context:** this is a deliberately "brownfield" codebase for a
-refactoring exercise (`EXERCISE_1.md`). It contains **intentional bugs,
-inconsistent patterns, and technical debt** that the student is meant to find
-and fix themselves. Do not "clean up" or fix suspicious code unless the user
-asks — the bugs are the coursework. `EXERCISE_1.md` is the authoritative spec
-for what the exercise expects (ES module split, bug hunts, `async`/`await`,
-arrow functions, DevTools usage).
+The project started as a deliberately brownfield vanilla-JavaScript exercise in
+`EXERCISE_1.md`. In `EXERCISE_2.md` it has since been split into modules and
+migrated to TypeScript with Vite, ESLint, and Prettier.
 
 ## How to run
 
-The app uses `fetch()` on local JSON files (and, after the module refactor,
-ES modules), so it **must be served over HTTP** — `file://` will not work.
+The active app uses ES modules, TypeScript, and Vite. Serve it through npm:
 
 ```bash
-python -m http.server 8080   # or: npx serve .
+npm install
+npm run dev
 ```
 
-Then open `http://localhost:8080`. VS Code Live Server is preconfigured on
-port **5501** (see `.vscode/settings.json`).
+Open the URL shown by Vite.
+
+Production commands:
+
+```bash
+npm run build
+npm run preview
+```
+
+Other commands:
+
+```bash
+npm run lint
+npm run lint:fix
+npm run format
+```
+
+`build` runs Vite and then `tsc --noEmit`. TypeScript performs type checking;
+Vite performs transpilation and bundling.
 
 ## Verification
 
-There is **no test suite, linter, type checker, or build**. Verification is
-manual: serve the app, open the browser, click through the five views, and
-watch the DevTools console/network tabs. After any change, confirm the app
-still loads data and every view renders.
+There is no automated test suite yet. Verify with:
+
+```bash
+npm run lint
+npm run build
+npm run preview
+```
+
+Then click through all five views: Dashboard, Evidence, People & Locations,
+Timeline, and Workspace. Check evidence search/filter/sort/bookmark/detail/notes,
+timeline links/modals, hypothesis persistence, and the DevTools console/network
+tabs.
 
 ## Repository layout
 
+```text
+index.html              App shell, five view sections, module entry point.
+app.ts                  Entry point: storage init, event setup, data loading.
+data/api.ts             Typed JSON loading and loading-overlay orchestration.
+data/api.js             Compatibility re-export for old imports.
+navigation/router.ts    Hash routing and lazy view rendering.
+state/globalState.ts    Typed shared state getters/setters.
+storage/localStorage.ts Typed localStorage wrappers for bookmarks/notes/hypothesis.
+types/domain.ts         Shared domain interfaces, ID unions, and type guards.
+utils/
+  badgeHelper.ts        Status/relevance badge class helpers.
+  dateHelper.ts         Timestamp formatting.
+  dom.ts                Typed DOM lookup helpers.
+  lookupHelpers.ts      Evidence/person/location lookup helpers.
+  setup.ts              Event-listener wiring.
+views/
+  dashboard.ts          Dashboard statistics and recent items.
+  evidenceBasic.ts      Evidence catalogue, filters, sort, bookmarks, search.
+  evidenceDetails.ts    Detail panel, status/relevance mutation, notes.
+  people.ts             People/location cards and evidence-count links.
+  timeline.ts           Timeline filters, rendering, evidence modal.
+  workspace.ts          Bookmarks, notes, and hypothesis dropdowns.
+public/data/            JSON fetched at runtime and copied unchanged to dist/.
+assets/                 Used images, including logo and person avatars.
+styles.css              All styles.
+old_app.js              Legacy pre-refactor monolith; excluded from TypeScript.
+*.js compatibility      Thin `export *` shims left next to migrated `.ts` modules.
+EXERCISE_1.md           Original module/refactoring/debugging exercise.
+EXERCISE_2.md           Tooling, TypeScript, CI/CD exercise.
 ```
-index.html      App shell: header/nav + 5 <section class="view"> containers.
-                Views are shown/hidden via the .active class (hash routing).
-app.js          ALL application logic (~1085 lines, single file, ES5 style:
-                var, function expressions, string-concatenated innerHTML).
-styles.css      All styles (~820 lines), organised by /* Section */ comments.
-data/           Static JSON fetched at runtime — the entire "backend".
-  case.json       Single object: case title, status, summary.
-  evidence.json   18 evidence items (see schema below).
-  people.json     6 people; avatar paths point into assets/people/.
-  locations.json  6 locations (ids L01..L06).
-  timeline.json   15 events; evidenceIds cross-reference evidence.
-assets/         Used images: logo/logo.svg, people/<person-id>.png avatars.
-resources/      LEGACY/UNUSED: duplicate avatars with snake_case names.
-                Nothing references this folder — do not wire it in by accident.
-EXERCISE_1.md   The course exercise: tasks, theory questions, grading notes.
-README.md       User-facing project description.
-.vscode/        Live Server port config only.
-```
 
-## Architecture of app.js
+## TypeScript architecture
 
-The file is organised by `// -----` banner comments, in this order:
+Domain types are centralized in `types/domain.ts`:
 
-| Section (approx. lines)        | Contents                                                                                                                                                                                                                                                                                                        |
-| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Global state (1–35)            | All shared state as top-level `var`s: `allEvidence`, `filteredEvidence`, `selectedEvidence`, `bookmarks`, `allPeople`, `allLocations`, `allTimeline`, `caseData`, `notesStore`, `viewRendered` flags, `currentPage`, plus `STORAGE_KEY_*` constants.                                                            |
-| Data loading (41–125)          | `loadAllData()` → `loadCorePeopleAndLocations()` (deeply nested fetch of case+people+locations), `loadEvidenceData()`, `loadTimelineData()`. Loading overlay hidden after a counted number of steps (`loadingStepsRemaining`).                                                                                  |
-| Lookup helpers (131–176)       | `findEvidenceById`, `findPersonById`, `findLocationById` (linear scans), `evidenceMentionsPerson`, `formatDate`, badge-class helpers.                                                                                                                                                                           |
-| Navigation (182–226)           | Hash routing: `navigateTo()` sets `location.hash`; `handleHashChange()` toggles `.view.active`, updates nav buttons, lazily renders each view once (`viewRendered` flags). Valid views: `dashboard`, `evidence`, `people`, `timeline`, `workspace`.                                                             |
-| Dashboard (232–296)            | `renderDashboard()` computes stats and recent items; pure string-concat HTML into `#dashboardContent`.                                                                                                                                                                                                          |
-| Evidence catalogue (302–509)   | `populateEvidenceDropdowns`, `getFilteredEvidence` (search + type/person/location/status/relevance filters), `renderEvidenceList`, `renderEvidenceCardHTML`, delegated click handler, bookmark toggle, `handleSortChange`, `clearFilters`, fake-async search (`simulateAsyncSearch` + `latestSearchRequestId`). |
-| Evidence detail (515–622)      | `openEvidenceDetail` / `renderEvidenceDetail` render into `#evidenceDetailSection`; status & relevance `<select>`s **mutate the evidence object in place**; note textarea saved via `saveCurrentNote`.                                                                                                          |
-| People & locations (628–709)   | `switchPeopleTab`, `renderPeople` (cards with avatars, evidence counts, "view" links that pre-set the evidence person filter), `renderLocations`.                                                                                                                                                               |
-| Timeline (715–842)             | `populateTimelineDropdowns`, `renderTimeline` (order + person/location/type filters, sort, per-event "View E.." buttons), `certaintyBadgeClass`, `openEvidenceModal` (quick-view modal created on demand as `#quickViewModal`).                                                                                 |
-| Workspace (848–984)            | `renderWorkspace` → bookmarks list, notes list (reads `notesStore`), hypothesis form (`populateHypothesisDropdowns`, `saveHypothesis`, `loadHypothesisFromStorage`, `getSelectedOptions`).                                                                                                                      |
-| Storage helpers (990–1028)     | localStorage wrappers for bookmarks/notes; `loadNoteAsync` returns an immediately-resolved Promise.                                                                                                                                                                                                             |
-| Event setup & init (1034–1085) | `setupEventListeners()` wires all controls; `initApp()` on `DOMContentLoaded`: loads storage, wires events, `loadAllData()`, then `handleHashChange()`.                                                                                                                                                         |
+- `CaseData`, `Evidence`, `Person`, `Location`, `TimelineEvent`
+- restricted identifiers such as `PersonId`, `LocationId`, `EvidenceId`
+- restricted values such as `EvidenceStatus`, `EvidenceRelevance`, and
+  `TimelineCertainty`
+- UI state types such as `ViewName`, `PeopleTab`, `ViewRendered`, `NotesStore`,
+  and `HypothesisDraft`
+- runtime type guards such as `isPersonId`, `isEvidenceId`, and `isViewName`
 
-### Cross-cutting patterns to know before editing
+`fetchJson<T>()` in `data/api.ts` declares the expected domain type. It checks
+HTTP status, but it is still only a type assertion of runtime JSON, not schema
+validation. Runtime validation would require explicit type guards or a schema
+library.
 
-- **Rendering = string-concatenated `innerHTML`.** Render functions rebuild
-  entire containers; several re-attach `addEventListener`s after every render
-  (a known source of duplicate-listener bugs — this is intentional).
-- **Navigation mixes inline `onclick` handlers (in index.html) with
-  `addEventListener`.** Functions like `navigateTo`, `switchPeopleTab`,
-  `closeEvidenceDetail`, `saveHypothesis`, `saveCurrentNote` must stay global
-  (or be re-wired) while inline handlers reference them.
-- **State is mutated in place.** E.g. `ev.status = ...` in the detail view,
-  `filteredEvidence` aliasing `allEvidence`. Mutation/reference bugs are part
-  of the exercise — be careful when asked to "fix" things.
-- **Persistence:** three localStorage keys — `remotion_bookmarks` (array of
-  evidence ids), `remotion_notes` (object `{evidenceId: text}`),
-  `remotion_hypothesis` (draft object). User notes are injected via
-  `innerHTML` (deliberate XSS surface — flagged in code comments).
-- **Loading gate:** the overlay hides only after `loadingStepsRemaining`
-  reaches 0; it is set to 2 and decremented by `loadCorePeopleAndLocations`
-  and `loadTimelineData` — evidence loading is _not_ part of the count.
-- **No `console`-free guarantee:** debug `console.log` calls exist on purpose
-  (e.g. modal listener counting, "First note preview" logging a Promise).
+## Cross-cutting patterns
 
-## Data model (data/*.json)
+- **Rendering remains string-concatenated `innerHTML`.** The migration added
+  types but preserved the exercise's rendering approach.
+- **Inline handlers still exist in `index.html`.** `app.ts` declares and assigns
+  global window functions such as `navigateTo`, `switchPeopleTab`,
+  `saveHypothesis`, `saveCurrentNote`, and `closeEvidenceDetail`.
+- **DOM values require narrowing.** `dataset.*`, select `.value`, and
+  `getElementById()` return strings or `null`; helpers in `utils/dom.ts` and
+  guards in `types/domain.ts` handle this.
+- **JSON IDs are normalized.** `personIds` now contains `PersonId` values. The
+  former `"Nova Byte"` name entry was normalized to `"nova-byte"`. Evidence
+  status/relevance values are lowercase.
+- **Persistence keys:** `remotion_bookmarks`, `remotion_notes`, and
+  `remotion_hypothesis`.
+- **User notes still flow into `innerHTML`.** This intentional XSS surface is
+  documented in the code; do not sanitize unless the task asks for it.
 
-```
+## Data model
+
+```text
 evidence:  { id:"E01", type, title, timestamp(ISO), summary, content,
-             personIds:[...], locationIds:["L01"], tags:[...],
+             personIds:[PersonId], locationIds:[LocationId], tags:[...],
              status: unreviewed|reviewed|flagged,
              relevance: unknown|relevant|irrelevant }
-people:    { id:"kebab-case", name, role, speciality,
+people:    { id:PersonId, name, role, speciality,
              responsibilities:[...], statement, background, avatar }
-locations: { id:"L01", name, description, contains:[...] }
+locations: { id:LocationId, name, description, contains:[...] }
 timeline:  { id:"T01", time(ISO), title, description, type,
-             certainty: confirmed|reported|contradictory|...,
-             personIds:[...], locationIds:[...], evidenceIds:["E01"] }
-case:      single object (caseId, title, status, summary, ...)
+             certainty: confirmed|reported|contradictory,
+             personIds:[PersonId], locationIds:[LocationId],
+             evidenceIds:[EvidenceId] }
+case:      single CaseData object
 ```
 
-**Join conventions:** `personIds`/`locationIds`/`evidenceIds` are foreign keys
-into the other files. Known **intentional data inconsistencies** exist (e.g.
-one evidence item uses the person _name_ `"Nova Byte"` instead of the id
-`"nova-byte"` — `evidenceMentionsPerson` works around this; `type` casing is
-inconsistent like `"Test-Report"` vs `"test-report"` — filters lowercase to
-compensate). Preserve this behaviour unless the task is to fix it.
+`personIds`, `locationIds`, and `evidenceIds` are foreign-key relationships.
+Types describe the intended shape but do not validate data at runtime.
 
-## Where to look / common tasks
+## Common tasks
 
-| Task                                                  | Start here                                                                                                                               |
-| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Add/change a view                                     | `index.html` (new `<section class="view">` + nav button), `handleHashChange` + `viewRendered` in app.js, styles.css                      |
-| Change evidence filtering/search                      | `getFilteredEvidence`, `handleSearchInput`, `populateEvidenceDropdowns`                                                                  |
-| Change a data field                                   | `data/*.json` schema above + every render function that prints it                                                                        |
-| Bookmarks / notes / hypothesis persistence            | storage helpers section + `renderWorkspace`, `saveCurrentNote`                                                                           |
-| Styling                                               | `styles.css` — find the `/* Section */` matching the view; class names are descriptive (`.evidence-card`, `.timeline-event`, `.badge-*`) |
-| Exercise tasks (module split, bug hunts, async/await) | `EXERCISE_1.md` is the spec; refactor within `app.js`'s existing section boundaries                                                      |
+| Task | Start here |
+|---|---|
+| Add/change a view | `index.html`, `navigation/router.ts`, relevant `views/*.ts`, `styles.css` |
+| Change filtering/search | `views/evidenceBasic.ts` and `utils/lookupHelpers.ts` |
+| Change loaded data/schema | `types/domain.ts`, `public/data/*.json`, `data/api.ts` |
+| Bookmarks/notes/hypothesis | `storage/localStorage.ts`, `views/workspace.ts`, `views/evidenceDetails.ts` |
+| Global state | `state/globalState.ts` |
+| Event wiring | `utils/setup.ts`, plus window declarations in `app.ts` |
+| Exercise demos | `EXERCISE_1.md`, `EXERCISE_2.md` |
 
 ## Conventions
 
-- ES5-style code throughout: `var`, `function` expressions, `for` loops,
-  string concatenation — the exercise migrates away from this deliberately.
-- When refactoring per the exercise, keep behaviour identical (bugs included)
-  for the "pure refactor" tasks.
-- The user tracks changes in commits/`CHANGES.md`; commit messages should be
-  able to serve as before/after demos for the course.
+- Active source files are TypeScript; remaining `.js` files are compatibility
+  re-export shims or legacy files.
+- Avoid `any`; prefer explicit interfaces, union types, `unknown`, and type
+  guards.
+- Preserve intentionally demonstrated app behavior unless the task explicitly
+  asks to fix it.
+- Keep `//Demo N:` comments where they explain a change useful for course
+  presentation.

@@ -65,10 +65,9 @@ export function setupEventListeners(): void {
     "change",
     timeline.renderTimeline,
   );
-  getRequiredElement<HTMLSelectElement>("timelinePersonFilter").addEventListener(
-    "change",
-    timeline.renderTimeline,
-  );
+  getRequiredElement<HTMLSelectElement>(
+    "timelinePersonFilter",
+  ).addEventListener("change", timeline.renderTimeline);
   getRequiredElement<HTMLSelectElement>(
     "timelineLocationFilter",
   ).addEventListener("change", timeline.renderTimeline);

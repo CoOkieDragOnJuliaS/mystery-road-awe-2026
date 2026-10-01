@@ -154,7 +154,10 @@ export function getViewRendered(): ViewRendered {
   return viewRendered;
 }
 
-export function setViewRendered(view: keyof ViewRendered, rendered: boolean): void {
+export function setViewRendered(
+  view: keyof ViewRendered,
+  rendered: boolean,
+): void {
   viewRendered[view] = rendered;
 }
 

@@ -67,9 +67,8 @@ export function getFilteredEvidence(): Evidence[] {
   const locationVal =
     getRequiredElement<HTMLSelectElement>("filterLocation").value;
   const statusVal = getRequiredElement<HTMLSelectElement>("filterStatus").value;
-  const relevanceVal = getRequiredElement<HTMLSelectElement>(
-    "filterRelevance",
-  ).value;
+  const relevanceVal =
+    getRequiredElement<HTMLSelectElement>("filterRelevance").value;
 
   const results: Evidence[] = [];
   for (const item of state.getAllEvidence()) {
@@ -105,9 +104,7 @@ export function getFilteredEvidence(): Evidence[] {
     if (matches) results.push(item);
   }
 
-  const sortValue = getRequiredElement<HTMLSelectElement>(
-    "sortEvidence",
-  ).value;
+  const sortValue = getRequiredElement<HTMLSelectElement>("sortEvidence").value;
 
   if (sortValue === "title-asc") {
     results.sort((a, b) => a.title.localeCompare(b.title));
@@ -115,11 +112,13 @@ export function getFilteredEvidence(): Evidence[] {
     results.sort((a, b) => b.title.localeCompare(a.title));
   } else if (sortValue === "date-asc") {
     results.sort(
-      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+      (a, b) =>
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     );
   } else {
     results.sort(
-      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
     );
   }
 
@@ -131,9 +130,7 @@ export function renderEvidenceList(): void {
   const container = getElement<HTMLElement>("evidenceList");
   if (!container) return;
 
-  const loadingIndicator = getElement<HTMLElement>(
-    "evidenceLoadingIndicator",
-  );
+  const loadingIndicator = getElement<HTMLElement>("evidenceLoadingIndicator");
   if (state.getEvidenceViewLoading()) {
     if (loadingIndicator) loadingIndicator.classList.remove("hidden");
     container.innerHTML = "";
@@ -234,6 +231,7 @@ function handleBookmarkClick(evidenceId: EvidenceId): void {
     state.setBookmarks([...bookmarks, evidenceId]);
     evidenceItem.bookmarked = true;
   } else {
+    //Demo7-bug: the JS version assigned the filtered array only to a local variable.
     state.setBookmarks(bookmarks.filter((id) => id !== evidenceId));
     evidenceItem.bookmarked = false;
   }
