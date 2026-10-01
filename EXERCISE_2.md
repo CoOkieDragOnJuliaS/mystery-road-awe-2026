@@ -335,8 +335,17 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 **Questions** (depend on the tasks above)
 
 - [ ] What is the difference between a workflow, a job, and a step in GitHub Actions? Point to one of each in your workflow file.
+      A **workflow** is the complete automation definition stored in `.github/workflows/`, for example `.github/workflows/development.yml`. It defines when GitHub should run the automation through `on:` and which jobs it contains.
+      A **job** is a named unit inside `jobs:` that runs on one runner. In the development workflow, the job would be the block that runs on `ubuntu-latest`, checks out the repository, installs Node.js and dependencies, and performs the checks.
+      A **step** is one command or action inside that job's `steps:` list. Examples would be `uses: actions/checkout@v...` for checking out the repository, `uses: actions/setup-node@v...` for configuring Node.js, and `run: npm run lint` for executing the linter. The hierarchy is workflow → jobs → steps.
+
 - [ ] Why should lint/format run in CI at all, if it already runs (or could run) on every developer's own machine before they push?
+      Local checks are helpful, but CI is the shared source of truth. A developer can forget to run `npm run lint` or `prettier --check`, use a different tool version, have an incomplete local checkout, or push code that only works because of uncommitted files.
+      Running the checks in GitHub Actions means every `push` and pull request is checked in a clean environment with the same Node.js version and the same locked dependencies. The result is visible to everyone in the Actions tab and can block a broken pull request before it reaches the main branch. It also creates an auditable run history that can be shown in class.
+
 - [ ] What is dependency caching doing in your workflow, and what would happen (both correctness- and speed-wise) if you removed it?
+      Dependency caching stores the npm cache between workflow runs. With `actions/setup-node`, the cache is normally keyed from `package-lock.json`, so a new dependency installation reuses previously downloaded packages when the lock file has not changed.
+      Removing it should not normally change correctness because `npm ci` still reads `package-lock.json` and installs the dependency versions recorded there. The difference is speed and network usage: every run would have to download the dependency packages again. If `npm ci` were used without a lock file, that would be a correctness problem, but the project has `package-lock.json`, so the main effect of deleting the cache would be slower and more fragile CI runs.
 
 ---
 
@@ -351,8 +360,16 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 **Questions** (depend on the tasks above)
 
 - [ ] Why does the deploy workflow re-run lint and build itself, instead of trusting "it already passed on my machine" or reusing Demo 8's workflow's result directly?
+      Deployment is the workflow that publishes real output, so it must verify the exact commit it is about to deploy. A green development workflow on an earlier commit does not prove that the current commit is valid, and GitHub Actions does not automatically hand a passing result or a build artifact from one workflow run to another unrelated deployment run.
+      Re-running `npm run lint` and `npm run build` also protects against differences between local machines, missing files, stale `node_modules`, or a manual push that bypassed the pull-request checks. Most importantly, `vite build` creates the `dist/` directory that the deploy step publishes, so the build has to happen inside the deploy workflow anyway.
+
 - [ ] What is the actual mechanism your deploy workflow uses to publish to GitHub Pages (e.g. a dedicated deploy action publishing an artifact, pushing to a `gh-pages` branch, or something else)? Explain, concretely, what it does.
+      The intended mechanism is GitHub's official Pages deployment flow with `actions/configure-pages`, `actions/upload-pages-artifact`, and `actions/deploy-pages`. After `npm run build`, the workflow packages the generated `dist/` directory as a Pages artifact. `actions/upload-pages-artifact` uploads that directory as the site content, and `actions/deploy-pages` publishes the uploaded artifact to the repository's GitHub Pages environment.
+      This is different from pushing the generated files to a `gh-pages` branch. The deploy action publishes the artifact through GitHub Pages' deployment API, while the repository itself only needs the workflow file and source code. GitHub Pages also needs to be configured in the repository settings to use **GitHub Actions** as its source.
+
 - [ ] What would you need to change in this workflow if you were deploying to a different static host instead (e.g. Netlify, Vercel, a plain server over SFTP)? What would stay the same?
+      The beginning of the workflow would stay almost identical: trigger on the chosen branch, check out the repository, install Node.js, run `npm ci`, run lint/format/type checks, and run `npm run build` to produce `dist/`.
+      Only the publication part would change. For Netlify or Vercel, the final steps would use the provider's CLI or a dedicated action and provider-specific secrets such as an API token and site/project ID. For SFTP, the workflow would upload the contents of `dist/` with an SSH/SFTP action or command and would need secrets for the host, username, key/password, and target directory. The build output remains the same, but the credentials, destination, and deploy command are host-specific.
 
 ---
 
@@ -367,8 +384,16 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 **Questions** (depend on the tasks above)
 
 - [ ] When your build step fails, does the previously-deployed version of the app stay live, get taken down, or something else? Is that the behavior you want, and why?
+      With GitHub Pages, a failed build normally leaves the previously deployed version live. The workflow stops before `actions/deploy-pages`, so no new artifact is uploaded or published. GitHub Pages does not take the old site down just because a newer commit failed to build.
+      That is the desired behavior for this project: a broken commit should not deploy, but it also should not remove the last working version. The failed workflow run still makes the problem visible, so the broken commit can be fixed and pushed again.
+
 - [ ] What GitHub Actions permission(s) or secret(s) does your deploy workflow actually need, and where did you grant/store them? What's the security risk of over-granting permissions here?
+      For the official `actions/deploy-pages` mechanism, the deploy job needs a small `permissions:` block such as `contents: read`, `pages: write`, and `id-token: write`. `contents: read` lets the job read the repository checkout, `pages: write` lets it create the Pages deployment, and `id-token: write` lets GitHub issue the OIDC token used by the Pages deployment flow. GitHub Pages must also be configured in the repository's **Settings → Pages** area to use GitHub Actions.
+      No long-lived personal access token is needed for that approach; the workflow uses the short-lived `GITHUB_TOKEN` and the OIDC identity. Over-granting permissions such as `contents: write`, broad `actions` permissions, or storing a powerful personal token as a secret would increase the damage a compromised workflow or dependency could do. With write access to the repository or other resources, malicious workflow code could modify code, releases, or deployments rather than only publishing the current site.
+
 - [ ] What's the difference between triggering a workflow `on: push`, `on: pull_request`, and `on: workflow_dispatch`? Which did you use for the development workflow (Demo 8) and which for the deployment workflow (Demo 9), and why is that pairing the right one?
+      `on: push` runs after commits are pushed to the selected branches. `on: pull_request` runs when a pull request is opened or updated, so it checks the proposed merge result before the code reaches the main branch. `on: workflow_dispatch` adds a manual **Run workflow** button, which is useful for demonstrations or a controlled redeploy.
+      The development workflow should run on `push` and `pull_request` so both direct commits and proposed changes are checked before they are relied on. The deployment workflow should run on `push` to `main`, optionally with `workflow_dispatch` for a manual redeploy. This pairing is appropriate because pull requests get feedback before merge, while only the accepted `main` branch is published automatically.
 
 ---
 
