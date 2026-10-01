@@ -2,8 +2,8 @@ import * as state from "../state/globalState.js";
 import {
   findLocationById,
   findEvidenceById,
-  formatDate,
 } from "../utils/lookupHelpers.js";
+import { formatDate } from "../utils/dateHelper.ts";
 import { openEvidenceDetail } from "./evidenceDetails.js";
 import { navigateTo } from "../navigation/router.js";
 // ---------------------------------------------------------------------

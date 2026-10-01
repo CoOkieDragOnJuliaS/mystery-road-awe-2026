@@ -2,8 +2,8 @@ import {
   findEvidenceById,
   findPersonById,
   findLocationById,
-  formatDate,
 } from "../utils/lookupHelpers.js";
+import { formatDate } from "../utils/dateHelper.ts";
 import {
   loadNoteForEvidence,
   saveNoteForEvidence,

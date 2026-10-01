@@ -7,6 +7,7 @@ import {
 // GENERIC LOOKUP HELPERS
 // ---------------------------------------------------------------------
 
+
 export function findEvidenceById(id) {
   const allEvidence = getAllEvidence();
   for (let i = 0; i < allEvidence.length; i++) {
@@ -38,36 +39,4 @@ export const evidenceMentionsPerson = (ev, person) => {
     ev.personIds.indexOf(person.id) !== -1 ||
     ev.personIds.indexOf(person.name) !== -1
   );
-};
-
-export function formatDate(ts) {
-  if (!ts) return "Unknown date";
-  const d = new Date(ts);
-  if (isNaN(d.getTime())) return ts;
-  return (
-    d.toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    }) +
-    " " +
-    d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })
-  );
-}
-
-// Refactor to arrow function
-export const getStatusBadgeClass = (status) => {
-  const s = (status || "").toLowerCase();
-
-  if (s === "reviewed") return "badge-reviewed";
-  if (s === "flagged") return "badge-flagged";
-
-  return "badge-unreviewed";
-};
-
-// Refactor to arrow function
-export const getRelevanceBadgeClass = (relevance) => {
-  const r = (relevance || "").toLowerCase();
-  if (r === "relevant") return "badge-relevant";
-  return "badge-unreviewed";
 };

@@ -3,10 +3,12 @@ import {
   findEvidenceById,
   findPersonById,
   evidenceMentionsPerson,
-  formatDate,
+} from "../utils/lookupHelpers.js";
+import { formatDate } from "../utils/dateHelper.ts";
+import {
   getStatusBadgeClass,
   getRelevanceBadgeClass,
-} from "../utils/lookupHelpers.js";
+} from "../utils/badgeHelper.ts";
 import { saveBookmarksToStorage } from "../storage/localStorage.js";
 import { openEvidenceDetail } from "./evidenceDetails.js";
 // ---------------------------------------------------------------------

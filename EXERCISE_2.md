@@ -193,9 +193,24 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 **Tasks**
 
-- [ ] Install TypeScript and add a `tsconfig.json`. Deliberately choose your strictness settings (don't just copy a default blindly) and be ready to justify at least one setting you turned on or left off.
-- [ ] Convert 2–3 of your smallest/utility modules from Exercise 1 (e.g. formatting or lookup helpers) from `.js` to `.ts`, with **no `any`**, and get them compiling with zero errors.
-- [ ] Wire TypeScript into your `build`/`dev` scripts from Demo 4 so type errors are actually surfaced by your tooling, not just by your editor.
+- [x] Install TypeScript and add a `tsconfig.json`. Deliberately choose your strictness settings (don't just copy a default blindly) and be ready to justify at least one setting you turned on or left off.
+
+            Information from the default  config online:
+
+            - strict converted TypeScript code receives strong checking.
+            - allowJs TypeScript modules may coexist with the unconverted JavaScript.
+            - checkJs existing JavaScript is not immediately subjected to strict TypeScript checking.
+            - noEmit TypeScript checks types, while Vite remains responsible for producing the build.
+            - noUncheckedIndexedAccess indexed array access is treated as potentially undefined.
+
+- [x] Convert 2–3 of your smallest/utility modules from Exercise 1 (e.g. formatting or lookup helpers) from `.js` to `.ts`, with **no `any`**, and get them compiling with zero errors.
+            I tried to change the lookupHelper to get the badge to export it to a .ts file to learn TypeScript
+            Debugging with lint and knowing helped me, that the information in dashboard and evidenceBasic.js needed help because of the new typescript change
+            I also added a new typescript file for the dateFormatter, but had to change a lot after searching for the import of the lookup, where the date was handled
+
+
+- [x] Wire TypeScript into your `build`/`dev` scripts from Demo 4 so type errors are actually surfaced by your tooling, not just by your editor.
+            I changed the package.json to get tsc --noEmit into build and dev to work together with eslint
 
 **Questions** (depend on the tasks above)
 

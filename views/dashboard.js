@@ -1,5 +1,6 @@
 import * as state from "../state/globalState.js";
-import * as helper from "../utils/lookupHelpers.js";
+import { formatDate } from "../utils/dateHelper.ts";
+import { getStatusBadgeClass } from "../utils/badgeHelper.ts";
 // ---------------------------------------------------------------------
 // DASHBOARD
 // ---------------------------------------------------------------------
@@ -67,7 +68,7 @@ export function renderDashboard() {
       "</strong> &mdash; " +
       ev.title +
       ' <span class="badge ' +
-      helper.getStatusBadgeClass(ev.status) +
+      getStatusBadgeClass(ev.status) +
       '">' +
       ev.status +
       "</span></div>";
@@ -83,7 +84,7 @@ export function renderDashboard() {
     const evt = recentTimeline[t];
     html +=
       '<div class="mini-list-item"><strong>' +
-      helper.formatDate(evt.time) +
+      formatDate(evt.time) +
       "</strong><br>" +
       evt.title +
       "</div>";

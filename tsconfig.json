@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {  //compilerOptions as project configuration for TypeScript
+    "target": "ES2022", //JavaScript language version, which is to work with ES2022 features, modern browsers and async/await syntax
+    "module": "ESNext", //Tells TypeScript to preserve ES module syntax
+    "moduleResolution": "Bundler",  //Bundling, like Vite does, to locate the files references by that (e.g. import of formatter)
+    "lib": ["ES2022", "DOM"],   //Specifies the built-in APIs that are available in the environment, including ES2022 features and DOM APIs for web development
+    "strict": true, //Enables all strict type-checking options, which helps catch potential errors and enforce better coding practices -- e.g. noImpliciAny, NullChecks, etc.
+    "noUncheckedIndexedAccess": true,   //Enables strict checking of indexed access, which helps catch potential errors when accessing properties of objects using index signatures
+    "noImplicitOverride": true, //Enables strict checking of method overrides, which helps catch potential errors when overriding methods in subclasses
+    "useDefineForClassFields": true,    //Enables the use of the `define` property for class fields, which helps catch potential errors when defining class fields
+    "allowJs": true,    //Allows JavaScript files to be included in the TypeScript project, which is useful for gradually migrating a JavaScript codebase to TypeScript
+    "checkJs": false,   //Disables type-checking for JavaScript files, which can be useful when working with existing JavaScript code that may not have type annotations
+    "noEmit": true, //Prevents TypeScript from emitting any output files, which is useful when using TypeScript for type-checking only
+    "isolatedModules": true,    //Enables isolated module compilation, which helps catch potential errors when compiling individual modules in isolation
+    "skipLibCheck": true    //Skips type-checking of declaration files, which can improve compilation performance when working with large codebases
+  },
+  "include": [  //Specifies the files to be included in the TypeScript project, which can include JavaScript and TypeScript files
+    "app.js",
+    "data/**/*.js",
+    "navigation/**/*.{js,ts}",
+    "state/**/*.{js,ts}",
+    "storage/**/*.{js,ts}",
+    "utils/**/*.{js,ts}",
+    "views/**/*.{js,ts}"
+  ],
+  "exclude": ["dist", "node_modules", "old_app.js"] //exclude files, like in eslint.config to avoid dist, node_modules or the old_app.js from Exercise 1
+}
