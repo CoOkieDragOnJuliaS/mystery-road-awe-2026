@@ -241,15 +241,34 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 **Tasks**
 
-- [ ] Define TypeScript types/interfaces for the case's data model (evidence, people, locations, timeline events) that match the shape of `data/*.json`.
-- [ ] Convert your data-loading module to use these types instead of untyped `fetch().json()` results.
-- [ ] Pick one field that was genuinely ambiguous or inconsistent in the original JavaScript version (for example: something that could be either an id or a display name, or a date stored in more than one format) and show what modeling it as a proper TypeScript type forced you to decide.
+- [x] Define TypeScript types/interfaces for the case's data model (evidence, people, locations, timeline events) that match the shape of `data/*.json`.
+      I created `types/domain.ts` and used interfaces for `CaseData`, `Evidence`, `Person`, `Location`, and `TimelineEvent`. I used type aliases for restricted values like `PersonId`, `EvidenceStatus`, `EvidenceRelevance`, and `TimelineCertainty`.
+
+- [x] Convert your data-loading module to use these types instead of untyped `fetch().json()` results.
+      I moved the implementation into `data/api.ts` and added a generic `fetchJson<T>()` helper. The loaders now specify their expected results, for example `fetchJson<CaseData>("data/case.json")`, `fetchJson<Person[]>("data/people.json")`, and `fetchJson<TimelineEvent[]>("data/timeline.json")`.
+      `data/api.js` is only a compatibility re-export so older imports still reach the same implementation.
+
+- [x] Pick one field that was genuinely ambiguous or inconsistent in the original JavaScript version (for example: something that could be either an id or a display name, or a date stored in more than one format) and show what modeling it as a proper TypeScript type forced you to decide.
+      I picked `Evidence.personIds`. One evidence entry stored `"Nova Byte"` (a display name), while the other records store IDs like `"nova-byte"`. I normalized the JSON to `"nova-byte"` and modelled the field as `PersonId[]`. I also normalized the capitalized `"Reviewed"` and `"Unknown"` values to lowercase so they match `EvidenceStatus` and `EvidenceRelevance`.
 
 **Questions** (depend on the tasks above)
 
-- [ ] Walk through the ambiguous field you picked: how did the JavaScript version get away without deciding on one shape, and what did TypeScript force you to commit to?
-- [ ] Is there a data-shape problem in this app that TypeScript's static types **can't** catch on their own, because the actual bad data would only show up at runtime from a JSON file, not from your code? What would you need in addition to types to catch that?
-- [ ] What's the difference between an `interface` and a `type` alias for an object shape in TypeScript? Which did you use for your domain models, and does it actually matter here?
+- [x] Walk through the ambiguous field you picked: how did the JavaScript version get away without deciding on one shape, and what did TypeScript force you to commit to?
+      JavaScript did not enforce what `personIds` contained. It was only an array of strings, so `"nova-byte"` and `"Nova Byte"` were technically both possible. The old `evidenceMentionsPerson` workaround checked both `person.id` and `person.name`, which let the inconsistent data keep working.
+
+      TypeScript forced me to decide what the field means. Because the property is called `personIds`, I committed to person IDs only and modelled it as `PersonId[]`. After normalizing `"Nova Byte"` to `"nova-byte"`, the helper only needs to check `person.id`. This makes the relationship between `evidence.json` and `people.json` clearer and prevents new code from treating names and IDs as interchangeable.
+
+- [x] Is there a data-shape problem in this app that TypeScript's static types **can't** catch on their own, because the actual bad data would only show up at runtime from a JSON file, not from your code? What would you need in addition to types to catch that?
+      Yes. The TypeScript types describe the expected shape, but they do not validate the JSON at runtime. `fetchJson<Evidence[]>("data/evidence.json")` tells the compiler that the result should be evidence objects, but `response.json()` itself still only returns unknown external data.
+
+      A JSON file could still contain a missing field, a number instead of a string, `null` instead of an array, or a `personId` that does not exist in `people.json`. TypeScript cannot compare the data files at runtime.
+
+      To catch this automatically, I would need runtime validation, for example a schema library such as Zod/Valibot, JSON Schema validation, or manually written type guards. A separate cross-reference test could also verify that every evidence, person, location, and timeline ID refers to an existing record.
+
+- [x] What's the difference between an `interface` and a `type` alias for an object shape in TypeScript? Which did you use for your domain models, and does it actually matter here?
+      Both can describe object shapes. An interface is focused on objects and can be extended or declaration-merged. A type alias is more flexible because it can also describe unions, primitives, tuples, and template-literal types.
+
+      I used interfaces for the main domain objects (`CaseData`, `Evidence`, `Person`, `Location`, and `TimelineEvent`) because they are records with named fields. I used type aliases for the restricted values and IDs (`PersonId`, `EvidenceStatus`, `EvidenceRelevance`, and `TimelineCertainty`) because they are unions of allowed values. For these simple models, `interface` versus `type` does not matter much technically, but using them this way makes the intent clearer.
 
 ---
 
