@@ -204,37 +204,37 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
             - noUncheckedIndexedAccess indexed array access is treated as potentially undefined.
 
 - [x] Convert 2–3 of your smallest/utility modules from Exercise 1 (e.g. formatting or lookup helpers) from `.js` to `.ts`, with **no `any`**, and get them compiling with zero errors.
-            I tried to change the lookupHelper to get the badge to export it to a .ts file to learn TypeScript
-            Debugging with lint and knowing helped me, that the information in dashboard and evidenceBasic.js needed help because of the new typescript change
-            I also added a new typescript file for the dateFormatter, but had to change a lot after searching for the import of the lookup, where the date was handled
-
+      I tried to change the lookupHelper to get the badge to export it to a .ts file to learn TypeScript
+      Debugging with lint and knowing helped me, that the information in dashboard and evidenceBasic.js needed help because of the new typescript change
+      I also added a new typescript file for the dateFormatter, but had to change a lot after searching for the import of the lookup, where the date was handled
 
 - [x] Wire TypeScript into your `build`/`dev` scripts from Demo 4 so type errors are actually surfaced by your tooling, not just by your editor.
-            I changed the package.json to get tsc --noEmit into build and dev to work together with eslint
+      I changed the package.json to get tsc --noEmit into build and dev to work together with eslint
 
 **Questions** (depend on the tasks above)
 
 - [x] What does the `strict` option in `tsconfig.json` actually turn on? Name at least two individual checks bundled under it, and say whether you kept it on and why.
-            //Enables all strict type-checking options, which helps catch potential errors and enforce better coding practices -- e.g. noImpliciAny, NullChecks, etc.
-            Which means for example that typescript reports variables that would receive an any type and null as well as undefined could be handled explicitly, so separate.
+      //Enables all strict type-checking options, which helps catch potential errors and enforce better coding practices -- e.g. noImpliciAny, NullChecks, etc.
+      Which means for example that typescript reports variables that would receive an any type and null as well as undefined could be handled explicitly, so separate.
 
             I kept it on, because I do not trust myself in TypeScript to know wrong from right right now - needing extra strict help and checks to prevent errors
             One example was the badgeClass --> it had to describe EvidenceStatus (the new) | null and | undefined - it threw an any error
             "Argument of type 'undefined' is not assignable to parameter of type 'EvidenceStatus'."
 
 - [x] What is the difference between a compile-time type error and the runtime bugs you fixed in Exercise 1? Could TypeScript alone have caught any of those specific bugs? Why or why not?
-            Compile-time error is detected before the application runs, so as the code compiles - e.g. if I have a type string | null or | undefined in TypeScript and want to call the method with a number, the TypeScript compiler can see that it is no a required format and react!
+      Compile-time error is detected before the application runs, so as the code compiles - e.g. if I have a type string | null or | undefined in TypeScript and want to call the method with a number, the TypeScript compiler can see that it is no a required format and react!
 
-            A Runtime bug does happen while the application is running - e.g. if I click something and a bug happens which I did not see beforehand. 
+            A Runtime bug does happen while the application is running - e.g. if I click something and a bug happens which I did not see beforehand.
             TypeScript alone could never have found all those bugs, because a valid Typescript argument cannot see that a property is sending a null result if I click on a button for example - which happened with findEvidenceById or findAllEvidence() - Promises could return nothing, but the TypeScript would not check that.
             So if event listeners are working there TypeScript can help before in compile-time and in debugging, but can never replace runtime-debugging with console and explorative testing
 
 - [x] What does `any` do to TypeScript's checking for a value, and why did you avoid it in this first pass even though it would have been faster to just silence the errors with it?
-            ANY - is the type that can be almost anything. It can be another type, any type, be called as a function or passed to a function. It is no safety whatsoever what type is used or how the function is called - I could call a string function with a number - it would probably throw errors along the way, but for TypeScript it is working for the check
+      ANY - is the type that can be almost anything. It can be another type, any type, be called as a function or passed to a function. It is no safety whatsoever what type is used or how the function is called - I could call a string function with a number - it would probably throw errors along the way, but for TypeScript it is working for the check
 
             So I avoided it in getStatusBadgeClass, because I want to have the value known to me, like unreviewed, reviewed, flagged and catch errors / variables types known to me,like undefined or null
 
-            
+
+
 ---
 
 ## Demo 6 — Typing the domain data
@@ -281,8 +281,7 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
       I converted the active modules to TypeScript: `app.ts`, `state/globalState.ts`, `navigation/router.ts`, `storage/localStorage.ts`, `utils/dom.ts`, `utils/lookupHelpers.ts`, `utils/setup.ts`, and all six `views/*.ts` files. `index.html` now loads `app.ts`.
       The old `.js` files are only thin compatibility `export *` shims so old imports cannot accidentally use stale duplicate implementations. `npx tsc --noEmit`, `npm run lint`, and `npm run build` all complete without TypeScript or lint errors.
 
-- [x] Find at least 3 real spots where the compiler flagged something you had to actually think about (a union type, a possibly-`undefined` value, an implicit `any`, etc.). For each, decide and record whether it pointed at a real latent bug or was "just" the compiler being pedantic.
-      1. **DOM elements could be `null`.** `document.getElementById(...)` returns `HTMLElement | null`, but the old code immediately accessed `.value`, `.classList`, or `.innerHTML`. This produced `Object is possibly 'null'`. I added `getElement()` and `getRequiredElement()` in `utils/dom.ts`. For elements that must exist in `index.html`, the required helper fails explicitly; for optional containers, the code keeps the early return. This was partly pedantic because the current HTML contains those elements, but it also makes the dependency on the DOM explicit.
+- [x] Find at least 3 real spots where the compiler flagged something you had to actually think about (a union type, a possibly-`undefined` value, an implicit `any`, etc.). For each, decide and record whether it pointed at a real latent bug or was "just" the compiler being pedantic. 1. **DOM elements could be `null`.** `document.getElementById(...)` returns `HTMLElement | null`, but the old code immediately accessed `.value`, `.classList`, or `.innerHTML`. This produced `Object is possibly 'null'`. I added `getElement()` and `getRequiredElement()` in `utils/dom.ts`. For elements that must exist in `index.html`, the required helper fails explicitly; for optional containers, the code keeps the early return. This was partly pedantic because the current HTML contains those elements, but it also makes the dependency on the DOM explicit.
 
       2. **DOM values are only strings.** `dataset.view`, `dataset.evidenceId`, select `.value`, and `dataset.personId` do not automatically have domain types. TypeScript therefore reported errors when those values were passed to functions expecting `ViewName`, `EvidenceId`, or `PersonId`. I added type guards such as `isViewName`, `isEvidenceId`, `isPersonId`, `isEvidenceStatus`, and `isEvidenceRelevance` instead of casting or using `any`. This exposed that the old JavaScript assumed every DOM attribute had a valid domain value.
 
@@ -330,6 +329,7 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 - [ ] Write a GitHub Actions workflow that triggers on push (and/or pull request), checks out the repo, sets up Node.js at the right version, installs dependencies (with dependency caching), and runs your `lint` and a format-check (e.g. `prettier --check`).
 - [ ] Push a commit that deliberately fails lint or format, and show the workflow **failing** in the Actions tab.
+      Failing- because it does not have any package-lock.json anywhere in the current main code - maybe I need to get it to work in a branch?
 - [ ] Fix it and push again, and show the same workflow **passing**.
 
 **Questions** (depend on the tasks above)
