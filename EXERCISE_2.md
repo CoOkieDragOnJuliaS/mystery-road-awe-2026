@@ -327,7 +327,7 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 - [ ] Write a GitHub Actions workflow that triggers on push (and/or pull request), checks out the repo, sets up Node.js at the right version, installs dependencies (with dependency caching), and runs your `lint` and a format-check (e.g. `prettier --check`).
 - [ ] Push a commit that deliberately fails lint or format, and show the workflow **failing** in the Actions tab.
-            Well, it failed - not deliberately, but it did
+      Well, it failed - not deliberately, but it did
 - [ ] Fix it and push again, and show the same workflow **passing**.
 
             Got it to pass
