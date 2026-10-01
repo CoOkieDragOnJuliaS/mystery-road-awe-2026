@@ -15,23 +15,20 @@ let allTimeline = [];
 let caseData = {};
 
 let currentPeopleTab = "people";
-let loadingStepsRemaining = 2; 
-
+let loadingStepsRemaining = 2;
 
 let evidenceViewLoading = true;
-
 
 let viewRendered = {
   dashboard: false,
   evidence: false,
   people: false,
   timeline: false,
-  workspace: false
+  workspace: false,
 };
 
-let notesStore = {}; 
-let modalCloseListenerCount = 0; 
-
+let notesStore = {};
+let modalCloseListenerCount = 0;
 
 // #region Getters and Setters
 export function getAllEvidence() {
@@ -63,7 +60,7 @@ export function getBookmarks() {
 }
 
 export function setBookmarks(bookmarkList) {
-    bookmarks = bookmarkList;
+  bookmarks = bookmarkList;
 }
 
 export function getCurrentPage() {
@@ -76,31 +73,31 @@ export function setCurrentPage(page) {
 
 export function getAllPeople() {
   return allPeople;
-}   
+}
 
 export function setAllPeople(people) {
   allPeople = people;
-}   
+}
 
 export function getAllLocations() {
   return allLocations;
-}   
+}
 
 export function setAllLocations(locations) {
   allLocations = locations;
-}   
+}
 
 export function getAllTimeline() {
   return allTimeline;
-}   
+}
 
 export function setAllTimeline(timeline) {
   allTimeline = timeline;
-}   
+}
 
 export function getCaseData() {
   return caseData;
-}   
+}
 
 export function setCaseData(data) {
   caseData = data;
@@ -154,7 +151,7 @@ export function resetViewRendered() {
     evidence: false,
     people: false,
     timeline: false,
-    workspace: false
+    workspace: false,
   };
 }
 
@@ -172,7 +169,7 @@ export function getModalCloseListenerCount() {
 
 export function setModalCloseListenerCount(count) {
   modalCloseListenerCount = count;
-}   
+}
 
 export function incrementModalCloseListenerCount() {
   modalCloseListenerCount++;
@@ -181,12 +178,12 @@ export function incrementModalCloseListenerCount() {
 export function decrementModalCloseListenerCount() {
   if (modalCloseListenerCount > 0) {
     modalCloseListenerCount--;
-    } 
+  }
 }
 
 export function resetGlobalState() {
   allEvidence = [];
-  filteredEvidence = []; 
+  filteredEvidence = [];
 }
 
 // #endregion

@@ -4,7 +4,7 @@
 //
 //   A rule gets an autofixer ONLY when there is exactly one mechanical,
 //   meaning-preserving way to rewrite the violation. If fixing it requires
-//   understanding what the code is trying to do, there is no fixer, on purpose. 
+//   understanding what the code is trying to do, there is no fixer, on purpose.
 //
 // When does running lint:fix actually make sense?
 //   1. Right before a commit, as a habit.
@@ -14,11 +14,11 @@
 //      before review, not `var`->`let` noise.
 //
 // When does it NOT make sense?
-//   1. In CI. Ever. 
+//   1. In CI. Ever.
 //   2. On code you haven't read yet. --fix is safe by rule design, but
 //      "safe" means "meaning-preserving for well-formed code". Always
 //      diff and re-test after running it, don't blindly trust it.
-//   3. As a substitute for actually understanding a warning. 
+//   3. As a substitute for actually understanding a warning.
 // ---------------------------------------------------------------------
 
 import js from "@eslint/js";
@@ -37,7 +37,7 @@ export default tseslint.config(
       ecmaVersion: "latest",
       sourceType: "module",
     },
-     rules: {
+    rules: {
       "no-console": "off",
       "no-var": "error",
       "prefer-const": "error",
@@ -46,10 +46,7 @@ export default tseslint.config(
   },
   {
     files: ["**/*.{ts,tsx}"],
-    extends: [
-      ...tseslint.configs.recommended,
-      ...tseslint.configs.stylistic,
-    ],
+    extends: [...tseslint.configs.recommended, ...tseslint.configs.stylistic],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -98,5 +95,5 @@ export default tseslint.config(
   // Must be last: turns off every ESLint *stylistic* rule that would
   // otherwise disagree with Prettier's formatting. Prettier owns
   // formatting; ESLint owns correctness/quality. Two tools, one job each.
-  prettier
+  prettier,
 );

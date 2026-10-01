@@ -10,15 +10,15 @@ export const STORAGE_KEY_HYPOTHESIS = "remotion_hypothesis";
 //Refactor arrow function
 export const saveBookmarksToStorage = () => {
   localStorage.setItem(
-    STORAGE_KEY_BOOKMARKS, 
-    JSON.stringify(state.getBookmarks())
+    STORAGE_KEY_BOOKMARKS,
+    JSON.stringify(state.getBookmarks()),
   );
 };
 
 export function loadBookmarksFromStorage() {
   try {
-    var raw = localStorage.getItem(STORAGE_KEY_BOOKMARKS);
-    var parsed = raw ? JSON.parse(raw) : [];
+    const raw = localStorage.getItem(STORAGE_KEY_BOOKMARKS);
+    const parsed = raw ? JSON.parse(raw) : [];
     state.setBookmarks(Array.isArray(parsed) ? parsed : []);
   } catch (err) {
     console.warn("Could not read stored bookmarks, starting empty", err);
@@ -27,10 +27,13 @@ export function loadBookmarksFromStorage() {
 }
 
 export function saveNoteForEvidence(evidenceId, text) {
-  var notesStore = state.getNotesStore();
+  const notesStore = state.getNotesStore();
   notesStore[evidenceId] = text;
   state.setNotesStore(notesStore);
-  localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(state.getNotesStore()));
+  localStorage.setItem(
+    STORAGE_KEY_NOTES,
+    JSON.stringify(state.getNotesStore()),
+  );
 }
 
 export function loadNoteForEvidence(evidenceId) {
@@ -38,7 +41,7 @@ export function loadNoteForEvidence(evidenceId) {
 }
 
 export function loadNotesFromStorage() {
-  var raw = localStorage.getItem(STORAGE_KEY_NOTES);
+  const raw = localStorage.getItem(STORAGE_KEY_NOTES);
   if (!raw) {
     state.setNotesStore({});
     return;
@@ -54,34 +57,36 @@ export function loadNoteAsync(evidenceId) {
 }
 
 export function loadHypothesisFromStorage() {
-  var raw = localStorage.getItem(STORAGE_KEY_HYPOTHESIS);
+  const raw = localStorage.getItem(STORAGE_KEY_HYPOTHESIS);
   if (!raw) return;
 
-  var draft = JSON.parse(raw); 
+  const draft = JSON.parse(raw);
 
   document.getElementById("hypSuspect").value = draft.suspectId || "";
   document.getElementById("hypNature").value = draft.nature || "";
   document.getElementById("hypConfidence").value = draft.confidence || 50;
-  document.getElementById("hypConfidenceValue").textContent = draft.confidence || 50;
+  document.getElementById("hypConfidenceValue").textContent =
+    draft.confidence || 50;
   document.getElementById("hypExplanation").value = draft.explanation || "";
   document.getElementById("hypAlternative").value = draft.alternative || "";
 
-  var evidenceSelect = document.getElementById("hypEvidence");
-  var savedIds = draft.evidenceIds || [];
-  for (var i = 0; i < evidenceSelect.options.length; i++) {
-    evidenceSelect.options[i].selected = savedIds.indexOf(evidenceSelect.options[i].value) !== -1;
+  const evidenceSelect = document.getElementById("hypEvidence");
+  const savedIds = draft.evidenceIds || [];
+  for (let i = 0; i < evidenceSelect.options.length; i++) {
+    evidenceSelect.options[i].selected =
+      savedIds.indexOf(evidenceSelect.options[i].value) !== -1;
   }
 }
 
 export function saveHypothesis() {
-  var draft = {
+  const draft = {
     suspectId: document.getElementById("hypSuspect").value,
     nature: document.getElementById("hypNature").value,
     evidenceIds: getSelectedOptions(document.getElementById("hypEvidence")),
     confidence: document.getElementById("hypConfidence").value,
     explanation: document.getElementById("hypExplanation").value,
     alternative: document.getElementById("hypAlternative").value,
-    savedAt: new Date().toISOString()
+    savedAt: new Date().toISOString(),
   };
 
   try {
@@ -92,7 +97,7 @@ export function saveHypothesis() {
     return;
   }
 
-  var msg = document.getElementById("hypothesisSavedMsg");
+  const msg = document.getElementById("hypothesisSavedMsg");
   msg.classList.remove("hidden");
   setTimeout(function () {
     msg.classList.add("hidden");
@@ -100,8 +105,8 @@ export function saveHypothesis() {
 }
 
 export function getSelectedOptions(selectEl) {
-  var result = [];
-  for (var i = 0; i < selectEl.options.length; i++) {
+  const result = [];
+  for (let i = 0; i < selectEl.options.length; i++) {
     if (selectEl.options[i].selected) result.push(selectEl.options[i].value);
   }
   return result;

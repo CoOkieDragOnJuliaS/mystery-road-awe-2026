@@ -8,8 +8,8 @@ import * as workspace from "../views/workspace.js";
 // ---------------------------------------------------------------------
 
 export function showLoadingOverlay(msg) {
-  var overlay = document.getElementById("loadingOverlay");
-  var text = document.getElementById("loadingText");
+  const overlay = document.getElementById("loadingOverlay");
+  const text = document.getElementById("loadingText");
   if (text) text.textContent = msg;
   if (overlay) overlay.classList.remove("hidden");
 }
@@ -17,7 +17,7 @@ export function showLoadingOverlay(msg) {
 export function hideLoadingStep() {
   state.decrementLoadingStepsRemaining();
   if (state.getLoadingStepsRemaining() <= 0) {
-    var overlay = document.getElementById("loadingOverlay");
+    const overlay = document.getElementById("loadingOverlay");
     if (overlay) overlay.classList.add("hidden");
   }
 }
@@ -68,17 +68,14 @@ export async function loadTimelineData() {
     const data = await res.json();
     state.setAllTimeline(data);
     renderDashboard();
-    
+
     if (state.getCurrentPage() === "timeline") timeline.renderTimeline();
-    
+
     populateAllDropdowns();
-    
-  }catch(err) {
-      console.log("timeline load error", err);
-
-  }finally {
-      hideLoadingStep();
-
+  } catch (err) {
+    console.log("timeline load error", err);
+  } finally {
+    hideLoadingStep();
   }
 }
 
@@ -88,10 +85,7 @@ export function loadAllData() {
 
   // Changed to Promise.all() to wait for everything to load before loading web page
   return loadCorePeopleAndLocations().then(function () {
-    return Promise.all([
-    loadEvidenceData(),
-    loadTimelineData()
-  ]);
+    return Promise.all([loadEvidenceData(), loadTimelineData()]);
   });
 }
 

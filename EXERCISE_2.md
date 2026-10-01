@@ -33,18 +33,18 @@ presented in class.
 These checkboxes are for self-checking. Don't forget to do the actual checking of tasks you are able to present in the Moodle course. **Before class, tick only what you can genuinely demonstrate
 or answer on the spot, live.**
 
-| # | Demo | Ready? |
-|---|---|---|
-| 1 | Initialize the package manager & project metadata | ☐ |
-| 2 | Integrate Vite as the dev server | ☐ |
-| 3 | Production build & preview | ☐ |
-| 4 | `package.json` scripts: lint & format | ☐ |
-| 5 | TypeScript setup & first conversions | ☐ |
-| 6 | Typing the domain data | ☐ |
-| 7 | Full migration & resolving type errors | ☐ |
-| 8 | GitHub Actions: development workflow | ☐ |
-| 9 | GitHub Actions: deployment workflow | ☐ |
-| 10 | Workflow triggers, permissions & failure modes | ☐ |
+| #   | Demo                                              | Ready? |
+| --- | ------------------------------------------------- | ------ |
+| 1   | Initialize the package manager & project metadata | ☐      |
+| 2   | Integrate Vite as the dev server                  | ☐      |
+| 3   | Production build & preview                        | ☐      |
+| 4   | `package.json` scripts: lint & format             | ☐      |
+| 5   | TypeScript setup & first conversions              | ☐      |
+| 6   | Typing the domain data                            | ☐      |
+| 7   | Full migration & resolving type errors            | ☐      |
+| 8   | GitHub Actions: development workflow              | ☐      |
+| 9   | GitHub Actions: deployment workflow               | ☐      |
+| 10  | Workflow triggers, permissions & failure modes    | ☐      |
 
 A demo only counts as "Ready" once **every** task and question checkbox inside it (below) is
 ticked. The table above is just a fast overview, tick the boxes inside each demo first.
@@ -68,14 +68,14 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 - [x] What's the difference between `dependencies` and `devDependencies` in `package.json`? Which
       category will Vite, your linter/formatter, and TypeScript belong to, and why?
-            devDependencies are used while developing - testing dependencies to check if they work with the current structures. Dependencies are then used if the application runs without test mode or build mode.
-            Vite and Formatters belong definitely to the devDependencies, because in a deployed state it is not important.
-            Important is, if a type appears in a declaration file - then I need to place e.g. TypeScript inside dependencies.
+      devDependencies are used while developing - testing dependencies to check if they work with the current structures. Dependencies are then used if the application runs without test mode or build mode.
+      Vite and Formatters belong definitely to the devDependencies, because in a deployed state it is not important.
+      Important is, if a type appears in a declaration file - then I need to place e.g. TypeScript inside dependencies.
 
 - [x] What is a lockfile for, and what could go wrong for your teammates (or CI) if it weren't
       committed to the repo?
 
-            A lockfile is to state the versions used in the dependencies (z.B: package_lock), also if optional or not. 
+            A lockfile is to state the versions used in the dependencies (z.B: package_lock), also if optional or not.
             Teammates could commit a newer version, without knowing it is in the lock_file and cause breaks in the deployment.
 
 - [ ] If you chose pnpm: what does it do differently from npm regarding how `node_modules` is laid out and how disk space/install time is shared across projects? If you chose npm: what would you gain or lose by switching to pnpm on a larger project?
@@ -87,15 +87,15 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 **Tasks**
 
 - [x] Install Vite and configure it for this project (restructure files if needed so Vite can find `index.html`/your modules/the `data/` and `assets/` folders correctly).
-            --save-dev for devDependencies as mentioned above. Index.html is in the main folder structure
-            Configuration is done in package.json - needing to say dev, build or preview to work with vite
+      --save-dev for devDependencies as mentioned above. Index.html is in the main folder structure
+      Configuration is done in package.json - needing to say dev, build or preview to work with vite
 
 - [x] Get `vite`'s dev server running the app with the same functionality it had before. Verify every view still works, not just that the page loads.
-            Run with npm run dev --> to start the dev in package.json
-            I clicked through and verified, that it has the same state as after Exercise 1 at least, still with some bugs.
+      Run with npm run dev --> to start the dev in package.json
+      I clicked through and verified, that it has the same state as after Exercise 1 at least, still with some bugs.
 
 - [x] Trigger Hot Module Replacement at least once: change something in the running app's source and observe the update happen without a full page reload.
-            Interestingly - the whole page reloads and starts at the beginning. I had a (maybe) a bug, where it didn't reload the page or show anyting when I try to change it first in Evidence. Only if I changed it to Dashboard, made changes, the changes to Evidence e.g. can be shown after switching. 
+      Interestingly - the whole page reloads and starts at the beginning. I had a (maybe) a bug, where it didn't reload the page or show anyting when I try to change it first in Evidence. Only if I changed it to Dashboard, made changes, the changes to Evidence e.g. can be shown after switching.
 
 **Questions** (depend on the tasks above)
 
@@ -103,13 +103,13 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
             So much easier to see changes right in this second and also if the error is thrown after every save. Usually you change a lot, save and then if you switch to the browser you see that it breaks. But if you forgot to save in-between because you can't see the browser all the time, you see the break/error, but need to find out where it happened. This can be more efficient in changing something or a behaviour to my liking.
 
-            But, another big difference is, that Vite knows the structure of the project (hence why I needed to have index.html at the start). It understand the imports and reports also import errors during the development. 
+            But, another big difference is, that Vite knows the structure of the project (hence why I needed to have index.html at the start). It understand the imports and reports also import errors during the development.
 
-- [x] What is Hot Module Replacement, and what specifically did you observe happen (and *not* happen, e.g. to app state) when you triggered it?
-            Updating the code in the browser without reloading the whole page myself - it automatically changes and reloads the page to show changes. Nothing happened when changing the styles.css or the .js file when I startet in Evidence - changing to Dashboard helped the HMR-method
+- [x] What is Hot Module Replacement, and what specifically did you observe happen (and _not_ happen, e.g. to app state) when you triggered it?
+      Updating the code in the browser without reloading the whole page myself - it automatically changes and reloads the page to show changes. Nothing happened when changing the styles.css or the .js file when I startet in Evidence - changing to Dashboard helped the HMR-method
 
 - [x] Why does an app already split into ES modules (Exercise 1) integrate naturally with a tool like Vite, compared to the original single-`<script>` version?
-            Because we have exports and imports - earlier the single script has no structure and Vite has no information how everything is connected. Vite follows dependencies during dev-state so that's why I can update modules in HMR
+      Because we have exports and imports - earlier the single script has no structure and Vite has no information how everything is connected. Vite follows dependencies during dev-state so that's why I can update modules in HMR
 
 ---
 
@@ -118,14 +118,14 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 **Tasks**
 
 - [x] Run the production build (`vite build`) and inspect the generated `dist/` folder.
-            The /dist folder is generated with index assets and a index.html file
+      The /dist folder is generated with index assets and a index.html file
 - [x] Serve that build locally with `vite preview` (not the dev server) and confirm the app still works end-to-end from the built output.
-            Well, the vite preview only has a loading element with loading case files, nothing else happens. So it does not work without the dev server. So no, it does not work (error log: Unexpected token '<', "html lang"... is not valid JSON)
-            After debugging with console - I found out, that it cannot find the .sjon files because it did not move into the dist folder.
-            To prevent this I used a public/ folder which is working with vite as well as npm run dev - so both versions work again (vita ses public as the root for static assets)
+      Well, the vite preview only has a loading element with loading case files, nothing else happens. So it does not work without the dev server. So no, it does not work (error log: Unexpected token '<', "html lang"... is not valid JSON)
+      After debugging with console - I found out, that it cannot find the .sjon files because it did not move into the dist folder.
+      To prevent this I used a public/ folder which is working with vite as well as npm run dev - so both versions work again (vita ses public as the root for static assets)
 
 - [x] Compare the dev-mode source with the built output for at least one file: note what changed (filenames, size, formatting/minification).
-            The biggest difference is the generated .js file in assets/ in /dist folder. Vite combines everything and the .js file was without whitespaces, line breaks and does look awful for everyone who tries to read it. It also uses a hash value for the name of it - easily distinguishable
+      The biggest difference is the generated .js file in assets/ in /dist folder. Vite combines everything and the .js file was without whitespaces, line breaks and does look awful for everyone who tries to read it. It also uses a hash value for the name of it - easily distinguishable
 
 **Questions** (depend on the tasks above)
 
@@ -142,11 +142,10 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
             Laut Internet:
             - Hashed filenames help when a browser caches data. If the name is always the same after every build the internet could use the wrong or deprecated file version. So it reference the new file hash version for changed files - for unchanged files they remain cached which can improve loading time
 
-
 - [x] Why would you never want to deploy the dev server itself (`vite dev`/`vite`) to real users, even though it "works"?
-            It has developer functions - so developer oriented code, functions (like HMR as mentioned before) and error handling.
-            It is also for a local environment, which means, it should not be used in a internet web server or production server 
-            You can use dist folder as a production static server information and serve it when deploying - why? Because you can check the build locally and have a preview to see how it would look like on the production server (also if something is buggy after building it)
+      It has developer functions - so developer oriented code, functions (like HMR as mentioned before) and error handling.
+      It is also for a local environment, which means, it should not be used in a internet web server or production server
+      You can use dist folder as a production static server information and serve it when deploying - why? Because you can check the build locally and have a preview to see how it would look like on the production server (also if something is buggy after building it)
 
 ---
 
@@ -155,14 +154,14 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 **Tasks**
 
 - [x] Install and configure a linter (e.g. ESLint) and a formatter (e.g. Prettier) for this TypeScript/JS project.
-            using npm install --save-dev eslint @eslint/js globals prettier eslint: linter engine @eslint/js: standard ESLint rule configurations globals: definitions for browser globals such as window, document, and localStorage -- prettier: formatter
+      using npm install --save-dev eslint @eslint/js globals prettier eslint: linter engine @eslint/js: standard ESLint rule configurations globals: definitions for browser globals such as window, document, and localStorage -- prettier: formatter
 - [x] Add these scripts to `package.json`: `dev`, `build`, `lint`, `lint:fix`, `format`. Each one must actually do something real when run, not just print a placeholder
-            I tried to use the eslint.config from the page to set lint, lint:fix and format
-            Why eslint .? ESLint would not be clearly told which files or directory to lint and, depending on the version/configuration, may fail or not check what you expect
-            --fix because --fix: automatically writes safe corrections into the source files. --> for example if a safe fixable problem is detected eslint can change it
+      I tried to use the eslint.config from the page to set lint, lint:fix and format
+      Why eslint .? ESLint would not be clearly told which files or directory to lint and, depending on the version/configuration, may fail or not check what you expect
+      --fix because --fix: automatically writes safe corrections into the source files. --> for example if a safe fixable problem is detected eslint can change it
 
 - [x] Run `lint` and show it catching at least one real issue in your code (introduce one on purpose if you have to). Run `lint:fix` and/or `format` and show it actually changing a file.
-            ![alt text](/resources/documentation_images/oops_eslintConfig.png) --> needed another .config file --> change to .mjs why? Because mjs treats it as a script that eslint can use. The module syntax is then shown in color and if I would use .js the import and exports could create conflicts with the other exports, even though it is an es module syntax. (CommonJS) --> ES modules or CommonJS
+      ![alt text](/resources/documentation_images/oops_eslintConfig.png) --> needed another .config file --> change to .mjs why? Because mjs treats it as a script that eslint can use. The module syntax is then shown in color and if I would use .js the import and exports could create conflicts with the other exports, even though it is an es module syntax. (CommonJS) --> ES modules or CommonJS
 
             ![alt text](/resources/documentation_images/eslint_errors.png) A lot of errors with run lint
             I like that fix - it loves to disable vars, which I love!
@@ -170,9 +169,23 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 **Questions** (depend on the tasks above)
 
-- [ ] What's the difference between what a linter checks/fixes and what a formatter checks/fixes? Give one concrete finding from each tool on this codebase.
-- [ ] Why are `lint` and `lint:fix` two separate scripts instead of one script that always auto-fixes? When would you deliberately want the non-fixing version?
-- [ ] What does `npm run lint` (or `pnpm lint`) actually do under the hood? Where does npm/pnpm look for the `lint` command, and would it work if your linter weren't installed as a project dependency (only globally on your machine)?
+- [x] What's the difference between what a linter checks/fixes and what a formatter checks/fixes? Give one concrete finding from each tool on this codebase.
+      The linter checks and fixes all the unused variables, vars instead of const/let, information that is code-specific. While the formatter checks everything - from .md files to index.html files to everything (except Exercise 2 to be honest) - It looks for spaces, formatting rules that have not been obeyed, changes to classes, methods and unneeded spaces
+
+            ![alt text](/resources/documentation_images/lint_formatter_difference.png)
+
+            So one looks for code quality, mistakes, code-quality rules - while the other looks for the visual bugs a file can have (spacing, line breaks, etc.)
+
+- [x] Why are `lint` and `lint:fix` two separate scripts instead of one script that always auto-fixes? When would you deliberately want the non-fixing version?
+      Sometimes you do not want a software to automatically correct your code, why? Because not every lint error needs to be fixed and not every solution is correct. Non-fixing version is the best to see, before I commit a solution to git, if everything is indeed as it seems, if I forgot a var for example. Fixing it lets me see inside the code. I can also inspect the code with lint before I correct it to see what lint detects.
+
+- [x] What does `npm run lint` (or `pnpm lint`) actually do under the hood? Where does npm/pnpm look for the `lint` command, and would it work if your linter weren't installed as a project dependency (only globally on your machine)?
+
+            npm run lint or :fix is the command I use
+            It reads the scripts: element in package.json and runs the code behind it, which is eslint . (or with --fix)
+            The eslint runs then the .config file to see which files and rules should be used when looking for .js or .ts files.
+            Probably through node_modules the package loads the eslint, which was installed through the dependency.
+            I think if eslint is globally available, not in project directory (devDependencies) then the global exe could be available through the OS path. The problem is, that it would fail on another developers computer if the environment variables are not set correctly
 
 ---
 
@@ -260,7 +273,7 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 **Tasks**
 
-- [ ] Deliberately commit a real TypeScript error (or a lint failure) that should block deployment, push it, and show the deploy workflow failing *before* it reaches the deploy step.
+- [ ] Deliberately commit a real TypeScript error (or a lint failure) that should block deployment, push it, and show the deploy workflow failing _before_ it reaches the deploy step.
 - [ ] Identify exactly what permissions and/or secrets your deploy workflow needs to publish to GitHub Pages, and show where they're configured (repository settings, the `permissions:` key in the workflow file, etc.).
 - [ ] Open the run history for both workflows and be ready to read a failed run's logs live and explain, to someone unfamiliar with it, what failed and why.
 
@@ -275,5 +288,5 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 ## What to bring to class
 
 For each of the 10 demos: your changed code/config (ideally as commits you can diff live), the actual GitHub Actions run history for both workflows (not just the files), and the ticked checkboxes
-above reflecting what you can genuinely demonstrate and answer *right now*. Be ready to trigger a real workflow run live (e.g. via a small commit) on request, not just describe
+above reflecting what you can genuinely demonstrate and answer _right now_. Be ready to trigger a real workflow run live (e.g. via a small commit) on request, not just describe
 one that ran earlier.

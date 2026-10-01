@@ -64,20 +64,20 @@ README.md       User-facing project description.
 
 The file is organised by `// -----` banner comments, in this order:
 
-| Section (approx. lines) | Contents |
-|---|---|
-| Global state (1–35) | All shared state as top-level `var`s: `allEvidence`, `filteredEvidence`, `selectedEvidence`, `bookmarks`, `allPeople`, `allLocations`, `allTimeline`, `caseData`, `notesStore`, `viewRendered` flags, `currentPage`, plus `STORAGE_KEY_*` constants. |
-| Data loading (41–125) | `loadAllData()` → `loadCorePeopleAndLocations()` (deeply nested fetch of case+people+locations), `loadEvidenceData()`, `loadTimelineData()`. Loading overlay hidden after a counted number of steps (`loadingStepsRemaining`). |
-| Lookup helpers (131–176) | `findEvidenceById`, `findPersonById`, `findLocationById` (linear scans), `evidenceMentionsPerson`, `formatDate`, badge-class helpers. |
-| Navigation (182–226) | Hash routing: `navigateTo()` sets `location.hash`; `handleHashChange()` toggles `.view.active`, updates nav buttons, lazily renders each view once (`viewRendered` flags). Valid views: `dashboard`, `evidence`, `people`, `timeline`, `workspace`. |
-| Dashboard (232–296) | `renderDashboard()` computes stats and recent items; pure string-concat HTML into `#dashboardContent`. |
-| Evidence catalogue (302–509) | `populateEvidenceDropdowns`, `getFilteredEvidence` (search + type/person/location/status/relevance filters), `renderEvidenceList`, `renderEvidenceCardHTML`, delegated click handler, bookmark toggle, `handleSortChange`, `clearFilters`, fake-async search (`simulateAsyncSearch` + `latestSearchRequestId`). |
-| Evidence detail (515–622) | `openEvidenceDetail` / `renderEvidenceDetail` render into `#evidenceDetailSection`; status & relevance `<select>`s **mutate the evidence object in place**; note textarea saved via `saveCurrentNote`. |
-| People & locations (628–709) | `switchPeopleTab`, `renderPeople` (cards with avatars, evidence counts, "view" links that pre-set the evidence person filter), `renderLocations`. |
-| Timeline (715–842) | `populateTimelineDropdowns`, `renderTimeline` (order + person/location/type filters, sort, per-event "View E.." buttons), `certaintyBadgeClass`, `openEvidenceModal` (quick-view modal created on demand as `#quickViewModal`). |
-| Workspace (848–984) | `renderWorkspace` → bookmarks list, notes list (reads `notesStore`), hypothesis form (`populateHypothesisDropdowns`, `saveHypothesis`, `loadHypothesisFromStorage`, `getSelectedOptions`). |
-| Storage helpers (990–1028) | localStorage wrappers for bookmarks/notes; `loadNoteAsync` returns an immediately-resolved Promise. |
-| Event setup & init (1034–1085) | `setupEventListeners()` wires all controls; `initApp()` on `DOMContentLoaded`: loads storage, wires events, `loadAllData()`, then `handleHashChange()`. |
+| Section (approx. lines)        | Contents                                                                                                                                                                                                                                                                                                        |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Global state (1–35)            | All shared state as top-level `var`s: `allEvidence`, `filteredEvidence`, `selectedEvidence`, `bookmarks`, `allPeople`, `allLocations`, `allTimeline`, `caseData`, `notesStore`, `viewRendered` flags, `currentPage`, plus `STORAGE_KEY_*` constants.                                                            |
+| Data loading (41–125)          | `loadAllData()` → `loadCorePeopleAndLocations()` (deeply nested fetch of case+people+locations), `loadEvidenceData()`, `loadTimelineData()`. Loading overlay hidden after a counted number of steps (`loadingStepsRemaining`).                                                                                  |
+| Lookup helpers (131–176)       | `findEvidenceById`, `findPersonById`, `findLocationById` (linear scans), `evidenceMentionsPerson`, `formatDate`, badge-class helpers.                                                                                                                                                                           |
+| Navigation (182–226)           | Hash routing: `navigateTo()` sets `location.hash`; `handleHashChange()` toggles `.view.active`, updates nav buttons, lazily renders each view once (`viewRendered` flags). Valid views: `dashboard`, `evidence`, `people`, `timeline`, `workspace`.                                                             |
+| Dashboard (232–296)            | `renderDashboard()` computes stats and recent items; pure string-concat HTML into `#dashboardContent`.                                                                                                                                                                                                          |
+| Evidence catalogue (302–509)   | `populateEvidenceDropdowns`, `getFilteredEvidence` (search + type/person/location/status/relevance filters), `renderEvidenceList`, `renderEvidenceCardHTML`, delegated click handler, bookmark toggle, `handleSortChange`, `clearFilters`, fake-async search (`simulateAsyncSearch` + `latestSearchRequestId`). |
+| Evidence detail (515–622)      | `openEvidenceDetail` / `renderEvidenceDetail` render into `#evidenceDetailSection`; status & relevance `<select>`s **mutate the evidence object in place**; note textarea saved via `saveCurrentNote`.                                                                                                          |
+| People & locations (628–709)   | `switchPeopleTab`, `renderPeople` (cards with avatars, evidence counts, "view" links that pre-set the evidence person filter), `renderLocations`.                                                                                                                                                               |
+| Timeline (715–842)             | `populateTimelineDropdowns`, `renderTimeline` (order + person/location/type filters, sort, per-event "View E.." buttons), `certaintyBadgeClass`, `openEvidenceModal` (quick-view modal created on demand as `#quickViewModal`).                                                                                 |
+| Workspace (848–984)            | `renderWorkspace` → bookmarks list, notes list (reads `notesStore`), hypothesis form (`populateHypothesisDropdowns`, `saveHypothesis`, `loadHypothesisFromStorage`, `getSelectedOptions`).                                                                                                                      |
+| Storage helpers (990–1028)     | localStorage wrappers for bookmarks/notes; `loadNoteAsync` returns an immediately-resolved Promise.                                                                                                                                                                                                             |
+| Event setup & init (1034–1085) | `setupEventListeners()` wires all controls; `initApp()` on `DOMContentLoaded`: loads storage, wires events, `loadAllData()`, then `handleHashChange()`.                                                                                                                                                         |
 
 ### Cross-cutting patterns to know before editing
 
@@ -97,7 +97,7 @@ The file is organised by `// -----` banner comments, in this order:
   `innerHTML` (deliberate XSS surface — flagged in code comments).
 - **Loading gate:** the overlay hides only after `loadingStepsRemaining`
   reaches 0; it is set to 2 and decremented by `loadCorePeopleAndLocations`
-  and `loadTimelineData` — evidence loading is *not* part of the count.
+  and `loadTimelineData` — evidence loading is _not_ part of the count.
 - **No `console`-free guarantee:** debug `console.log` calls exist on purpose
   (e.g. modal listener counting, "First note preview" logging a Promise).
 
@@ -119,21 +119,21 @@ case:      single object (caseId, title, status, summary, ...)
 
 **Join conventions:** `personIds`/`locationIds`/`evidenceIds` are foreign keys
 into the other files. Known **intentional data inconsistencies** exist (e.g.
-one evidence item uses the person *name* `"Nova Byte"` instead of the id
+one evidence item uses the person _name_ `"Nova Byte"` instead of the id
 `"nova-byte"` — `evidenceMentionsPerson` works around this; `type` casing is
 inconsistent like `"Test-Report"` vs `"test-report"` — filters lowercase to
 compensate). Preserve this behaviour unless the task is to fix it.
 
 ## Where to look / common tasks
 
-| Task | Start here |
-|---|---|
-| Add/change a view | `index.html` (new `<section class="view">` + nav button), `handleHashChange` + `viewRendered` in app.js, styles.css |
-| Change evidence filtering/search | `getFilteredEvidence`, `handleSearchInput`, `populateEvidenceDropdowns` |
-| Change a data field | `data/*.json` schema above + every render function that prints it |
-| Bookmarks / notes / hypothesis persistence | storage helpers section + `renderWorkspace`, `saveCurrentNote` |
-| Styling | `styles.css` — find the `/* Section */` matching the view; class names are descriptive (`.evidence-card`, `.timeline-event`, `.badge-*`) |
-| Exercise tasks (module split, bug hunts, async/await) | `EXERCISE_1.md` is the spec; refactor within `app.js`'s existing section boundaries |
+| Task                                                  | Start here                                                                                                                               |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Add/change a view                                     | `index.html` (new `<section class="view">` + nav button), `handleHashChange` + `viewRendered` in app.js, styles.css                      |
+| Change evidence filtering/search                      | `getFilteredEvidence`, `handleSearchInput`, `populateEvidenceDropdowns`                                                                  |
+| Change a data field                                   | `data/*.json` schema above + every render function that prints it                                                                        |
+| Bookmarks / notes / hypothesis persistence            | storage helpers section + `renderWorkspace`, `saveCurrentNote`                                                                           |
+| Styling                                               | `styles.css` — find the `/* Section */` matching the view; class names are descriptive (`.evidence-card`, `.timeline-event`, `.badge-*`) |
+| Exercise tasks (module split, bug hunts, async/await) | `EXERCISE_1.md` is the spec; refactor within `app.js`'s existing section boundaries                                                      |
 
 ## Conventions
 
