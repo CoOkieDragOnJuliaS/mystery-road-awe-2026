@@ -214,10 +214,27 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
 **Questions** (depend on the tasks above)
 
-- [ ] What does the `strict` option in `tsconfig.json` actually turn on? Name at least two individual checks bundled under it, and say whether you kept it on and why.
-- [ ] What is the difference between a compile-time type error and the runtime bugs you fixed in Exercise 1? Could TypeScript alone have caught any of those specific bugs? Why or why not?
-- [ ] What does `any` do to TypeScript's checking for a value, and why did you avoid it in this first pass even though it would have been faster to just silence the errors with it?
+- [x] What does the `strict` option in `tsconfig.json` actually turn on? Name at least two individual checks bundled under it, and say whether you kept it on and why.
+            //Enables all strict type-checking options, which helps catch potential errors and enforce better coding practices -- e.g. noImpliciAny, NullChecks, etc.
+            Which means for example that typescript reports variables that would receive an any type and null as well as undefined could be handled explicitly, so separate.
 
+            I kept it on, because I do not trust myself in TypeScript to know wrong from right right now - needing extra strict help and checks to prevent errors
+            One example was the badgeClass --> it had to describe EvidenceStatus (the new) | null and | undefined - it threw an any error
+            "Argument of type 'undefined' is not assignable to parameter of type 'EvidenceStatus'."
+
+- [x] What is the difference between a compile-time type error and the runtime bugs you fixed in Exercise 1? Could TypeScript alone have caught any of those specific bugs? Why or why not?
+            Compile-time error is detected before the application runs, so as the code compiles - e.g. if I have a type string | null or | undefined in TypeScript and want to call the method with a number, the TypeScript compiler can see that it is no a required format and react!
+
+            A Runtime bug does happen while the application is running - e.g. if I click something and a bug happens which I did not see beforehand. 
+            TypeScript alone could never have found all those bugs, because a valid Typescript argument cannot see that a property is sending a null result if I click on a button for example - which happened with findEvidenceById or findAllEvidence() - Promises could return nothing, but the TypeScript would not check that.
+            So if event listeners are working there TypeScript can help before in compile-time and in debugging, but can never replace runtime-debugging with console and explorative testing
+
+- [x] What does `any` do to TypeScript's checking for a value, and why did you avoid it in this first pass even though it would have been faster to just silence the errors with it?
+            ANY - is the type that can be almost anything. It can be another type, any type, be called as a function or passed to a function. It is no safety whatsoever what type is used or how the function is called - I could call a string function with a number - it would probably throw errors along the way, but for TypeScript it is working for the check
+
+            So I avoided it in getStatusBadgeClass, because I want to have the value known to me, like unreviewed, reviewed, flagged and catch errors / variables types known to me,like undefined or null
+
+            
 ---
 
 ## Demo 6 — Typing the domain data

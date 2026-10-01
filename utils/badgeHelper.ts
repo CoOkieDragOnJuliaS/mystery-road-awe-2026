@@ -10,6 +10,7 @@ export type RelevanceBadgeClass = "badge-unreviewed" | "badge-relevant";
 
 // Refactor to arrow function
 export const getStatusBadgeClass = (
+  //Demo 5 -- if you delete null or undefined a call with undefined can receive an error Argument of type 'undefined' is not assignable to parameter of type 'EvidenceStatus'.
   status: EvidenceStatus | null | undefined,
 ): StatusBadgeClass => {
   const normalizedStatus = (status ?? "").toLowerCase();
