@@ -233,8 +233,6 @@ ticked. The table above is just a fast overview, tick the boxes inside each demo
 
             So I avoided it in getStatusBadgeClass, because I want to have the value known to me, like unreviewed, reviewed, flagged and catch errors / variables types known to me,like undefined or null
 
-
-
 ---
 
 ## Demo 6 — Typing the domain data
