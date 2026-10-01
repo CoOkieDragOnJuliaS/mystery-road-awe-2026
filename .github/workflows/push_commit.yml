@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: 24.20.0
+          node-version: '24.20.0'
           cache: npm
 
       # Install the exact dependency versions listed in package-lock.json
