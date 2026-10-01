@@ -1,0 +1,32 @@
+name: push_commit
+
+on:
+  # Run this workflow when a commit is pushed or a pull request is opened or updated
+  push:
+  pull_request:
+
+jobs:
+  # Check the code for linting and formatting issues
+  lint-and-format:
+    # Run the job on a GitHub-hosted Ubuntu runner
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      # Set up the requested Node.js version for later workflow steps
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 24.20.0
+          cache: npm
+
+      # Install the exact dependency versions listed in package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      # Run lint and formatter
+      - name: Run lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npx prettier --check .
