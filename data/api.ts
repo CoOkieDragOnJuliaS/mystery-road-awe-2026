@@ -15,7 +15,7 @@ import type {
 // ---------------------------------------------------------------------
 
 //Demo 6: response.json() returns JSON data but cannot prove its shape.
-// T is the expected domain type; a runtime validator would be needed to prove it.
+// T is the expected domain type
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url);
 
