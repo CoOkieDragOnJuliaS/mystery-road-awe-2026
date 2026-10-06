@@ -14,7 +14,8 @@
     "noEmit": true, //Prevents TypeScript from emitting any output files, which is useful when using TypeScript for type-checking only
     "isolatedModules": true, //Enables isolated module compilation, which helps catch potential errors when compiling individual modules in isolation
     "skipLibCheck": true, //Skips type-checking of declaration files, which can improve compilation performance when working with large codebases
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "jsx": "react-jsx" //Enables JSX syntax for React components, which is useful when working with React in TypeScript, automatic JSX runtime no import react every time
   },
   "include": [
     //Specifies the files to be included in the TypeScript project, which can include JavaScript and TypeScript files

@@ -260,28 +260,41 @@ component's function body had a side effect (e.g. mutated a global variable) eve
 
 **Tasks**
 
-- [ ] Add React and TypeScript support to the existing Vite project from Exercise 2 (the right Vite plugin, `tsx` support, React types).
+- [x] Add React and TypeScript support to the existing Vite project from Exercise 2 (the right Vite plugin, `tsx` support, React types).
 
-        - 
-- [ ] Create a minimal entry point (e.g. a root `<App />` component mounted into the page) that
+        - npm install react react-dom
+        - npm install -D @types/react @types/react-dom @vitejs/plugin-react
+        Added to vite.config.js and tsconfig.json --> need to find out if devDependencies or dependencies
+
+- [x] Create a minimal entry point (e.g. a root `<App />` component mounted into the page) that
 renders *something* visible, without removing the working vanilla app yet.
 
-        - 
-- [ ] Decide and document how the two versions coexist during the migration (e.g. a separate route/ flag to view the React version, or a full swap-over. Your call, but be ready to justify it).
+        - created in /react folder - App.tsx and main.tsx
+- [x] Decide and document how the two versions coexist during the migration (e.g. a separate route/ flag to view the React version, or a full swap-over. Your call, but be ready to justify it).
 
-        - 
+        - They got me a few errors because of the Module app and the exports names - also because app is also used by app.js and app.ts - which should be changed I suppose
+        - I created a different entry point in index.html so react as well as ts don't fight over the main id="app" and can use separate html containers
 
 **Questions** (depend on the tasks above)
 
-- [ ] What did you actually have to install and configure to get JSX compiling through Vite? What is each piece responsible for?
+- [x] What did you actually have to install and configure to get JSX compiling through Vite? What is each piece responsible for?
 
-        - 
-- [ ] How does your `<App />` component get from source code onto the actual page? Trace the path from your `.tsx` file to the DOM.
+        - react and react-dowm - DOM renderer and runtime information
+        - TypeScript definitions to work with react
+        - vitejs plugin which is named plugin-react to enable JSX runtime and configuration in vite.config.ts
 
-        - 
-- [ ] What decision did you make about how the vanilla and React versions coexist during migration, and why? What would go wrong with an opposite choice?
+- [x] How does your `<App />` component get from source code onto the actual page? Trace the path from your `.tsx` file to the DOM.
 
-        - 
+        - Vites server gets main.tsx and then to app.tsx
+        - vite transforms jsx and compiles the .tsx files from typescript also to JavaScript
+        - vite then gets the JavaScript to the browser and with createRoot --> we create a React root on the DOM and render the component (which gets me the rendered <App /> and the h1 element)
+
+- [x] What decision did you make about how the vanilla and React versions coexist during migration, and why? What would go wrong with an opposite choice?
+
+        - I made the decision to only have the files co-existent and change the entry point at the end of index.html if needed
+        - The rest of the app is still vanlla and if the last entry is changed the app cannot load anything except the preview of the Dahboard, the empty shell, the new react h1 and an endless loading screen
+
+        - If I changed everything onto this, it would break infinitely. Every view needs to be recreated in React until it is usable again. Migrating everything at once is not the goal.
 
 ---
 
