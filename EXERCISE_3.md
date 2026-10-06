@@ -90,7 +90,7 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
 
 **Tasks**
 
-- [ ] Present a short comparison table for Server-Side Rendering and Client-Side Rendering. Explain what the server sends on first request, what the browser has to do before the user sees content, and what happens on subsequent navigation.
+- [x] Present a short comparison table for Server-Side Rendering and Client-Side Rendering. Explain what the server sends on first request, what the browser has to do before the user sees content, and what happens on subsequent navigation.
 
         | Question      | Server-Side Rendering      |  Client-Side Rendering     |
         | :----  | ----:  | ----:  |
@@ -99,21 +99,32 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
         | What must happen before the user sees the content?| Browser displays the HTML, maybe needs JavScript to run | Browser loads data and the HTML shell / creates the intiial DOM |
         | What happens on subsequent navigation?    | Multi-Page application (MPA), navigation requests document --> replacing current document | In a Single-Page application (SPA), router changes URL and view without replacing current document --> cached state?|
 
+        --> Table creation in Markdown document in Visual Studio does not worke - here is the new table made from 
+                ![alt text](/resources/documentation_images/table_clientside_serverside.png)
 
 
-- [ ] Pick one real, publicly known website and argue whether it's (primarily) SSR or CSR, using
+- [x] Pick one real, publicly known website and argue whether it's (primarily) SSR or CSR, using
 observable evidence (view source, network tab, etc.).
 
-        Wordpress.com --> Server-side rendered (SSR), because in Network tab while the page is reloaded the response for the HTML document is primarily everything the site has --> like HTML, page-specific content and metadata, classes. There is probably a lot of other things inside the page itself, e.g. menu hovering creates a lot of network traffic, but the primarily used evidence is the SSR
+        Wordpress.com --> Server-side rendered (SSR), because in Network tab while the page is reloaded the response for the HTML document is primarily everything the site has 
+        --> like HTML, page-specific content and metadata, classes. 
+        There is probably a lot of other things inside the page itself, e.g. menu hovering creates a lot of network traffic, but the primarily used evidence is the SSR
 
 **Questions** (depend on the tasks above)
 
-- [ ] Explain why this exercise application is SSR or CSR and why. Walk through, step by step, what happens between the browser requesting the page and the Dashboard actually being visible.
+- [x] Explain why this exercise application is SSR or CSR and why. Walk through, step by step, what happens between the browser requesting the page and the Dashboard actually being visible.
 
-        - 
-- [ ] Name one real cost of what the architecture pays for that choice (think about what a user with JavaScript disabled, or a slow connection, or a search engine crawler would see) and why.
+        - This app currently is CSR, why? Because the Browser requests the index.html and uses JS to parse and execute it. After everything is loaded the HTML gets visible
+        Step by step (during Vite run):
+                1. The load is requesting index.html
+                2. The app works with an empty HTML shell and an app.js reference, it calls to it
+                3. Browser parses the JavaScript and runs it --> which means app.ts has the init() methods, the loadAllData(), api methods, which fetch and render elements
+                4. renderDashboard() runs afterwards and assigns it currently with innerHTML (there is a better solution as we know)
+        
+- [x] Name one real cost of what the architecture pays for that choice (think about what a user with JavaScript disabled, or a slow connection, or a search engine crawler would see) and why.
 
-        -
+        - One problem is, that we server an empty HTML shell during the page load, so the user only sees an empty shell without the javascript data if something goes wrong with JS code
+        - How a search engine crawler works I don't know. I suppose it tries to execute JS through the search engine inside the code itself, which should not work with the HTML shell and the JS loading afterwards.
 
 ---
 
