@@ -8,6 +8,7 @@ import { isViewName } from "../types/domain.ts";
 // ---------------------------------------------------------------------
 
 export function setupEventListeners(): void {
+  //Exercise 3 - Demo 4 (hashChange listener for navigation)
   window.addEventListener("hashchange", handleHashChange);
 
   // Demo 8 change for eventListeners - first refactor

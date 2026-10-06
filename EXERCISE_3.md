@@ -170,25 +170,49 @@ observable evidence (view source, network tab, etc.).
 
 **Tasks**
 
-- [ ] Diagram or illustrate live how navigation currently works in this app: what triggers a view change, what code runs, and what does *not* happen (that would happen in a classic multi-page site).
+- [x] Diagram or illustrate live how navigation currently works in this app: what triggers a view change, what code runs, and what does *not* happen (that would happen in a classic multi-page site).
 
-        - 
+        What does not happen?
+        - The browser does not fully reload the page, the localStorage and state remain, and it does not get rid of the current document, only changes the active hash element
 
-- [ ] List every piece of state in the current app that would be lost on a full page reload, versus what's preserved (hint: check what's in `localStorage` versus what's only in memory).
+- [x] List every piece of state in the current app that would be lost on a full page reload, versus what's preserved (hint: check what's in `localStorage` versus what's only in memory).
 
-        -
+        - The localStorage, which means remotion_bookmarks, remotion_nbotes and remotion_hypothesis are saved in localStorage even across page reloads
+
+        - The selectedEvidence, filteredEvidence, currentPeopleTab and the flags are not saved for a full page reload - views will render again fully if I close and reopen the app
 
 **Questions** (depend on the tasks above)
 
-- [ ] In a traditional multi-page app, where does "the current page's data" live between requests? Where does it live in this SPA instead, and what are the consequences of that difference (for good and for bad)?
+- [x] In a traditional multi-page app, where does "the current page's data" live between requests? Where does it live in this SPA instead, and what are the consequences of that difference (for good and for bad)?
 
-        - 
-- [ ] This app currently implements routing by hand (`handleHashChange()`, a `switch`-like chain of `if`s, and manually toggling CSS classes). What is a router library actually responsible for that this hand-rolled version does *not* handle?
+        - Current page data in Multi-Page App (MPA): Data lives on the server or is embedded into a HTML doc which is fetched. At navigateTo for example, the browser would forget everything and get new information
 
-        - 
-- [ ] If the user hits the browser's back button right now, what happens in this app, and why?
+        - In SPA (Single-Page App): Data lives inside the browser in memory and in localStorage of course. Faster navigation is a good one, BUT it is difficult to manage the sensible data inside the SPA and the memory needed is much larger.
 
-        - 
+- [x] This app currently implements routing by hand (`handleHashChange()`, a `switch`-like chain of `if`s, and manually toggling CSS classes). What is a router library actually responsible for that this hand-rolled version does *not* handle?
+
+        - A usual router library (using e.g. React) handles states better and does not only deal with hashes
+        - it works with parameters and nested routes (e.g. /evidence/:id)
+
+        ![alt text](/resources/documentation_images/react_routes.png)
+        From the book the message was:
+                React does not include routing. A router maps URLs to component
+                trees and integrates history, links, parameters, query
+                values, and missing routes.
+                Route parameters normally identify resources, while query
+                parameters commonly represent optional view state such as
+                filters and sorting.
+
+        In other words: Route redirects and loads per route with parameters and parsing. It reacts if there is no route found and can work with history of the routing to go back to
+
+- [x] If the user hits the browser's back button right now, what happens in this app, and why?
+
+        - With hash routing the back-button also triggers the hashChange event, but it does not re-render the dashboard and thus not show if the reviewed state or the new evidence is shown on the dashboard. But I found a bug while doing it. 
+        A full page reload, as mentioned before, also gets rid of the reviewedFlag
+
+        Hash itself works for the back-button, but the rendering is cached (viewRendered.dashboard = true) so it does not rerender and the count does not change
+
+
 
 ---
 

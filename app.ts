@@ -23,6 +23,7 @@ declare global {
 // WINDOW INITIALIZATION
 // ---------------------------------------------------------------------
 
+// Exercise 3 - Demo 4 (navigateTo with window for exposure, can be changed)
 window.navigateTo = navigateTo; // Expose navigateTo for use in inline eventHandling (HTML)
 window.switchPeopleTab = people.switchPeopleTab;
 window.handleSortChange = evidence.handleSortChange;

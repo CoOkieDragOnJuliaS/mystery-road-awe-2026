@@ -12,10 +12,12 @@ import { isViewName, type ViewName } from "../types/domain.ts";
 // ---------------------------------------------------------------------
 
 export function navigateTo(viewName: ViewName): void {
+  // Exercise 3 - Demo 4 (sets window.location.hash to the evidence, hashChange listener will pick this up)
   window.location.hash = viewName;
   // handleHashChange() will pick this up via the hashchange listener
 }
 
+//Exercise 3 - Demo 4 (handleHashChange is called, reads the hash, sets the current page and active element and updates the nav Button active for view)
 export function handleHashChange(): void {
   const rawHash = window.location.hash.replace("#", "");
   //Demo 7: window.location.hash is an unrestricted string, so it is narrowed to ViewName.
@@ -40,6 +42,7 @@ export function handleHashChange(): void {
     renderDashboard();
     viewRendered.dashboard = true;
   } else if (hash === "evidence" && !viewRendered.evidence) {
+    //Exercise 3 - Demo 4 (evidence view is rendered only once, then cached)
     renderEvidenceList();
     viewRendered.evidence = true;
   } else if (hash === "people" && !viewRendered.people) {
