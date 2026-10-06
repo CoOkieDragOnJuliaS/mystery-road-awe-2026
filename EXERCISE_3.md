@@ -341,21 +341,29 @@ renders *something* visible, without removing the working vanilla app yet.
 
 **Tasks**
 
-- [ ] Argue whether an SPA built with React is actually the right architecture for *this specific app*, given what it does.
+- [x] Argue whether an SPA built with React is actually the right architecture for *this specific app*, given what it does.
 
-        - 
-- [ ] Include honest trade-offs or downsides of the SPA/React choice for this app, not just the benefits.
+        - I don't think that having MPA is bad, but with React it would make the interactive part much more efficient
+        - Clicking around with bookmarks, notes, filters and the different views would update the complete view in repeat
+        - Initial load is maybe heavier with React, but it could benefit from a lot of changes
 
-        - 
+        BUT for this small app and the current complexity, changing everything to React would give me components, but a lot of new information and structures that wouldn't be necessary with a goot JavaScript architecture
+
+- [x] Include honest trade-offs or downsides of the SPA/React choice for this app, not just the benefits.
+
+        - I mentioned one trade-off beforehand, but probably there are more
 
 **Questions** (depend on the tasks above)
 
-- [ ] What would you lose by keeping this app as server-rendered vanilla HTML/JS instead? What would you lose by choosing React specifically over a *different* SPA approach (e.g. vanilla JS with a router, or a lighter library)?
+- [x] What would you lose by keeping this app as server-rendered vanilla HTML/JS instead? What would you lose by choosing React specifically over a *different* SPA approach (e.g. vanilla JS with a router, or a lighter library)?
 
-        - 
-- [ ] If this app needed to support users on very low-end devices or poor connections as a hard requirement, would you stick with SPA or change the architecture? Why or why not?
+        - I would loose the view switching and state persistence with React if I stay with HTML/JS, even with AJAX implemented
+        - BUT on the other hand I would benefit from not having a lot of complicated files and plugins I needed to install to use tsx, jsx compilation and so on
 
-        - 
+- [x] If this app needed to support users on very low-end devices or poor connections as a hard requirement, would you stick with SPA or change the architecture? Why or why not?
+
+        - Low-end devices often cannot handle rich react based webpages. Vanilla is lightweight, which means it has less dependencies and works with small rendering.
+        - Low internet, low cpu power and so on could really benefit from the current structure
 
 ---
 
