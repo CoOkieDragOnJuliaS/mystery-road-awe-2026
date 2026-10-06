@@ -154,6 +154,7 @@ export function renderEvidenceList(): void {
 }
 
 //Code Smell 1 - not needed
+//Exercise 3 - Demo 5 (returning string)
 function renderEvidenceCardHTML(evidenceItem: Evidence): string {
   const bookmarks = state.getBookmarks();
   const isBookmarked = bookmarks.includes(evidenceItem.id);

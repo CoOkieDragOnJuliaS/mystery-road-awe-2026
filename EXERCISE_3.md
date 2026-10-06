@@ -220,25 +220,39 @@ observable evidence (view source, network tab, etc.).
 
 **Tasks**
 
-- [ ] Read enough of the React docs (or equivalent) to write, from scratch, a single tiny component (it can live in a throwaway sandbox, not necessarily this project yet) that renders a piece of static data as JSX. No state, no props even, just to prove you can write and reason about JSX.
+- [x] Read enough of the React docs (or equivalent) to write, from scratch, a single tiny component (it can live in a throwaway sandbox, not necessarily this project yet) that renders a piece of static data as JSX. No state, no props even, just to prove you can write and reason about JSX.
 
-        - 
-- [ ] Identify, in your own words, what "component" means in React, and how it differs from a plain JavaScript function that happens to return an HTML string (which is essentially what several functions in the old `app.js` did, e.g. `renderEvidenceCardHTML()`).
+        - created sandbox.jsx component for testing out the information
 
-        - 
+- [x] Identify, in your own words, what "component" means in React, and how it differs from a plain JavaScript function that happens to return an HTML string (which is essentially what several functions in the old `app.js` did, e.g. `renderEvidenceCardHTML()`).
+
+        - A component is also like a template for React elements. It can be translated with React to get local states or React based functions
+        - React works with state - so as JavaScript functions (e.g. renderEvidenceCardHTML) only do one thing, the method call has to be assigned to innerHTML to work and be viewed by the user
 
 **Questions** (depend on the tasks above)
 
-- [ ] What is JSX, actually? What does it compile to?
+- [x] What is JSX, actually? What does it compile to?
 
-        - 
-- [ ] Compare your tiny component to the old `renderEvidenceCardHTML(ev)` function (string concatenation returning an HTML string). What is fundamentally different about how each one's output becomes real DOM?
+        - JSX compiles to JavaScript using React elements to create a template to use 
+        What is it? A syntax of some sort --> a value in React and at the same time looking like HTML
+        - React event handlers are passing functions to JSX (onClick, onChange, etc.) and request changes in response to an user interaction - e.g. getting an HTML component or another component information as a return element from the function
+        - JSX ist not interpreted by the browser, but it converts to JavaScript that create React elements --> a middleware of some sorts
+        - If we have reusable components and a state-driven rendering we can use react-based frameworks and add runtime code and elements with JSX and TypeScript.
 
-        - 
-- [ ] What does it mean that "components are just functions" in React? What would break if a
+- [x] Compare your tiny component to the old `renderEvidenceCardHTML(ev)` function (string concatenation returning an HTML string). What is fundamentally different about how each one's output becomes real DOM?
+
+        - renderEvidenceCardHTML function --> vice cersa sandbox.jsx
+        - The sandbox.jsx returns HTML as a react element -> react compares the current state to the new ony and changes the DOM node (e.g. the elements inside the component)
+        - The other function builds a huge html string and returns it. This is then assigned to innerHTML, which replaces everything that was there beforehand.
+
+- [x] What does it mean that "components are just functions" in React? What would break if a
 component's function body had a side effect (e.g. mutated a global variable) every time it rendered?
 
-        - 
+        - Components in react are written as functions (sandbox.jsx). In the book it states that they are seen as pure:
+                "Function components should remain pure. The same inputs should produce the same output without side effects during rendering."
+
+        - If a components function body had a side effect (global variable mutated) the mutation could happen multiple times, re-rendering the small elements inside DOM
+        The side effects could break the event handlers and the view itself (the output of what we want)
 
 ---
 
