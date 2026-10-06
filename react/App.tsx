@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { ViewName } from "../types/domain.ts";
 import { isViewName } from "../types/domain.ts";
 import { Header } from "./Header.tsx";
+import { DashboardPage } from "./pages/DashboardPage.tsx";
 
 function getViewFromHash(): ViewName {
   const raw = window.location.hash.replace("#", "");
@@ -39,9 +40,6 @@ export function App() {
 }
 
 //Exercise 3 - Demo 9 - building header/branding, the navigation bar, and a routing skeleton in React + TypeScript
-function DashboardPage() {
-  return <h2>Dashboard</h2>;
-}
 
 function EvidencePage() {
   return <h2>Evidence</h2>;

@@ -397,25 +397,32 @@ renders *something* visible, without removing the working vanilla app yet.
 
 **Tasks**
 
-- [ ] Rebuild the Dashboard view as React components (using your hierarchy from Demo 7 as a starting point), rendering the case summary, stat cards, review progress, and the recent
+- [x] Rebuild the Dashboard view as React components (using your hierarchy from Demo 7 as a starting point), rendering the case summary, stat cards, review progress, and the recent
 evidence/timeline lists. Reading from the same data your app already loads.
 
-        - 
-- [ ] Confirm it renders correctly with real data, and that navigating away and back doesn't lose or corrupt anything.
+        - Yes, it works - it looks hideous, but it works!
 
-        - 
+- [x] Confirm it renders correctly with real data, and that navigating away and back doesn't lose or corrupt anything.
+
+        - I cannot confirm it right now, because the information is only on the dashboard - back and forth does not do anything, but it shows the exact things needed
 
 **Questions** (depend on the tasks above)
 
-- [ ] Where does the Dashboard's data (case info, evidence, timeline) come from in your React version, and how does it get to the components that render it? Is this the final architecture you intend to keep, or a placeholder you know you'll change in a later exercise?
+- [x] Where does the Dashboard's data (case info, evidence, timeline) come from in your React version, and how does it get to the components that render it? Is this the final architecture you intend to keep, or a placeholder you know you'll change in a later exercise?
 
-        - 
-- [ ] The old vanilla dashboard had a real bug where it could show stale numbers because it only re-rendered on a view's *first* visit (a manual render-cache flag). Does your React version have an equivalent risk? Why or why not, given how React re-renders?
+        - The dashboards data comes from the same loadAllData (the api) as before --> through the DashboardPage.tsx I read every state with getAllPeople(), getAllEvidence() and so on. And then through loadAllData() I fetch the api data
+        - I divided it into the components and this is just a placeholder. It looks awfule and I think my architecture is not working correctly.
+        Unfortunately the time is going too fast and I did not enjoy this in the small timeframe I had
+        - I unfortunately have too many folder so the imports are difficult and the globalState, as well as the api are used directly, everything is tight together
 
-        - 
-- [ ] What, if anything, does your React Dashboard do differently from the vanilla one in terms of *when* it recalculates derived values (like the review-progress percentage)?
+- [x] The old vanilla dashboard had a real bug where it could show stale numbers because it only re-rendered on a view's *first* visit (a manual render-cache flag). Does your React version have an equivalent risk? Why or why not, given how React re-renders?
 
-        - 
+        - React, or the dashboard has no viewRendered cache so the stale elements are not there. it re-renders the DashboardPage whenever the App re-renders (so the parent component)
+
+- [x] What, if anything, does your React Dashboard do differently from the vanilla one in terms of *when* it recalculates derived values (like the review-progress percentage)?
+
+        - On the first visit everything is recalculated due to the cache - if I check every page I get stale data if there is a connection between them and I have visited all in a session
+        - In React I see the values on every render of DashboardPage (so in parent App), which means I can see the reviewed elements, the progress and so on.
 
 ---
 
