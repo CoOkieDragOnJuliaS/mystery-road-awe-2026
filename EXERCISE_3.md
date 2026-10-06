@@ -43,27 +43,30 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
 
 **Tasks**
 
-- [ ] Give a concise explanation of how web applications evolved over the years and place the app from the exercises on the timeline. Justify where you put it.
+- [x] Give a concise explanation of how web applications evolved over the years and place the app from the exercises on the timeline. Justify where you put it.
 
         Web applications went from static HTML web pages (the early era of the web with links to other static HTML pages) - my first webpage was one of those with 
         Gifs, Images, CSS scripts to a full-on colorful degree and small imbedded scripts of early JavaScript
 
-        to Dynamic HTML generated templates and navigation requests (why dynamic? By rendering the page with data --> filling the template placeholders with data)
+        to Dynamic HTML generated templates (server-rendered) and navigation requests (why dynamic? By rendering the page with data --> filling the template placeholders with data)
 
-        Up to AJAX and DOM requests  [Rich pages and updates after data requests with fetch and response.json] --> A lot of logic with event handlers and selectors
+        Up to AJAX and DOM requests  [Rich pages and updates after data requests (only parts of the page) with fetch and response.json] --> A lot of logic with event handlers and selectors
 
         Further on we have client-side routing and application-state component based websites   Later on (Browser requests page route, server loads data and renders HTML, Browser receives the document and navigation replaces the current document)
-        And later on with server components.    (Browser request an application shell, host returns HTML, JS and CSS and the client node renders the current route --> router switches views and APIs return data as needed
+        
+        And later on with server components. (Browser request an application shell, host returns HTML, JS and CSS and the client node renders the current route --> router switches views and APIs return data as needed --> state lives in browser and the views are switched in place
         
         
     - The current app is placed on the timeline I suppose placed on the line between AJAX/DOM requests and the client site-routing/application-state component based webpage
     Why? 
+        
+        It uses fetch() arguments and updates the DOM in place - currently it uses a lot of innerHTML for rendering and has still window.location routing (hash-based), which is AJAX hybrid. Without innerHTML, it would live more on the AJAX state
 
 
 
 **Questions** (depend on the tasks above)
 
-- [ ] What specific problem was AJAX (and libraries like jQuery) solving that plain server-rendered pages couldn't? What new problems did that approach introduce, that SPA frameworks then tried to solve?
+- [x] What specific problem was AJAX (and libraries like jQuery) solving that plain server-rendered pages couldn't? What new problems did that approach introduce, that SPA frameworks then tried to solve?
 
         Well, AJAX did not replace the server rendering - AJAX solved it in the way that JavaScript began requesting data in the background and updates part of the existing page instead of everything. AJAX is the term for Asynchronous JavaScript and XML --> instead of a complete navigational switch/discard of whole document we have page updates on the information needed, e.g. refreshing a status of an article (if read or not)
 
@@ -73,9 +76,13 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
             - The order of the runs of those fetches (dependent?)
             - How the browser and navigation should show the current view - automatically updated on the spot, be in the background, etc. 
 
-- [ ] This app currently uses hash-based routing (`#dashboard`, `#evidence`, ...) with no full page reload between views. Which era does that pattern belong to, and what does it tell you about when this architectural choice became common?
+- [x] This app currently uses hash-based routing (`#dashboard`, `#evidence`, ...) with no full page reload between views. Which era does that pattern belong to, and what does it tell you about when this architectural choice became common?
 
-
+        #dashboard and #evidence belong to hash-based routing.
+        The era it belongs to is the Client-Side routing & application-state SPA (4th era) I suppose.
+        - It works on static host without a rewrite logic and through the hash it has a client-sided route (not sent to server)
+        - It works inside HTML 
+        - example in app: router.ts (window.location.hjas and handleHashChange()  where the navigateTo() is set and uses hash-based routing)
 
 ---
 
