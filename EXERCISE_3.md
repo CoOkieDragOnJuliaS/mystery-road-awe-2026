@@ -302,24 +302,38 @@ renders *something* visible, without removing the working vanilla app yet.
 
 **Tasks**
 
-- [ ] Design and diagram a proposed component hierarchy for the **entire application**, not just the part you're building this exercise. E.g. pages (one per current view) and the reusable components you expect to extract (cards, badges, buttons, form controls, etc.), even though most of them won't be built until Exercises 4 and 5.
+- [x] Design and diagram a proposed component hierarchy for the **entire application**, not just the part you're building this exercise. E.g. pages (one per current view) and the reusable components you expect to extract (cards, badges, buttons, form controls, etc.), even though most of them won't be built until Exercises 4 and 5.
 
-        - 
-- [ ] For at least 5 components in your diagram, briefly note what data/props each one would need and where that data comes from.
+        - Components in react that can be changed independently inside the DOM...
+        - I tried to create a diagram using mermaid - i could easily have forgotten some things
 
-        - 
+- [x] For at least 5 components in your diagram, briefly note what data/props each one would need and where that data comes from.
+
+        - EvidenceCard -> data needed: Evidence itself -> using bookmarks from bookmarks, the status?
+        - PersonCard --> Person itself --> and the number of evidences found per person
+        - StatusBadge --> The Status of the Evidence, which is shown on the evidence
+        - FilterBar --> Information to filter to and the elements to filter
+        - DashboardPage --> Gets information about a list of evidences, timelines and statusinformation and summaryCards
 
 **Questions** (depend on the tasks above)
 
-- [ ] What criteria did you use to decide something should be its own component versus staying inline inside a bigger one?
+- [x] What criteria did you use to decide something should be its own component versus staying inline inside a bigger one?
 
-        - 
-- [ ] Pick one component in your diagram that appears in more than one place in the app. What made you extract it instead of duplicating its markup, and how does that compare to how the original vanilla app handled (or didn't handle) that same duplication?
+        - I extract it if it is needed more than once, for example the status
+        - state for each component is needed for each UI element, for example bookmarking an evidence
+        - parent-child elements are easier to read nonetheless
+        - Isolation of concerns?
 
-        - 
-- [ ] Your diagram includes components you won't build until later exercises. Why is it useful to design the whole hierarchy now rather than only diagramming what you're about to build?
+- [x] Pick one component in your diagram that appears in more than one place in the app. What made you extract it instead of duplicating its markup, and how does that compare to how the original vanilla app handled (or didn't handle) that same duplication?
 
-        - 
+        - StatusBadge is inside more than one place - badgeHelper creates it, dashboard and evidence uses it
+        - Not only the logic but also how it would be represented could be extracted with React by having a singular component
+
+- [x] Your diagram includes components you won't build until later exercises. Why is it useful to design the whole hierarchy now rather than only diagramming what you're about to build?
+
+        - I can look at the hierarchy and try to re-design it or see if the data-flow or the data-duplication is correct.
+        So if any component needs less de-coupling I could redesign it early on and plan accordingly
+        - I can plan ahead and don't need to refactor that much later on
 
 ---
 
