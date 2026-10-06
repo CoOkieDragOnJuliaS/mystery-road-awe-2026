@@ -371,21 +371,25 @@ renders *something* visible, without removing the working vanilla app yet.
 
 **Tasks**
 
-- [ ] Build the header/branding, the navigation bar, and a routing skeleton (even a minimal one, a full router library is not required yet) in React + TypeScript.
+- [x] Build the header/branding, the navigation bar, and a routing skeleton (even a minimal one, a full router library is not required yet) in React + TypeScript.
 
-        - 
-- [ ] Wire it up so navigating between (stub) pages actually changes what's rendered, mirroring the current five views even though only the Dashboard will have real content this exercise.
+        - Needs commenting, this part was mostly AI and book
 
-        - 
+- [x] Wire it up so navigating between (stub) pages actually changes what's rendered, mirroring the current five views even though only the Dashboard will have real content this exercise.
+
+        - Changes work
 
 **Questions** (depend on the tasks above)
 
-- [ ] How does "the current view" get tracked in your React shell? Compare this directly to how `currentPage` and `handleHashChange()` did it in the vanilla version? What's actually different, and what's superficially different but conceptually the same?
+- [x] How does "the current view" get tracked in your React shell? Compare this directly to how `currentPage` and `handleHashChange()` did it in the vanilla version? What's actually different, and what's superficially different but conceptually the same?
 
-        - 
-- [ ] What happens in your shell if a user navigates to a view that doesn't exist? How does that compare to the vanilla app's fallback-to-dashboard behavior?
+        - By looking with STRG+F I tried to see what was happening. The currentView is tracked with a const variable inside App.tsx. And in globalState the currentPage is set with a hash in handleHashChange()
+        - For most of it, it is the same. It also needs hash based routing and upadtes with navigateTo() --> different is, that the react state lives inside the component not in a global module like currentPage. It also re-renders automatically with DOM
 
-        - 
+- [x] What happens in your shell if a user navigates to a view that doesn't exist? How does that compare to the vanilla app's fallback-to-dashboard behavior?
+
+        - I have a fallback inside App.tsx with ? : to fall back to dashboard if a view is not found inside the const elements of the viewNames
+        - The fallback of vanilla app is also the same and reroutes back to dashboard (same same)
 
 ---
 

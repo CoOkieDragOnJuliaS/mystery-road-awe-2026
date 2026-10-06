@@ -25,6 +25,7 @@
     "state/**/*.{js,ts}",
     "storage/**/*.{js,ts}",
     "types/**/*.ts",
+    "react/**/*.{js,ts,tsx}",
     "utils/**/*.{js,ts}",
     "views/**/*.{js,ts}"
   ],
