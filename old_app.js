@@ -228,6 +228,7 @@ function handleHashChange() {
 // ---------------------------------------------------------------------
 // DASHBOARD
 // ---------------------------------------------------------------------
+//Exercise 3 - Demo 3
 
 function renderDashboard() {
   var container = document.getElementById("dashboardContent");

@@ -132,26 +132,37 @@ observable evidence (view source, network tab, etc.).
 
 **Tasks**
 
-- [ ] In your own words (a few sentences, not a copied definition), explain what the virtual DOM is and what problem it solves.
+- [x] In your own words (a few sentences, not a copied definition), explain what the virtual DOM is and what problem it solves.
 
         - The virtual DOM?.. I suppose, from the information provided in the book and the information about React itself:
-        - It is a informational DOM used during an update of the view, the UI? It is not a DOM as known in HTML, but rather a description of the the view should contain (React view?)
+        - It is a informational DOM used during an update of the view, the UI? It is not a DOM as known in HTML, but rather a template of the the view should contain (React view?)
+        You can also compare it with PL/I and a DCL declare template - which shows what should be contained
 
-- [ ] Find one concrete example in the *original* vanilla `app.js` (from before Exercise 1) where a small state change (e.g. toggling one bookmark) caused a large chunk of real DOM to be recreated via `innerHTML`, even though only a tiny part of it actually needed to change.
+        For the problem it solves:
+                It checks if something changes on the virtual DOM and only applies the changes to the things that need to be changed, keeping it to a minimum
 
-        - 
+- [x] Find one concrete example in the *original* vanilla `app.js` (from before Exercise 1) where a small state change (e.g. toggling one bookmark) caused a large chunk of real DOM to be recreated via `innerHTML`, even though only a tiny part of it actually needed to change.
+
+        - I am glad that I saved it under old_app.js, otherwise I would have to struggle through all those commits.
+
+                One concrete example is the renderDashboard() function in old_app.js. It sends a huge html element and sets it to container.innmerhTML.
+                Even if only one single element is changed the entire dashboard is recreated via innerHTML. 
 
 **Questions** (depend on the tasks above)
 
-- [ ] Using the example you found: how would a virtual-DOM-based approach (conceptually, not necessarily React-specific) avoid recreating the parts that didn't change?
+- [x] Using the example you found: how would a virtual-DOM-based approach (conceptually, not necessarily React-specific) avoid recreating the parts that didn't change?
 
-        - 
-- [ ] Is the virtual DOM a "faster" way to update the real DOM than directly calling `innerHTML`? Explain precisely what's actually being traded off (think about the diffing work itself).
+        - Because virtual dom, from the information above, checks if something particular changes and does not recreate the entire DOM it could solve the recreation of the entire dashboard if one thing changes.
+        It calculates and compares UI descriptions, much like a difference in git commits and keeps the existing DOM if nothing changes from the properties 
 
+- [x] Is the virtual DOM a "faster" way to update the real DOM than directly calling `innerHTML`? Explain precisely what's actually being traded off (think about the diffing work itself).
+        - innerHTML can insert a whole block of HTML, but needs to be recreated more often if you change something small
+        - virtual DOM compares the differences of the changes, which may cost more time - but only recreates elements that need to be changed (which saves time?)
        
 
-- [ ] Does using a virtual DOM library automatically make your app fast? What could still make a React app slow despite it?
-        - It is not faster per se, it updates differently than the direct calling of the innerHTML. If the React app calculates a lot of information/descriptions of the view, than it can be even slower. The original HTML DOM could be way smaller from the time consuming
+- [x] Does using a virtual DOM library automatically make your app fast? What could still make a React app slow despite it?
+        - It is not faster per se, it updates differently than the direct calling of the innerHTML. If the React app calculates a lot of information of the view, than it can be even slower. The original HTML DOM could be way smaller from the time consuming
+        - So if you change a lot of elements inside the DOM, then it would recreate the whole innerHTML more often, which makes virtual DOM a more efficient solution
 
 ---
 
