@@ -15,7 +15,8 @@
     "isolatedModules": true, //Enables isolated module compilation, which helps catch potential errors when compiling individual modules in isolation
     "skipLibCheck": true, //Skips type-checking of declaration files, which can improve compilation performance when working with large codebases
     "allowImportingTsExtensions": true,
-    "jsx": "react-jsx" //Enables JSX syntax for React components, which is useful when working with React in TypeScript, automatic JSX runtime no import react every time
+    "jsx": "react-jsx", //Enables JSX syntax for React components, which is useful when working with React in TypeScript, automatic JSX runtime no import react every time
+    "types": ["vite/client"]
   },
   "include": [
     //Specifies the files to be included in the TypeScript project, which can include JavaScript and TypeScript files

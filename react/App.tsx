@@ -13,6 +13,7 @@ function getViewFromHash(): ViewName {
 
 // Root component: owns navigation state and renders the selected page.
 export function App() {
+  //switch statement later on?
   const [currentView, setCurrentView] = useState<ViewName>("dashboard");
 
   // Keeps React state synchronized with browser back/forward navigation.
