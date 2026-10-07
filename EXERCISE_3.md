@@ -17,22 +17,22 @@ This exercise corresponds to the following chapters in the course manuscript:
 ## Self-Check
 
 The exercise is organized into 10 individual tasks with corresponding questions, that are
-presented in class. 
+presented in class.
 
 These checkboxes are for self-checking. Don't forget to do the actual checking of tasks you are able to present in the Moodle course. **Before class, tick only what you can genuinely demonstrate or answer on the spot, live.**
 
-| # | Demo | Ready? |
-|---|---|---|
-| 1 | Historical view of the web | ☐ |
-| 2 | SSR vs. CSR | ☐ |
-| 3 | The virtual DOM | ☐ |
-| 4 | SPA vs. MPA: state & routing | ☐ |
-| 5 | React introduction | ☐ |
-| 6 | React + TypeScript entry point in the Vite project | ☐ |
-| 7 | Component hierarchy for the whole app | ☐ |
-| 8 | Architecture Decision Record: why SPA/React | ☐ |
-| 9 | Migrate the application shell | ☐ |
-| 10 | Migrate the Dashboard view | ☐ |
+| #   | Demo                                               | Ready? |
+| --- | -------------------------------------------------- | ------ |
+| 1   | Historical view of the web                         | ☐      |
+| 2   | SSR vs. CSR                                        | ☐      |
+| 3   | The virtual DOM                                    | ☐      |
+| 4   | SPA vs. MPA: state & routing                       | ☐      |
+| 5   | React introduction                                 | ☐      |
+| 6   | React + TypeScript entry point in the Vite project | ☐      |
+| 7   | Component hierarchy for the whole app              | ☐      |
+| 8   | Architecture Decision Record: why SPA/React        | ☐      |
+| 9   | Migrate the application shell                      | ☐      |
+| 10  | Migrate the Dashboard view                         | ☐      |
 
 A demo only counts as "Ready" once **every** task and question checkbox inside it (below) is
 ticked — the table above is just a fast overview, tick the boxes inside each demo first.
@@ -45,7 +45,7 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
 
 - [x] Give a concise explanation of how web applications evolved over the years and place the app from the exercises on the timeline. Justify where you put it.
 
-        Web applications went from static HTML web pages (the early era of the web with links to other static HTML pages) - my first webpage was one of those with 
+        Web applications went from static HTML web pages (the early era of the web with links to other static HTML pages) - my first webpage was one of those with
         Gifs, Images, CSS scripts to a full-on colorful degree and small imbedded scripts of early JavaScript
 
         to Dynamic HTML generated templates (server-rendered) and navigation requests (why dynamic? By rendering the page with data --> filling the template placeholders with data)
@@ -53,16 +53,13 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
         Up to AJAX and DOM requests  [Rich pages and updates after data requests (only parts of the page) with fetch and response.json] --> A lot of logic with event handlers and selectors
 
         Further on we have client-side routing and application-state component based websites   Later on (Browser requests page route, server loads data and renders HTML, Browser receives the document and navigation replaces the current document)
-        
+
         And later on with server components. (Browser request an application shell, host returns HTML, JS and CSS and the client node renders the current route --> router switches views and APIs return data as needed --> state lives in browser and the views are switched in place
-        
-        
-    - The current app is placed on the timeline I suppose placed on the line between AJAX/DOM requests and the client site-routing/application-state component based webpage
-    Why? 
-        
-        It uses fetch() arguments and updates the DOM in place - currently it uses a lot of innerHTML for rendering and has still window.location routing (hash-based), which is AJAX hybrid. Without innerHTML, it would live more on the AJAX state
 
+  - The current app is placed on the timeline I suppose placed on the line between AJAX/DOM requests and the client site-routing/application-state component based webpage
+    Why?
 
+    It uses fetch() arguments and updates the DOM in place - currently it uses a lot of innerHTML for rendering and has still window.location routing (hash-based), which is AJAX hybrid. Without innerHTML, it would live more on the AJAX state
 
 **Questions** (depend on the tasks above)
 
@@ -74,14 +71,14 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
             - With a lot of event handlers and fetches we don't know which regions of the DOM are dependent on the AJAX data
             - Which fetch result was relevant and where it was needed
             - The order of the runs of those fetches (dependent?)
-            - How the browser and navigation should show the current view - automatically updated on the spot, be in the background, etc. 
+            - How the browser and navigation should show the current view - automatically updated on the spot, be in the background, etc.
 
 - [x] This app currently uses hash-based routing (`#dashboard`, `#evidence`, ...) with no full page reload between views. Which era does that pattern belong to, and what does it tell you about when this architectural choice became common?
 
         #dashboard and #evidence belong to hash-based routing.
         The era it belongs to is the Client-Side routing & application-state SPA (4th era) I suppose.
         - It works on static host without a rewrite logic and through the hash it has a client-sided route (not sent to server)
-        - It works inside HTML 
+        - It works inside HTML
         - example in app: router.ts (window.location.hjas and handleHashChange()  where the navigateTo() is set and uses hash-based routing)
 
 ---
@@ -99,15 +96,14 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
         | What must happen before the user sees the content?| Browser displays the HTML, maybe needs JavScript to run | Browser loads data and the HTML shell / creates the intiial DOM |
         | What happens on subsequent navigation?    | Multi-Page application (MPA), navigation requests document --> replacing current document | In a Single-Page application (SPA), router changes URL and view without replacing current document --> cached state?|
 
-        --> Table creation in Markdown document in Visual Studio does not worke - here is the new table made from 
+        --> Table creation in Markdown document in Visual Studio does not worke - here is the new table made from
                 ![alt text](/resources/documentation_images/table_clientside_serverside.png)
 
-
 - [x] Pick one real, publicly known website and argue whether it's (primarily) SSR or CSR, using
-observable evidence (view source, network tab, etc.).
+      observable evidence (view source, network tab, etc.).
 
-        Wordpress.com --> Server-side rendered (SSR), because in Network tab while the page is reloaded the response for the HTML document is primarily everything the site has 
-        --> like HTML, page-specific content and metadata, classes. 
+        Wordpress.com --> Server-side rendered (SSR), because in Network tab while the page is reloaded the response for the HTML document is primarily everything the site has
+        --> like HTML, page-specific content and metadata, classes.
         There is probably a lot of other things inside the page itself, e.g. menu hovering creates a lot of network traffic, but the primarily used evidence is the SSR
 
 **Questions** (depend on the tasks above)
@@ -120,7 +116,7 @@ observable evidence (view source, network tab, etc.).
                 2. The app works with an empty HTML shell and an app.js reference, it calls to it
                 3. Browser parses the JavaScript and runs it --> which means app.ts has the init() methods, the loadAllData(), api methods, which fetch and render elements
                 4. renderDashboard() runs afterwards and assigns it currently with innerHTML (there is a better solution as we know)
-        
+
 - [x] Name one real cost of what the architecture pays for that choice (think about what a user with JavaScript disabled, or a slow connection, or a search engine crawler would see) and why.
 
         - One problem is, that we server an empty HTML shell during the page load, so the user only sees an empty shell without the javascript data if something goes wrong with JS code
@@ -141,28 +137,23 @@ observable evidence (view source, network tab, etc.).
         For the problem it solves:
                 It checks if something changes on the virtual DOM and only applies the changes to the things that need to be changed, keeping it to a minimum
 
-- [x] Find one concrete example in the *original* vanilla `app.js` (from before Exercise 1) where a small state change (e.g. toggling one bookmark) caused a large chunk of real DOM to be recreated via `innerHTML`, even though only a tiny part of it actually needed to change.
+- [x] Find one concrete example in the _original_ vanilla `app.js` (from before Exercise 1) where a small state change (e.g. toggling one bookmark) caused a large chunk of real DOM to be recreated via `innerHTML`, even though only a tiny part of it actually needed to change.
 
         - I am glad that I saved it under old_app.js, otherwise I would have to struggle through all those commits.
 
                 One concrete example is the renderDashboard() function in old_app.js. It sends a huge html element and sets it to container.innmerhTML.
-                Even if only one single element is changed the entire dashboard is recreated via innerHTML. 
+                Even if only one single element is changed the entire dashboard is recreated via innerHTML.
 
 **Questions** (depend on the tasks above)
 
 - [x] Using the example you found: how would a virtual-DOM-based approach (conceptually, not necessarily React-specific) avoid recreating the parts that didn't change?
 
         - Because virtual dom, from the information above, checks if something particular changes and does not recreate the entire DOM it could solve the recreation of the entire dashboard if one thing changes.
-        It calculates and compares UI descriptions, much like a difference in git commits and keeps the existing DOM if nothing changes from the properties 
+        It calculates and compares UI descriptions, much like a difference in git commits and keeps the existing DOM if nothing changes from the properties
 
-- [x] Is the virtual DOM a "faster" way to update the real DOM than directly calling `innerHTML`? Explain precisely what's actually being traded off (think about the diffing work itself).
-        - innerHTML can insert a whole block of HTML, but needs to be recreated more often if you change something small
-        - virtual DOM compares the differences of the changes, which may cost more time - but only recreates elements that need to be changed (which saves time?)
-       
+- [x] Is the virtual DOM a "faster" way to update the real DOM than directly calling `innerHTML`? Explain precisely what's actually being traded off (think about the diffing work itself). - innerHTML can insert a whole block of HTML, but needs to be recreated more often if you change something small - virtual DOM compares the differences of the changes, which may cost more time - but only recreates elements that need to be changed (which saves time?)
 
-- [x] Does using a virtual DOM library automatically make your app fast? What could still make a React app slow despite it?
-        - It is not faster per se, it updates differently than the direct calling of the innerHTML. If the React app calculates a lot of information of the view, than it can be even slower. The original HTML DOM could be way smaller from the time consuming
-        - So if you change a lot of elements inside the DOM, then it would recreate the whole innerHTML more often, which makes virtual DOM a more efficient solution
+- [x] Does using a virtual DOM library automatically make your app fast? What could still make a React app slow despite it? - It is not faster per se, it updates differently than the direct calling of the innerHTML. If the React app calculates a lot of information of the view, than it can be even slower. The original HTML DOM could be way smaller from the time consuming - So if you change a lot of elements inside the DOM, then it would recreate the whole innerHTML more often, which makes virtual DOM a more efficient solution
 
 ---
 
@@ -170,7 +161,7 @@ observable evidence (view source, network tab, etc.).
 
 **Tasks**
 
-- [x] Diagram or illustrate live how navigation currently works in this app: what triggers a view change, what code runs, and what does *not* happen (that would happen in a classic multi-page site).
+- [x] Diagram or illustrate live how navigation currently works in this app: what triggers a view change, what code runs, and what does _not_ happen (that would happen in a classic multi-page site).
 
         What does not happen?
         - The browser does not fully reload the page, the localStorage and state remain, and it does not get rid of the current document, only changes the active hash element
@@ -189,7 +180,7 @@ observable evidence (view source, network tab, etc.).
 
         - In SPA (Single-Page App): Data lives inside the browser in memory and in localStorage of course. Faster navigation is a good one, BUT it is difficult to manage the sensible data inside the SPA and the memory needed is much larger.
 
-- [x] This app currently implements routing by hand (`handleHashChange()`, a `switch`-like chain of `if`s, and manually toggling CSS classes). What is a router library actually responsible for that this hand-rolled version does *not* handle?
+- [x] This app currently implements routing by hand (`handleHashChange()`, a `switch`-like chain of `if`s, and manually toggling CSS classes). What is a router library actually responsible for that this hand-rolled version does _not_ handle?
 
         - A usual router library (using e.g. React) handles states better and does not only deal with hashes
         - it works with parameters and nested routes (e.g. /evidence/:id)
@@ -207,12 +198,10 @@ observable evidence (view source, network tab, etc.).
 
 - [x] If the user hits the browser's back button right now, what happens in this app, and why?
 
-        - With hash routing the back-button also triggers the hashChange event, but it does not re-render the dashboard and thus not show if the reviewed state or the new evidence is shown on the dashboard. But I found a bug while doing it. 
+        - With hash routing the back-button also triggers the hashChange event, but it does not re-render the dashboard and thus not show if the reviewed state or the new evidence is shown on the dashboard. But I found a bug while doing it.
         A full page reload, as mentioned before, also gets rid of the reviewedFlag
 
         Hash itself works for the back-button, but the rendering is cached (viewRendered.dashboard = true) so it does not rerender and the count does not change
-
-
 
 ---
 
@@ -233,7 +222,7 @@ observable evidence (view source, network tab, etc.).
 
 - [x] What is JSX, actually? What does it compile to?
 
-        - JSX compiles to JavaScript using React elements to create a template to use 
+        - JSX compiles to JavaScript using React elements to create a template to use
         What is it? A syntax of some sort --> a value in React and at the same time looking like HTML
         - React event handlers are passing functions to JSX (onClick, onChange, etc.) and request changes in response to an user interaction - e.g. getting an HTML component or another component information as a return element from the function
         - JSX ist not interpreted by the browser, but it converts to JavaScript that create React elements --> a middleware of some sorts
@@ -246,13 +235,14 @@ observable evidence (view source, network tab, etc.).
         - The other function builds a huge html string and returns it. This is then assigned to innerHTML, which replaces everything that was there beforehand.
 
 - [x] What does it mean that "components are just functions" in React? What would break if a
-component's function body had a side effect (e.g. mutated a global variable) every time it rendered?
+      component's function body had a side effect (e.g. mutated a global variable) every time it rendered?
 
         - Components in react are written as functions (sandbox.jsx). In the book it states that they are seen as pure:
                 "Function components should remain pure. The same inputs should produce the same output without side effects during rendering."
 
         - If a components function body had a side effect (global variable mutated) the mutation could happen multiple times, re-rendering the small elements inside DOM
         The side effects could break the event handlers and the view itself (the output of what we want)
+        --> State in der Componente - Callback in Events (same as Jetpack Compose)
 
 ---
 
@@ -267,9 +257,10 @@ component's function body had a side effect (e.g. mutated a global variable) eve
         Added to vite.config.js and tsconfig.json --> need to find out if devDependencies or dependencies
 
 - [x] Create a minimal entry point (e.g. a root `<App />` component mounted into the page) that
-renders *something* visible, without removing the working vanilla app yet.
+      renders _something_ visible, without removing the working vanilla app yet.
 
         - created in /react folder - App.tsx and main.tsx
+
 - [x] Decide and document how the two versions coexist during the migration (e.g. a separate route/ flag to view the React version, or a full swap-over. Your call, but be ready to justify it).
 
         - They got me a few errors because of the Module app and the exports names - also because app is also used by app.js and app.ts - which should be changed I suppose
@@ -341,7 +332,7 @@ renders *something* visible, without removing the working vanilla app yet.
 
 **Tasks**
 
-- [x] Argue whether an SPA built with React is actually the right architecture for *this specific app*, given what it does.
+- [x] Argue whether an SPA built with React is actually the right architecture for _this specific app_, given what it does.
 
         - I don't think that having MPA is bad, but with React it would make the interactive part much more efficient
         - Clicking around with bookmarks, notes, filters and the different views would update the complete view in repeat
@@ -355,7 +346,7 @@ renders *something* visible, without removing the working vanilla app yet.
 
 **Questions** (depend on the tasks above)
 
-- [x] What would you lose by keeping this app as server-rendered vanilla HTML/JS instead? What would you lose by choosing React specifically over a *different* SPA approach (e.g. vanilla JS with a router, or a lighter library)?
+- [x] What would you lose by keeping this app as server-rendered vanilla HTML/JS instead? What would you lose by choosing React specifically over a _different_ SPA approach (e.g. vanilla JS with a router, or a lighter library)?
 
         - I would loose the view switching and state persistence with React if I stay with HTML/JS, even with AJAX implemented
         - BUT on the other hand I would benefit from not having a lot of complicated files and plugins I needed to install to use tsx, jsx compilation and so on
@@ -398,7 +389,7 @@ renders *something* visible, without removing the working vanilla app yet.
 **Tasks**
 
 - [x] Rebuild the Dashboard view as React components (using your hierarchy from Demo 7 as a starting point), rendering the case summary, stat cards, review progress, and the recent
-evidence/timeline lists. Reading from the same data your app already loads.
+      evidence/timeline lists. Reading from the same data your app already loads.
 
         - Yes, it works - it looks hideous, but it works!
 
@@ -415,11 +406,11 @@ evidence/timeline lists. Reading from the same data your app already loads.
         Unfortunately the time is going too fast and I did not enjoy this in the small timeframe I had
         - I unfortunately have too many folder so the imports are difficult and the globalState, as well as the api are used directly, everything is tight together
 
-- [x] The old vanilla dashboard had a real bug where it could show stale numbers because it only re-rendered on a view's *first* visit (a manual render-cache flag). Does your React version have an equivalent risk? Why or why not, given how React re-renders?
+- [x] The old vanilla dashboard had a real bug where it could show stale numbers because it only re-rendered on a view's _first_ visit (a manual render-cache flag). Does your React version have an equivalent risk? Why or why not, given how React re-renders?
 
         - React, or the dashboard has no viewRendered cache so the stale elements are not there. it re-renders the DashboardPage whenever the App re-renders (so the parent component)
 
-- [x] What, if anything, does your React Dashboard do differently from the vanilla one in terms of *when* it recalculates derived values (like the review-progress percentage)?
+- [x] What, if anything, does your React Dashboard do differently from the vanilla one in terms of _when_ it recalculates derived values (like the review-progress percentage)?
 
         - On the first visit everything is recalculated due to the cache - if I check every page I get stale data if there is a connection between them and I have visited all in a session
         - In React I see the values on every render of DashboardPage (so in parent App), which means I can see the reviewed elements, the progress and so on.
@@ -428,4 +419,91 @@ evidence/timeline lists. Reading from the same data your app already loads.
 
 ## What to bring to class
 
-For each of the 10 demos: your changed code/diagrams/documents (ideally as commits you can show live), and the ticked checkboxes above reflecting what you can genuinely demonstrate and answer *right now*.
+For each of the 10 demos: your changed code/diagrams/documents (ideally as commits you can show live), and the ticked checkboxes above reflecting what you can genuinely demonstrate and answer _right now_.
+
+---
+
+## Type aliases vs. interfaces in React and TSX
+
+Both `type` and `interface` can describe the object containing a React component's props. React itself does not require one or the other; this is a TypeScript design and project-style decision.
+
+```tsx
+// Type alias
+type StatCardProps = {
+  value: number;
+  label: string;
+};
+
+// Interface describing the same props
+interface StatCardProps {
+  value: number;
+  label: string;
+}
+```
+
+For a simple props object, these definitions behave the same when used by a component:
+
+```tsx
+function StatCard({ value, label }: StatCardProps) {
+  return (
+    <div>
+      {value}: {label}
+    </div>
+  );
+}
+```
+
+### When to use an `interface`
+
+Use an `interface` primarily for an object shape, especially for:
+
+- React component props such as `HeaderProps` or `ProgressProps`;
+- domain objects and class contracts;
+- types that may be extended with `extends`;
+- types that intentionally use declaration merging.
+
+```tsx
+interface ButtonProps {
+  label: string;
+}
+
+interface IconButtonProps extends ButtonProps {
+  icon: string;
+}
+```
+
+This project's ESLint rule `@typescript-eslint/consistent-type-definitions` is configured to require `interface` for object definitions. Therefore, props declared as `type HeaderProps = { ... }` produce a lint error and should be written as follows:
+
+```tsx
+interface HeaderProps {
+  currentView: ViewName;
+  onNavigate: (view: ViewName) => void;
+}
+```
+
+### When to use a `type`
+
+Use a `type` when TypeScript must describe something other than a normal object shape, particularly:
+
+- unions of permitted values;
+- intersections combining multiple types;
+- tuples;
+- primitive aliases;
+- mapped, conditional, or other computed types.
+
+```ts
+type ViewName = "dashboard" | "evidence" | "people" | "timeline" | "workspace";
+type LoadingState = "idle" | "loading" | "success" | "error";
+type Coordinates = [number, number];
+type EvidenceWithSelection = Evidence & { selected: boolean };
+```
+
+An `interface` cannot directly represent a union such as `"loading" | "success"`. A `type` is therefore the appropriate choice for restricted alternatives such as `ViewName`.
+
+### Rule of thumb for this project
+
+- Use `interface` for React props and other object shapes.
+- Use `type` for unions, tuples, intersections, and computed types.
+- Follow the repository's ESLint configuration consistently, even where TypeScript technically supports either syntax.
+
+The reported lint errors are style errors rather than React runtime errors. Changing the six props declarations from `type` to `interface` satisfies the configured rule without changing component behavior.

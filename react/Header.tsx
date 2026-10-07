@@ -1,10 +1,13 @@
 import type { ViewName } from "../types/domain.ts";
 
-type HeaderProps  = {
+// Props make the header reusable: the parent supplies the active view and
+// decides what should happen when a navigation button is clicked.
+interface HeaderProps {
   currentView: ViewName;
   onNavigate: (view: ViewName) => void;
-};
- 
+}
+
+// A single configuration list generates every navigation button.
 const VIEWS: { id: ViewName; label: string }[] = [
   { id: "dashboard", label: "Dashboard" },
   { id: "evidence", label: "Evidence" },
@@ -12,11 +15,13 @@ const VIEWS: { id: ViewName; label: string }[] = [
   { id: "timeline", label: "Timeline" },
   { id: "workspace", label: "Workspace" },
 ];
- 
+
+// Displays the product branding and the application's main navigation.
 export function Header({ currentView, onNavigate }: HeaderProps) {
   return (
     <header className="app-header">
       <div className="header-inner">
+        {/* Branding section with the logo, title, and case description. */}
         <div className="brand">
           <img
             src="assets/logo/logo.svg"
@@ -30,6 +35,7 @@ export function Header({ currentView, onNavigate }: HeaderProps) {
             </p>
           </div>
         </div>
+        {/* Build one button per view and visually mark the selected view. */}
         <nav className="main-nav" aria-label="Main navigation">
           {VIEWS.map((view) => (
             <button
