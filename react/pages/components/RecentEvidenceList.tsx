@@ -1,9 +1,9 @@
 import type { Evidence } from "../../../types/domain.ts";
- 
+
 type RecentEvidenceListProps = {
   evidence: Evidence[];
 };
- 
+
 export function RecentEvidenceList({ evidence }: RecentEvidenceListProps) {
   return (
     <div className="dashboard-panel">

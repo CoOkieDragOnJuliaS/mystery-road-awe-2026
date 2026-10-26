@@ -1,10 +1,10 @@
 import type { ViewName } from "../types/domain.ts";
 
-type HeaderProps  = {
+type HeaderProps = {
   currentView: ViewName;
   onNavigate: (view: ViewName) => void;
 };
- 
+
 const VIEWS: { id: ViewName; label: string }[] = [
   { id: "dashboard", label: "Dashboard" },
   { id: "evidence", label: "Evidence" },
@@ -12,7 +12,7 @@ const VIEWS: { id: ViewName; label: string }[] = [
   { id: "timeline", label: "Timeline" },
   { id: "workspace", label: "Workspace" },
 ];
- 
+
 export function Header({ currentView, onNavigate }: HeaderProps) {
   return (
     <header className="app-header">

@@ -3,6 +3,7 @@ import type { ViewName } from "../types/domain.ts";
 import { isViewName } from "../types/domain.ts";
 import { Header } from "./Header.tsx";
 import { DashboardPage } from "./pages/DashboardPage.tsx";
+import { TimelinePage } from "./pages/TimelinePage.tsx";
 
 function getViewFromHash(): ViewName {
   const raw = window.location.hash.replace("#", "");
@@ -13,16 +14,16 @@ export function App() {
   const [currentView, setCurrentView] = useState<ViewName>("dashboard");
   //return <h1>Project ReMotion — React shell</h1>;
 
-   // Keep React state in sync when the user uses back/forward buttons
+  // Keep React state in sync when the user uses back/forward buttons
   useEffect(() => {
     const onHashChange = () => setCurrentView(getViewFromHash());
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
- 
+
   const navigateTo = (view: ViewName) => {
-    window.location.hash = view;      // updates the URL
-    setCurrentView(view);            // updates React state immediately
+    window.location.hash = view; // updates the URL
+    setCurrentView(view); // updates React state immediately
   };
 
   return (
@@ -49,11 +50,6 @@ function PeoplePage() {
   return <h2>People</h2>;
 }
 
-function TimelinePage() {
-  return <h2>Timeline</h2>;
-}
-
 function WorkspacePage() {
   return <h2>Workspace</h2>;
 }
-

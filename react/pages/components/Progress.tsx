@@ -1,7 +1,7 @@
 type ProgressProps = {
   progressPct: number;
 };
- 
+
 export function Progress({ progressPct }: ProgressProps) {
   return (
     <div className="dashboard-panel">

@@ -1,9 +1,9 @@
 import type { CaseData } from "../../../types/domain.ts";
- 
+
 type CaseSummaryCardProps = {
   caseData: CaseData | null;
 };
- 
+
 export function CaseSummaryCard({ caseData }: CaseSummaryCardProps) {
   return (
     <div className="case-summary-card">

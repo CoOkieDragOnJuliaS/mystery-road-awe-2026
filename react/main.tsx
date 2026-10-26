@@ -6,12 +6,12 @@ import { loadAllData } from "../data/api.ts";
 
 const container = document.getElementById("root");
 
-if(!container ) throw new Error("Missing #root mount point");
+if (!container) throw new Error("Missing #root mount point");
 
 loadAllData().then(() => {
   createRoot(container).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+    <StrictMode>
+      <App />
+    </StrictMode>,
   );
 });

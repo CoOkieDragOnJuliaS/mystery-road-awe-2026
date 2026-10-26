@@ -80,6 +80,7 @@ export function renderTimeline(): void {
     events.push(timelineEvent);
   }
 
+  //Exercise 4 Demo 1: Replaced/duplicated in TimelinePage.tsx
   events = events.slice().sort(function (a, b) {
     const diff = new Date(a.time).getTime() - new Date(b.time).getTime();
     return order === "desc" ? -diff : diff;
@@ -99,11 +100,15 @@ export function renderTimeline(): void {
     html += "<h3>" + item.title + "</h3>";
     html += "<p>" + item.description + "</p>";
 
+    //Outer Layer
+    // Exercise 4 Demo 1 --> changed to React component TimelineList
     const eventLocationNames: string[] = [];
     for (const locationId of item.locationIds) {
       const eventLocation = findLocationById(locationId);
       eventLocationNames.push(eventLocation ? eventLocation.name : locationId);
     }
+    //Inner Layer
+    // Exercise 4 Demo 1: Change to TimelineEventCard component in React
     if (eventLocationNames.length > 0) {
       html +=
         '<p class="evidence-meta">Location: ' +
@@ -111,6 +116,7 @@ export function renderTimeline(): void {
         "</p>";
     }
 
+    //Exercise 4 Demo 1: Change to TimelineEventCard component in React --> replaced with the button key and evidence-link-btn class for the event.evidenceIds.map() below
     for (const evidenceId of item.evidenceIds) {
       html +=
         '<button type="button" class="evidence-link-btn" data-evidence-id="' +
@@ -121,6 +127,7 @@ export function renderTimeline(): void {
     }
     html += "</div>";
   }
+  // Exercise 4 Demo 1 --> changed to React component TimelineList
   if (events.length === 0) {
     html = "<p>No timeline events match the current filters.</p>";
   }
