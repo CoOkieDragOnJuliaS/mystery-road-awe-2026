@@ -1,12 +1,13 @@
 import * as state from "../../../state/globalState.ts";
-import { Card } from "./Card.tsx";
+import { LocationCard } from "./LocationCard.tsx";
 
-//Exercise 4 Demo 3: Collection of LocationsList
+//Exercise 4 Demo 3: locations rendered as a mapped collection with
+// key={location.id} — replaces the string concatenation in renderLocations().
 export function LocationsList() {
   return (
     <div className="locations-grid">
-      {state.getAllLocations().map((loc) => (
-        <Card key={loc.id} children={undefined} />
+      {state.getAllLocations().map((location) => (
+        <LocationCard key={location.id} location={location} />
       ))}
     </div>
   );

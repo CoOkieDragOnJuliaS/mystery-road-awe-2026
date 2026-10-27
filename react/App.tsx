@@ -4,6 +4,8 @@ import { isViewName } from "../types/domain.ts";
 import { Header } from "./Header.tsx";
 import { DashboardPage } from "./pages/DashboardPage.tsx";
 import { TimelinePage } from "./pages/TimelinePage.tsx";
+import { PeopleList } from "./pages/components/PeopleList.tsx";
+import { LocationsList } from "./pages/components/LocationsList.tsx";
 
 function getViewFromHash(): ViewName {
   const raw = window.location.hash.replace("#", "");
@@ -46,8 +48,16 @@ function EvidencePage() {
   return <h2>Evidence</h2>;
 }
 
+//Exercise 4 Demo 5: renders the real migrated lists. The People/Locations
+// tab split becomes real routes in Demo 8.
 function PeoplePage() {
-  return <h2>People</h2>;
+  return (
+    <section id="view-people" className="view active">
+      <h2>People &amp; Locations</h2>
+      <PeopleList />
+      <LocationsList />
+    </section>
+  );
 }
 
 function WorkspacePage() {
