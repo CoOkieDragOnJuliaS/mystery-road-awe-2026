@@ -40,7 +40,10 @@ export function PersonCard({ person, evidenceCount }: PersonCardProps) {
       <p>
         {evidenceCount} related evidence item{evidenceCount === 1 ? "" : "s"}{" "}
         &mdash;{" "}
-        <Link className="evidence-count-link" to={`/evidence?person=${person.id}`}>
+        <Link
+          className="evidence-count-link"
+          to={`/evidence?person=${person.id}`}
+        >
           view
         </Link>
       </p>

@@ -21,8 +21,7 @@ export function TimelinePage() {
   //interactive filter changes are Exercise 5 scope.
   const events = [...state.getAllTimeline()]
     .filter(
-      (event) =>
-        !initialPerson || event.personIds.includes(initialPerson),
+      (event) => !initialPerson || event.personIds.includes(initialPerson),
     )
     .sort((a, b) => +new Date(a.time) - +new Date(b.time));
 

@@ -56,7 +56,6 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
 
         And later on with server components. (Browser request an application shell, host returns HTML, JS and CSS and the client node renders the current route --> router switches views and APIs return data as needed --> state lives in browser and the views are switched in place
 
-
   - The current app is placed on the timeline I suppose placed on the line between AJAX/DOM requests and the client site-routing/application-state component based webpage
     Why?
 
@@ -117,7 +116,6 @@ ticked — the table above is just a fast overview, tick the boxes inside each d
                 2. The app works with an empty HTML shell and an app.js reference, it calls to it
                 3. Browser parses the JavaScript and runs it --> which means app.ts has the init() methods, the loadAllData(), api methods, which fetch and render elements
                 4. renderDashboard() runs afterwards and assigns it currently with innerHTML (there is a better solution as we know)
-
 
 - [x] Name one real cost of what the architecture pays for that choice (think about what a user with JavaScript disabled, or a slow connection, or a search engine crawler would see) and why.
 

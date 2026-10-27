@@ -32,7 +32,10 @@ export function TimelineEventCard({
         {formatDate(event.time)}&nbsp;&middot;&nbsp;
         {/*Exercise 4 Demo 7: shared Badge component, also used by
            CaseSummaryCard on the dashboard.*/}
-        <Badge label={event.certainty} variant={CERTAINTY_VARIANT[event.certainty]} />
+        <Badge
+          label={event.certainty}
+          variant={CERTAINTY_VARIANT[event.certainty]}
+        />
       </div>
       <h3>{event.title}</h3>
       <p>{event.description}</p>

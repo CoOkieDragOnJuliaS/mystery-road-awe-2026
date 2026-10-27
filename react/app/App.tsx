@@ -11,8 +11,7 @@ import { TimelinePage } from "../features/timeline/TimelinePage.tsx";
 // hashchange plumbing from Exercise 3. The router now owns navigation state;
 // unmatched URLs hit the catch-all redirect to "/" (the vanilla
 // handleHashChange silently fell back to the dashboard in the same way).
-// Evidence and Workspace stay as placeholder routes — their migration is
-// Exercise 5 scope.
+// Evidence and Workspace stay as placeholder routes
 export function App() {
   return (
     <>

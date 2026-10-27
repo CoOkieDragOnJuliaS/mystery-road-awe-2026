@@ -220,17 +220,17 @@ Types describe the intended shape but do not validate data at runtime.
 
 ## Common tasks
 
-| Task                          | Start here                                                              |
-| ----------------------------- | ----------------------------------------------------------------------- |
-| Add/change a React view       | `react/features/<feature>/`, routes in `react/app/App.tsx`, `styles.css`|
-| Add/change a shared component | `react/components/` (only if used by ≥2 features)                       |
-| Add/change a route or nav     | `react/app/App.tsx` and `react/app/Header.tsx`                          |
-| Legacy Evidence/Workspace     | `views/evidenceBasic.ts`, `views/evidenceDetails.ts`, `views/workspace.ts` |
-| Change loaded data/schema     | `types/domain.ts`, `public/data/*.json`, `data/api.ts`                  |
+| Task                          | Start here                                                                  |
+| ----------------------------- | --------------------------------------------------------------------------- |
+| Add/change a React view       | `react/features/<feature>/`, routes in `react/app/App.tsx`, `styles.css`    |
+| Add/change a shared component | `react/components/` (only if used by ≥2 features)                           |
+| Add/change a route or nav     | `react/app/App.tsx` and `react/app/Header.tsx`                              |
+| Legacy Evidence/Workspace     | `views/evidenceBasic.ts`, `views/evidenceDetails.ts`, `views/workspace.ts`  |
+| Change loaded data/schema     | `types/domain.ts`, `public/data/*.json`, `data/api.ts`                      |
 | Bookmarks/notes/hypothesis    | `storage/localStorage.ts`, `views/workspace.ts`, `views/evidenceDetails.ts` |
-| Global state                  | `state/globalState.ts`                                                  |
-| Legacy event wiring           | `utils/setup.ts`, plus window declarations in `app.ts`                  |
-| Exercise demos                | `EXERCISE_1.md` … `EXERCISE_4.md`                                       |
+| Global state                  | `state/globalState.ts`                                                      |
+| Legacy event wiring           | `utils/setup.ts`, plus window declarations in `app.ts`                      |
+| Exercise demos                | `EXERCISE_1.md` … `EXERCISE_4.md`                                           |
 
 ## Conventions
 

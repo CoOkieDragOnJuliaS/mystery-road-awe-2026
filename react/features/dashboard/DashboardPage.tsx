@@ -16,7 +16,7 @@ export function DashboardPage() {
   const bookmarks = state.getBookmarks();
 
   const reviewedCount = evidence.filter(
-    (item) => item.status === "reviewed"
+    (item) => item.status === "reviewed",
   ).length;
 
   const progressPct =
@@ -42,9 +42,9 @@ export function DashboardPage() {
       <CaseSummaryCard caseData={caseData} />
 
       <div className="stat-grid">
-            {stats.map((stat) => (
-                <StatCard key={stat.label} value={stat.value} label={stat.label} />
-            ))}
+        {stats.map((stat) => (
+          <StatCard key={stat.label} value={stat.value} label={stat.label} />
+        ))}
       </div>
 
       <Progress progressPct={progressPct} />

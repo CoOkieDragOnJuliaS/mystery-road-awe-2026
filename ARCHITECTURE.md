@@ -34,12 +34,12 @@ react/
 
 ## Routes
 
-| Route                    | Renders                                   |
-| ------------------------ | ----------------------------------------- |
-| /                      | Dashboard                                 |
-| /team/people          | People tab (nested route, <Outlet/>)    |
-| /team/locations        | Locations tab (nested route)              |
-| /team/people/:personId | Single-person detail (route param)        |
-| /timeline              | Timeline (?person= seeds initial filter)|
-| /evidence, /workspace| Placeholder until Exercise 5              |
-| *                      | Redirect to /                           |
+| Route                  | Renders                                  |
+| ---------------------- | ---------------------------------------- |
+| /                      | Dashboard                                |
+| /team/people           | People tab (nested route, <Outlet/>)     |
+| /team/locations        | Locations tab (nested route)             |
+| /team/people/:personId | Single-person detail (route param)       |
+| /timeline              | Timeline (?person= seeds initial filter) |
+| /evidence, /workspace  | Placeholder until Exercise 5             |
+| *                      | Redirect to /                            |
