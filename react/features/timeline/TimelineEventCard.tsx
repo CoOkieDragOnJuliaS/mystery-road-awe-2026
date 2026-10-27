@@ -2,50 +2,44 @@ import type {
   TimelineEvent,
   TimelineCertainty,
 } from "../../../types/domain.ts";
-import { isTimelineCertainty } from "../../../types/domain.ts";
 import { formatDate } from "../../../utils/dateHelper.ts";
 import { Card } from "../../components/Card.tsx";
+import { Badge, type BadgeVariant } from "../../components/Badge.tsx";
 
-//Typed props for the TimelineEventCard component - Type Error?
+//Exercise 4 Demo 1: explicitly typed props, no any — a wrong shape passed here
+// fails at compile time (e.g. <TimelineEventCard event="T01" .../>).
 interface TimelineEventCardProps {
   event: TimelineEvent;
   locationNames: string[];
 }
 
-/*function certaintyBadgeClass(certainty: TimelineCertainty | string): string {
-  //Demo 7: DOM-facing certainty values are narrowed to the known union.
-  const normalizedCertainty = isTimelineCertainty(certainty)
-    ? certainty
-    : "reported";
-  if (normalizedCertainty === "confirmed") return "reviewed";
-  if (normalizedCertainty === "contradictory") return "critical";
-  if (normalizedCertainty === "reported") return "flagged";
-  return "unreviewed";
-}*/
-
-//Exercise 4 Demo 2: CertaintyBadge Variant?
-const CERTAINTY_BADGE: Record<string, string> = {
-  confirmed: "badge-reviewed",
-  reported: "badge-flagged",
-  contradictory: "badge-critical",
+//Exercise 4 Demo 2: certainty → badge variant via a lookup map, replacing the
+// certaintyBadgeClass() if-chain in views/timeline.ts.
+const CERTAINTY_VARIANT: Record<TimelineCertainty, BadgeVariant> = {
+  confirmed: "reviewed",
+  reported: "flagged",
+  contradictory: "critical",
 };
 
 export function TimelineEventCard({
   event,
   locationNames,
 }: TimelineEventCardProps) {
-  const certaintyClass = CERTAINTY_BADGE[event.certainty] || "badge-unreviewed";
   return (
-    // html += '<div class="timeline-event certainty-' + item.certainty + '">'
-    //Exercise 4 Demo 1: Implemented the Card component to wrap the timeline event
+    //Exercise 4 Demo 1: Card wraps the event markup via children (composition).
     <Card className={`timeline-event certainty-${event.certainty}`}>
       <div className="timeline-time">
         {formatDate(event.time)}&nbsp;&middot;&nbsp;
-        <span className={`badge ${certaintyClass}`}>{event.certainty}</span>
+        {/*Exercise 4 Demo 7: shared Badge component, also used by
+           CaseSummaryCard on the dashboard.*/}
+        <Badge label={event.certainty} variant={CERTAINTY_VARIANT[event.certainty]} />
       </div>
       <h3>{event.title}</h3>
       <p>{event.description}</p>
 
+      {/*Exercise 4 Demo 2: `&&` — render only when locations exist. Written as
+         `> 0` so the falsy operand is a boolean, not the number 0 which React
+         would render literally. Replaces the length check in views/timeline.ts.*/}
       {locationNames.length > 0 && (
         <p className="evidence-meta">Location: {locationNames.join(", ")}</p>
       )}
