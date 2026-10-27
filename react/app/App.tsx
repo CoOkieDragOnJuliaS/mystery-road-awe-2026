@@ -4,6 +4,7 @@ import { DashboardPage } from "../features/dashboard/DashboardPage.tsx";
 import { PeopleLocationsPage } from "../features/people-locations/PeopleLocationsPage.tsx";
 import { PeopleList } from "../features/people-locations/PeopleList.tsx";
 import { LocationsList } from "../features/people-locations/LocationsList.tsx";
+import { PersonDetailPage } from "../features/people-locations/PersonDetailPage.tsx";
 import { TimelinePage } from "../features/timeline/TimelinePage.tsx";
 
 //Exercise 4 Demo 8: react-router-dom replaces the hand-rolled useState +
@@ -26,6 +27,8 @@ export function App() {
             <Route path="people" element={<PeopleList />} />
             <Route path="locations" element={<LocationsList />} />
           </Route>
+          {/*Exercise 4 Demo 9: route parameter — a specific person's page.*/}
+          <Route path="/team/people/:personId" element={<PersonDetailPage />} />
           <Route path="/timeline" element={<TimelinePage />} />
           <Route path="/evidence" element={<h2>Evidence</h2>} />
           <Route path="/workspace" element={<h2>Workspace</h2>} />

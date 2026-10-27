@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Person } from "../../../types/domain.ts";
 import { Card } from "../../components/Card.tsx";
 
@@ -19,7 +20,11 @@ export function PersonCard({ person, evidenceCount }: PersonCardProps) {
           alt={`Portrait of ${person.name}`}
         />
         <div>
-          <h3>{person.name}</h3>
+          {/*Exercise 4 Demo 9: the name links to the /team/people/:personId
+             route instead of only being reachable via a typed URL.*/}
+          <h3>
+            <Link to={`/team/people/${person.id}`}>{person.name}</Link>
+          </h3>
           <div className="person-role">{person.role}</div>
         </div>
       </div>
@@ -35,9 +40,9 @@ export function PersonCard({ person, evidenceCount }: PersonCardProps) {
       <p>
         {evidenceCount} related evidence item{evidenceCount === 1 ? "" : "s"}{" "}
         &mdash;{" "}
-        <button type="button" className="evidence-count-link">
+        <Link className="evidence-count-link" to={`/evidence?person=${person.id}`}>
           view
-        </button>
+        </Link>
       </p>
     </Card>
   );
