@@ -1,10 +1,17 @@
 import * as state from "../../../state/globalState.ts";
+import type { PersonId } from "../../../types/domain.ts";
 
 //Exercise 4 Demo 5: TimelineFilters is presentational — it renders the
-// controls but owns no filtering logic. The selects are visually complete
-// but intentionally not wired to onChange — interactive filtering is
-// Exercise 5 scope.
-export function TimelineFilters() {
+// controls but owns no filtering logic.
+//Exercise 4 Demo 10: the selects are visually complete but intentionally
+// not wired to onChange — interactive filtering is Exercise 5 scope.
+// defaultValue shows the initial selection (from the ?person= query param)
+// without needing useState.
+interface TimelineFiltersProps {
+  initialPerson?: PersonId;
+}
+
+export function TimelineFilters({ initialPerson }: TimelineFiltersProps) {
   const people = state.getAllPeople();
   const locations = state.getAllLocations();
 
@@ -27,7 +34,7 @@ export function TimelineFilters() {
         <label htmlFor="timelinePersonFilter" className="visually-hidden">
           Filter by person
         </label>
-        <select id="timelinePersonFilter" defaultValue="">
+        <select id="timelinePersonFilter" defaultValue={initialPerson ?? ""}>
           <option value="">All people</option>
           {people.map((person) => (
             <option key={person.id} value={person.id}>

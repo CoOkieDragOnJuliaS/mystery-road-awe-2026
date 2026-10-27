@@ -1,8 +1,8 @@
 import type { Location } from "../../../types/domain.ts";
 import { Card } from "../../components/Card.tsx";
 
-//Exercise 4 Demo 5: presentational location card — props in, markup out.
-// Replaces the string concatenation in renderLocations() in views/people.ts.
+//Exercise 4 Demo 1: typed props, no any. Replaces renderLocations() in
+// views/people.ts which concatenated the same markup as strings.
 interface LocationCardProps {
   location: Location;
 }
