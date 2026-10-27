@@ -1,19 +1,17 @@
-import type { ViewName } from "../../types/domain.ts";
+import { NavLink } from "react-router-dom";
 
-type HeaderProps = {
-  currentView: ViewName;
-  onNavigate: (view: ViewName) => void;
-};
-
-const VIEWS: { id: ViewName; label: string }[] = [
-  { id: "dashboard", label: "Dashboard" },
-  { id: "evidence", label: "Evidence" },
-  { id: "people", label: "People & Locations" },
-  { id: "timeline", label: "Timeline" },
-  { id: "workspace", label: "Workspace" },
+//Exercise 4 Demo 8: navigation is now real routes. NavLink renders an <a> so
+// links are bookmarkable/shareable, and it computes the .active class itself —
+// the currentView prop and onNavigate callback are gone.
+const NAV_ITEMS: { to: string; label: string; end?: boolean }[] = [
+  { to: "/", label: "Dashboard", end: true },
+  { to: "/evidence", label: "Evidence" },
+  { to: "/team/people", label: "People & Locations" },
+  { to: "/timeline", label: "Timeline" },
+  { to: "/workspace", label: "Workspace" },
 ];
 
-export function Header({ currentView, onNavigate }: HeaderProps) {
+export function Header() {
   return (
     <header className="app-header">
       <div className="header-inner">
@@ -31,15 +29,17 @@ export function Header({ currentView, onNavigate }: HeaderProps) {
           </div>
         </div>
         <nav className="main-nav" aria-label="Main navigation">
-          {VIEWS.map((view) => (
-            <button
-              key={view.id}
-              type="button"
-              className={`nav-btn ${currentView === view.id ? "active" : ""}`}
-              onClick={() => onNavigate(view.id)}
+          {NAV_ITEMS.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                `nav-btn ${isActive ? "active" : ""}`
+              }
             >
-              {view.label}
-            </button>
+              {item.label}
+            </NavLink>
           ))}
         </nav>
       </div>
