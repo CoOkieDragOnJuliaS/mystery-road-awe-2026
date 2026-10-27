@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import type { ViewName } from "../types/domain.ts";
-import { isViewName } from "../types/domain.ts";
+import type { ViewName } from "../../types/domain.ts";
+import { isViewName } from "../../types/domain.ts";
 import { Header } from "./Header.tsx";
-import { DashboardPage } from "./pages/DashboardPage.tsx";
-import { TimelinePage } from "./pages/TimelinePage.tsx";
-import { PeopleList } from "./pages/components/PeopleList.tsx";
-import { LocationsList } from "./pages/components/LocationsList.tsx";
+//Exercise 4 Demo 6: reorganized by feature — app shell in react/app/,
+// shared UI in react/components/, pages in react/features/<feature>/.
+import { DashboardPage } from "../features/dashboard/DashboardPage.tsx";
+import { TimelinePage } from "../features/timeline/TimelinePage.tsx";
+import { PeopleList } from "../features/people-locations/PeopleList.tsx";
+import { LocationsList } from "../features/people-locations/LocationsList.tsx";
 
 function getViewFromHash(): ViewName {
   const raw = window.location.hash.replace("#", "");

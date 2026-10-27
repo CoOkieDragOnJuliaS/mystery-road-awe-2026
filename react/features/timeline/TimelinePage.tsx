@@ -1,6 +1,6 @@
-import * as state from "../../state/globalState.ts";
-import { TimelineFilters } from "./components/TimelineFilters.tsx";
-import { TimelineList } from "./components/TimelineList.tsx";
+import * as state from "../../../state/globalState.ts";
+import { TimelineFilters } from "./TimelineFilters.tsx";
+import { TimelineList } from "./TimelineList.tsx";
 
 //Exercise 4 Demo 5: feature/container component — owns data selection
 // (ordering the events) and hands finished arrays down to the presentational

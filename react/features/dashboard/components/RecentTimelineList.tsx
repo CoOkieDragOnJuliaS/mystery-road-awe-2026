@@ -1,4 +1,4 @@
-import type { TimelineEvent } from "../../../types/domain.ts";
+import type { TimelineEvent } from "../../../../types/domain.ts";
 
 type RecentTimelineListProps = {
   events: TimelineEvent[];

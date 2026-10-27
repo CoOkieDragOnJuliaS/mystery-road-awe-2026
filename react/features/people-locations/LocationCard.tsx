@@ -1,5 +1,5 @@
 import type { Location } from "../../../types/domain.ts";
-import { Card } from "./Card.tsx";
+import { Card } from "../../components/Card.tsx";
 
 //Exercise 4 Demo 5: presentational location card — props in, markup out.
 // Replaces the string concatenation in renderLocations() in views/people.ts.

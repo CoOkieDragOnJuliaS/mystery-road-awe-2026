@@ -4,7 +4,7 @@ import type {
 } from "../../../types/domain.ts";
 import { isTimelineCertainty } from "../../../types/domain.ts";
 import { formatDate } from "../../../utils/dateHelper.ts";
-import { Card } from "./Card.tsx";
+import { Card } from "../../components/Card.tsx";
 
 //Typed props for the TimelineEventCard component - Type Error?
 interface TimelineEventCardProps {

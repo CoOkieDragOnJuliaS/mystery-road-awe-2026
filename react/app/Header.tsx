@@ -1,4 +1,4 @@
-import type { ViewName } from "../types/domain.ts";
+import type { ViewName } from "../../types/domain.ts";
 
 type HeaderProps = {
   currentView: ViewName;

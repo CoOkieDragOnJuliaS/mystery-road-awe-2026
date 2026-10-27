@@ -1,4 +1,4 @@
-import * as state from "../../state/globalState.ts";
+import * as state from "../../../state/globalState.ts";
 import { CaseSummaryCard } from "./components/CaseSummaryCard";
 import { StatCard } from "./components/StatCard";
 import { Progress } from "./components/Progress";

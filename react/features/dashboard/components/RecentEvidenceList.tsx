@@ -1,4 +1,4 @@
-import type { Evidence } from "../../../types/domain.ts";
+import type { Evidence } from "../../../../types/domain.ts";
 
 type RecentEvidenceListProps = {
   evidence: Evidence[];

@@ -1,4 +1,4 @@
-import type { CaseData } from "../../../types/domain.ts";
+import type { CaseData } from "../../../../types/domain.ts";
 
 type CaseSummaryCardProps = {
   caseData: CaseData | null;

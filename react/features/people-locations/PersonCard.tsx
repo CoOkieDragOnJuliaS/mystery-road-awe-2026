@@ -1,5 +1,5 @@
 import type { Person } from "../../../types/domain.ts";
-import { Card } from "./Card.tsx";
+import { Card } from "../../components/Card.tsx";
 
 //Exercise 4 Demo 5: PersonCard is purely presentational — it turns props into
 // markup and knows nothing about globalState or where the count comes from.
