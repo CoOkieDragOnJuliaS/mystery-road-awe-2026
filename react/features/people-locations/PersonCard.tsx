@@ -10,6 +10,7 @@ interface PersonCardProps {
   evidenceCount: number;
 }
 
+//Beispiel: <PersonCard person="something" evidenceCount={3} />
 export function PersonCard({ person, evidenceCount }: PersonCardProps) {
   return (
     <Card className="person-card">
