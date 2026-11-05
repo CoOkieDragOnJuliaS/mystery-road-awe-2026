@@ -152,7 +152,8 @@ export function renderEvidenceList(): void {
   container.innerHTML = html;
 
   // Event delegation for card clicks / bookmark button.
-  container.addEventListener("click", handleEvidenceListClick);
+  //Exercise 5 - Demo 1 - not needed, because the .tsx EvidenceList handles the onClick event
+  //container.addEventListener("click", handleEvidenceListClick);
 }
 
 //Code Smell 1 - not needed

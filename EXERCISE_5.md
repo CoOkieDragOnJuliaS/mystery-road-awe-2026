@@ -38,14 +38,30 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 
 **Tasks**
 
-- [ ] Build the Evidence Catalogue and Workspace views' static structure in React (cards, the filter toolbar, the notes list, the hypothesis form) if you haven't already, then migrate at least 3 real event handlers from the vanilla version (e.g. bookmark click, search input, save-note click) into React event handlers (`onClick`, `onChange`, `onSubmit`, etc.).
-- [ ] For each one, confirm the vanilla version's inline `onclick` attribute or manually-attached `addEventListener` is gone. React should own the event, not the DOM.
+- [x] Build the Evidence Catalogue and Workspace views' static structure in React (cards, the filter toolbar, the notes list, the hypothesis form) if you haven't already, then migrate at least 3 real event handlers from the vanilla version (e.g. bookmark click, search input, save-note click) into React event handlers (`onClick`, `onChange`, `onSubmit`, etc.).
+
+      - onChange for filtering
+      - onClick for clearing Filters (because filtering) & evidence load
+      - onSubmit e.g. form (maybe saving note in evidence?)
+
+- [x] For each one, confirm the vanilla version's inline `onclick` attribute or manually-attached `addEventListener` is gone. React should own the event, not the DOM.
 
 **Questions** (depend on the tasks above)
 
-- [ ] How do you attach a click handler to a button in React versus how the vanilla version did it (inline `onclick="..."` in the HTML string, or `addEventListener` in JS)? What actually receives the event object in each approach, and is it the same kind of object?
-- [ ] The vanilla version's evidence-list click handling used event delegation (one listener on the container, checking `event.target`) partly to work around listeners being re-registered on
+- [x] How do you attach a click handler to a button in React versus how the vanilla version did it (inline `onclick="..."` in the HTML string, or `addEventListener` in JS)? What actually receives the event object in each approach, and is it the same kind of object?
+
+      *In Vanilla it happened like this:*
+      With an inline JavaScript addEventListener, we register a browser listener. It receives the event and reacts accordingly and manually "forwards" it to the listener
+
+      In React we have JSX which uses props, handles objects and uses callbacks to pass the message through.
+      React manages itself how it gets the information and can e.g. get the EvidenceCard callback by directly referencing the evidenceId.
+
+      
+- [x] The vanilla version's evidence-list click handling used event delegation (one listener on the container, checking `event.target`) partly to work around listeners being re-registered on
       every render. Do you still need that pattern in React? Why or why not?
+
+      In vanilla the app attaches a listener to the evidence. And with event.target the listener looks it the card has been clicked. I need to search the DOM for the item's id and React can do that automatically by updating the handler as anything changes. 
+      So no, you do not need to use that pattern in react, because the rendering happens and with it the registering and listener handling.
 
 ---
 

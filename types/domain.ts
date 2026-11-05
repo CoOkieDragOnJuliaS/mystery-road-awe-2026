@@ -84,6 +84,26 @@ export interface Evidence {
   bookmarked?: boolean;
 }
 
+export interface EvidenceFilterValues {
+   searchTerm: string;
+    type: string;
+    personId: string;
+    locationId: string;
+    status: string;
+    relevance: string;
+    sortOption: string;
+}
+
+export const initialFilters: EvidenceFilterValues = {
+  searchTerm: "",
+  type: "",
+  personId: "",
+  locationId: "",
+  status: "",
+  relevance: "",
+  sortOption: "date-desc",
+};
+
 export interface Person {
   id: PersonId;
   name: string;

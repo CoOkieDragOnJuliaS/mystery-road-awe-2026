@@ -1,15 +1,18 @@
-import type { Evidence } from "../../../types/domain";
+import type { Evidence, EvidenceId } from "../../../types/domain";
 import { formatDate } from "../../../utils/dateHelper";
 import { Card } from "../../components/Card";
 
 //Exercise 5 - Demo 1 - changing from evidenceBasic and evidenceDetails to evidence with card
 interface EvidenceCardProps {
   evidence: Evidence;
+  onSelectEvidence: (id: EvidenceId) => void;
 }
 
-export function EvidenceCard({ evidence }: EvidenceCardProps) {
+export function EvidenceCard({ evidence, onSelectEvidence }: EvidenceCardProps) {
+  //Exercise 5 - Demo 1 - needed to have onClick on an outer layer of the card, because card prop did not work with onChange
   return (
-    <Card className="evidence-card">
+    <div onClick={() => onSelectEvidence(evidence.id)} id="evidence-card-container">
+    <Card className="evidence-card" >
       <h3>{evidence.title}</h3>
 
       <div className="evidence-meta">
@@ -38,5 +41,6 @@ export function EvidenceCard({ evidence }: EvidenceCardProps) {
         ))}
       </div>
     </Card>
+      </div>
   );
 }

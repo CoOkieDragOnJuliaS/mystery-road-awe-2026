@@ -28,6 +28,7 @@ export function setupEventListeners(): void {
     });
   });
 
+  /*
   getRequiredElement<HTMLInputElement>("evidenceSearch").addEventListener(
     "input",
     evidence.handleSearchInput,
@@ -61,7 +62,8 @@ export function setupEventListeners(): void {
     "click",
     evidence.clearFilters,
   );
-
+  */
+ 
   getRequiredElement<HTMLSelectElement>("timelineOrder").addEventListener(
     "change",
     timeline.renderTimeline,

@@ -151,7 +151,9 @@ export function renderEvidenceDetail(evidenceItem: Evidence): void {
       if (state.getViewRendered().evidence) renderEvidenceList();
     },
   );
-  getRequiredElement<HTMLSelectElement>(
+
+  //Exercise 5 - Demo 1 - REMOVE addeventListeners as I change the course
+  /*getRequiredElement<HTMLSelectElement>(
     "detailRelevanceSelect",
   ).addEventListener("change", function (e) {
     const target = e.target;
@@ -161,7 +163,7 @@ export function renderEvidenceDetail(evidenceItem: Evidence): void {
     evidenceItem.relevance = target.value;
     renderEvidenceDetail(evidenceItem);
     if (state.getViewRendered().evidence) renderEvidenceList();
-  });
+  });*/
 }
 
 function statusOptionHTML(
