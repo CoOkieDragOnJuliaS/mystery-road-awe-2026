@@ -1,8 +1,8 @@
 import type { Evidence } from "../../../../types/domain.ts";
 
-type RecentEvidenceListProps = {
+interface RecentEvidenceListProps {
   evidence: Evidence[];
-};
+}
 
 export function RecentEvidenceList({ evidence }: RecentEvidenceListProps) {
   return (

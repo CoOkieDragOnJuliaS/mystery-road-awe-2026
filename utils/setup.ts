@@ -1,5 +1,5 @@
 import { handleHashChange, navigateTo } from "../navigation/router.ts";
-import * as evidence from "../views/evidenceBasic.ts";
+//import * as evidence from "../views/evidenceBasic.ts";
 import * as timeline from "../views/timeline.ts";
 import { getRequiredElement } from "./dom.ts";
 import { isViewName } from "../types/domain.ts";
@@ -63,7 +63,7 @@ export function setupEventListeners(): void {
     evidence.clearFilters,
   );
   */
- 
+
   getRequiredElement<HTMLSelectElement>("timelineOrder").addEventListener(
     "change",
     timeline.renderTimeline,
@@ -79,6 +79,8 @@ export function setupEventListeners(): void {
     timeline.renderTimeline,
   );
 
+  //Exercise 5 Demo 2 - not needed
+  /*
   getRequiredElement<HTMLInputElement>("hypConfidence").addEventListener(
     "input",
     function (e) {
@@ -88,4 +90,5 @@ export function setupEventListeners(): void {
         target.value;
     },
   );
+  */
 }

@@ -85,13 +85,13 @@ export interface Evidence {
 }
 
 export interface EvidenceFilterValues {
-   searchTerm: string;
-    type: string;
-    personId: string;
-    locationId: string;
-    status: string;
-    relevance: string;
-    sortOption: string;
+  searchTerm: string;
+  type: string;
+  personId: string;
+  locationId: string;
+  status: string;
+  relevance: string;
+  sortOption: string;
 }
 
 export const initialFilters: EvidenceFilterValues = {

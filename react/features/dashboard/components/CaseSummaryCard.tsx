@@ -1,9 +1,9 @@
 import type { CaseData } from "../../../../types/domain.ts";
 import { Badge } from "../../../components/Badge.tsx";
 
-type CaseSummaryCardProps = {
+interface CaseSummaryCardProps {
   caseData: CaseData | null;
-};
+}
 
 export function CaseSummaryCard({ caseData }: CaseSummaryCardProps) {
   return (

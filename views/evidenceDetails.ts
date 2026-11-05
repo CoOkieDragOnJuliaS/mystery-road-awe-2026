@@ -13,7 +13,6 @@ import { renderEvidenceList } from "./evidenceBasic.ts";
 import { getRequiredElement } from "../utils/dom.ts";
 import {
   isEvidenceId,
-  isEvidenceRelevance,
   isEvidenceStatus,
   type Evidence,
   type EvidenceId,

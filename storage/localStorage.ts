@@ -139,6 +139,17 @@ export function loadHypothesisFromStorage(): HypothesisDraft {
   }
 }
 
+//Demo 2: React submits the controlled draft instead of reading form elements.
+export function saveHypothesisDraft(draft: HypothesisDraft): void {
+  localStorage.setItem(
+    STORAGE_KEY_HYPOTHESIS,
+    JSON.stringify({
+      ...draft,
+      savedAt: new Date().toISOString(),
+    }),
+  );
+}
+
 export function saveHypothesis(): void {
   const suspectValue =
     getRequiredElement<HTMLSelectElement>("hypSuspect").value;

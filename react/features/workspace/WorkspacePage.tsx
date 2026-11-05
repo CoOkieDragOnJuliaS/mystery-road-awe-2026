@@ -4,7 +4,10 @@ import * as state from "../../../state/globalState.ts";
 import { BookmarksList } from "./BookmarksList";
 import { HypothesisForm } from "./HypothesisForm.tsx";
 import { NotesList } from "./NotesList";
-import { loadHypothesisFromStorage } from "../../../storage/localStorage.ts";
+import {
+  loadHypothesisFromStorage,
+  saveHypothesisDraft,
+} from "../../../storage/localStorage.ts";
 
 export function WorkspacePage() {
   const allEvidence = state.getAllEvidence();
@@ -32,6 +35,7 @@ export function WorkspacePage() {
             people={state.getAllPeople()}
             evidence={allEvidence}
             hypothesisDraft={hypothesisDraft}
+            onSave={saveHypothesisDraft}
           />
         </section>
       </div>

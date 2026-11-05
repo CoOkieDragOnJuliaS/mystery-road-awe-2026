@@ -1,6 +1,5 @@
 import * as state from "../state/globalState.ts";
 import {
-  findEvidenceById,
   findPersonById,
   evidenceMentionsPerson,
 } from "../utils/lookupHelpers.ts";
@@ -9,15 +8,15 @@ import {
   getStatusBadgeClass,
   getRelevanceBadgeClass,
 } from "../utils/badgeHelper.ts";
-import { saveBookmarksToStorage } from "../storage/localStorage.ts";
-import { openEvidenceDetail } from "./evidenceDetails.ts";
+//import { saveBookmarksToStorage } from "../storage/localStorage.ts";
+//import { openEvidenceDetail } from "./evidenceDetails.ts";
 import { getElement, getRequiredElement } from "../utils/dom.ts";
 import {
-  isEvidenceId,
+  //isEvidenceId,
   isLocationId,
   isPersonId,
   type Evidence,
-  type EvidenceId,
+  //type EvidenceId,
 } from "../types/domain.ts";
 // ---------------------------------------------------------------------
 // EVIDENCE CATALOGUE
@@ -208,6 +207,7 @@ function renderEvidenceCardHTML(evidenceItem: Evidence): string {
 }
 
 // Code Smell 2 - not needed
+/*
 function handleEvidenceListClick(event: Event): void {
   const target = event.target;
   if (!(target instanceof HTMLElement)) return;
@@ -225,8 +225,10 @@ function handleEvidenceListClick(event: Event): void {
     openEvidenceDetail(evidenceId);
   }
 }
+  */
 
 // Code Smell 3 - not needed
+/*
 function handleBookmarkClick(evidenceId: EvidenceId): void {
   const evidenceItem = findEvidenceById(evidenceId);
   if (!evidenceItem) return;
@@ -243,6 +245,7 @@ function handleBookmarkClick(evidenceId: EvidenceId): void {
   //Demo 7: the previous undeclared global `currentPage` became an explicit state lookup.
   if (state.getCurrentPage() === "evidence") renderEvidenceList();
 }
+  */
 
 export function applyStoredBookmarkFlags(): void {
   const bookmarks = state.getBookmarks();

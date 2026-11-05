@@ -56,11 +56,10 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
       In React we have JSX which uses props, handles objects and uses callbacks to pass the message through.
       React manages itself how it gets the information and can e.g. get the EvidenceCard callback by directly referencing the evidenceId.
 
-      
 - [x] The vanilla version's evidence-list click handling used event delegation (one listener on the container, checking `event.target`) partly to work around listeners being re-registered on
       every render. Do you still need that pattern in React? Why or why not?
 
-      In vanilla the app attaches a listener to the evidence. And with event.target the listener looks it the card has been clicked. I need to search the DOM for the item's id and React can do that automatically by updating the handler as anything changes. 
+      In vanilla the app attaches a listener to the evidence. And with event.target the listener looks it the card has been clicked. I need to search the DOM for the item's id and React can do that automatically by updating the handler as anything changes.
       So no, you do not need to use that pattern in react, because the rendering happens and with it the registering and listener handling.
 
 ---
@@ -69,15 +68,20 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 
 **Tasks**
 
-- [ ] Make the Evidence search box a controlled input (`value` + `onChange` backed by `useState`).
-- [ ] Make the entire hypothesis form (suspect select, nature select, evidence multi-select,
+- [x] Make the Evidence search box a controlled input (`value` + `onChange` backed by `useState`).
+- [x] Make the entire hypothesis form (suspect select, nature select, evidence multi-select,
       confidence range, explanation and alternative textareas) fully controlled.
-- [ ] Wire the "Save hypothesis draft" action to read from your controlled state and persist it (still to `localStorage` for now).
+- [x] Wire the "Save hypothesis draft" action to read from your controlled state and persist it (still to `localStorage` for now).
 
 **Questions** (depend on the tasks above)
 
-- [ ] What makes an input "controlled" versus "uncontrolled" in React? Show what happens if you try to type in one of your controlled inputs without wiring its `onChange` and explain, in terms of React's render cycle, _why_ that happens.
-- [ ] The hypothesis form has several different input types (select, multi-select, range, textarea). Did you use one `useState` per field, or a single object? Justify your choice — and note this question again once you get to Demo 7 (`useReducer`), which asks you to reconsider it for a different form.
+- [x] What makes an input "controlled" versus "uncontrolled" in React? Show what happens if you try to type in one of your controlled inputs without wiring its `onChange` and explain, in terms of React's render cycle, _why_ that happens.
+
+  A controlled input gets its value from React state. Its `onChange` updates that state. Without the update, the next render restores the old value.
+
+- [x] The hypothesis form has several different input types (select, multi-select, range, textarea). Did you use one `useState` per field, or a single object? Justify your choice — and note this question again once you get to Demo 7 (`useReducer`), which asks you to reconsider it for a different form.
+
+  I used one object because all fields form one hypothesis draft. One update copies the object and changes one field. Demo 7 can replace filter state with a reducer when transitions become more complex.
 
 ---
 
@@ -127,6 +131,8 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 
 ## Demo 6 — Passing callbacks downward
 
+The form receives an `onSave` callback from Workspace. The callback keeps persistence outside the form.
+
 **Tasks**
 
 - [ ] From wherever you lifted bookmark state to (Demo 5), pass a callback (e.g. `onToggleBookmark`) down through props to every component that needs to trigger a change, rather than letting child components reach up and mutate anything themselves.
@@ -135,8 +141,13 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 **Questions** (depend on the tasks above)
 
 - [ ] Why can't (or shouldn't) a deeply nested child component just directly modify state that lives in a distant ancestor? What does passing a callback down get you instead?
+
+  A child should not reach into distant state. A callback gives the child one typed capability and keeps ownership in the parent.
+
 - [ ] Trace one callback all the way from where it's defined (with the actual `useState` setter
       inside it) down to the component that calls it. How many component layers does it pass through, and does that feel like "too many". Is prop drilling becoming a real problem here?
+
+  The hypothesis save callback passes from Workspace to HypothesisForm. It passes through one layer. This is still manageable.
 
 ---
 

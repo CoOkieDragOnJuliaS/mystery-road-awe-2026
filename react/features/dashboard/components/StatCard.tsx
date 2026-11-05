@@ -1,7 +1,7 @@
-type StatCardProps = {
+interface StatCardProps {
   value: number;
   label: string;
-};
+}
 
 export function StatCard({ value, label }: StatCardProps) {
   return (

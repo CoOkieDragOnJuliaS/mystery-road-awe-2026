@@ -1,8 +1,8 @@
 import type { TimelineEvent } from "../../../../types/domain.ts";
 
-type RecentTimelineListProps = {
+interface RecentTimelineListProps {
   events: TimelineEvent[];
-};
+}
 
 export function RecentTimelineList({ events }: RecentTimelineListProps) {
   return (
