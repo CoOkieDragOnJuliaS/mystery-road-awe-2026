@@ -28,7 +28,7 @@ react/
 - **Shared on second real use.** A component is promoted to react/components/
   only when two or more features import it (e.g. Badge is used by
   features/timeline/ and features/dashboard/). No preemptive sharing.
-  
+
 - **Presentational vs. feature.** Files that read state/globalState.ts or
   own routing/data selection are feature components (pages, lists);
   files that only turn props into JSX are presentational (cards, Badge,

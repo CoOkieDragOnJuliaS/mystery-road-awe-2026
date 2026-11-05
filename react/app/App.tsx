@@ -6,6 +6,8 @@ import { PeopleList } from "../features/people-locations/PeopleList.tsx";
 import { LocationsList } from "../features/people-locations/LocationsList.tsx";
 import { PersonDetailPage } from "../features/people-locations/PersonDetailPage.tsx";
 import { TimelinePage } from "../features/timeline/TimelinePage.tsx";
+import { EvidencePage } from "../features/evidence/EvidencePage.tsx";
+import { WorkspacePage } from "../features/workspace/WorkspacePage.tsx";
 
 //Exercise 4 Demo 8: react-router-dom replaces the hand-rolled useState +
 // hashchange plumbing from Exercise 3. The router now owns navigation state;
@@ -29,8 +31,8 @@ export function App() {
           {/*Exercise 4 Demo 9: route parameter — a specific person's page.*/}
           <Route path="/team/people/:personId" element={<PersonDetailPage />} />
           <Route path="/timeline" element={<TimelinePage />} />
-          <Route path="/evidence" element={<h2>Evidence</h2>} />
-          <Route path="/workspace" element={<h2>Workspace</h2>} />
+          <Route path="/evidence" element={<EvidencePage />} />
+          <Route path="/workspace" element={<WorkspacePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

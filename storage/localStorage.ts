@@ -87,7 +87,8 @@ export function loadNoteAsync(evidenceId: EvidenceId): Promise<string> {
   return Promise.resolve(loadNoteForEvidence(evidenceId));
 }
 
-export function loadHypothesisFromStorage(): void {
+//Exercise 5 - Demo 1 -> NO HTML DOM MANIPULATION IN .tsx HypothesisForm
+/*export function loadHypothesisFromStorage(): void {
   const raw = localStorage.getItem(STORAGE_KEY_HYPOTHESIS);
   if (!raw) return;
 
@@ -113,6 +114,29 @@ export function loadHypothesisFromStorage(): void {
   Array.from(evidenceSelect.options).forEach((option) => {
     option.selected = savedIds.includes(option.value as EvidenceId);
   });
+}*/
+
+export function loadHypothesisFromStorage(): HypothesisDraft {
+  const emptyDraft: HypothesisDraft = {
+    suspectId: "",
+    nature: "",
+    evidenceIds: [],
+    confidence: 50,
+    explanation: "",
+    alternative: "",
+  };
+
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_HYPOTHESIS);
+
+    if (!raw) return emptyDraft;
+
+    const parsed: unknown = JSON.parse(raw);
+
+    return isHypothesisDraft(parsed) ? parsed : emptyDraft;
+  } catch {
+    return emptyDraft;
+  }
 }
 
 export function saveHypothesis(): void {

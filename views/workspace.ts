@@ -27,6 +27,7 @@ export function renderBookmarksList(): void {
   const container = getElement<HTMLElement>("bookmarksList");
   if (!container) return;
 
+  //Exercise 5 Demo 1 - getting this inside .tsx file
   const allEvidence = state.getAllEvidence();
   const bookmarkedItems = allEvidence.filter(function (evidenceItem) {
     return evidenceItem.bookmarked;
@@ -113,6 +114,7 @@ export function populateHypothesisDropdowns(): void {
   const evidenceSelect = getElement<HTMLSelectElement>("hypEvidence");
   if (!suspectSelect || !evidenceSelect) return;
 
+  //Exercise 5 - Demo 1 - populating dropdowns in HypothesisForm
   const currentSuspect = suspectSelect.value;
   suspectSelect.innerHTML = '<option value="">Select a person…</option>';
   for (const person of state.getAllPeople()) {

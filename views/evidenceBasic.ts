@@ -29,6 +29,7 @@ export function populateEvidenceDropdowns(): void {
   const locationSelect = getElement<HTMLSelectElement>("filterLocation");
   if (!typeSelect || !personSelect || !locationSelect) return;
 
+  //Exercise 5 - Demo 1 - filtering inside .tsx EvidenceFilters
   const types: string[] = [];
   for (const evidenceItem of state.getAllEvidence()) {
     const type = evidenceItem.type.toLowerCase();
@@ -59,6 +60,7 @@ export function populateEvidenceDropdowns(): void {
   }
 }
 
+//This function in evidenceFilters.tsx
 export function getFilteredEvidence(): Evidence[] {
   const searchBox = getElement<HTMLInputElement>("evidenceSearch");
   const searchTerm = searchBox ? searchBox.value.toLowerCase().trim() : "";
@@ -252,6 +254,7 @@ export function handleSortChange(): void {
   renderEvidenceList();
 }
 
+//Exercise 5 - Demo 1 Clearing filters is not yet implemented in .tsx EvidenceFilters
 export function clearFilters(): void {
   getRequiredElement<HTMLInputElement>("evidenceSearch").value = "";
   getRequiredElement<HTMLSelectElement>("filterType").value = "";
