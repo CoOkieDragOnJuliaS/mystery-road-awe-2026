@@ -13,6 +13,7 @@ export function DashboardPage() {
   const people = state.getAllPeople();
   const locations = state.getAllLocations();
   const timeline = state.getAllTimeline();
+  //Exercise 5 - Demo 4: the count is derived from the shared bookmark IDs.
   const bookmarks = state.getBookmarks();
 
   const reviewedCount = evidence.filter(

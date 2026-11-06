@@ -11,7 +11,11 @@ import {
 
 export function WorkspacePage() {
   const allEvidence = state.getAllEvidence();
-  const bookmarkedItems = allEvidence.filter((item) => item.bookmarked);
+  //Exercise 5 - Demo 4: derive this list from the shared bookmark IDs.
+  const bookmarkedIds = state.getBookmarks();
+  const bookmarkedItems = allEvidence.filter((item) =>
+    bookmarkedIds.includes(item.id),
+  );
   const hypothesisDraft = loadHypothesisFromStorage();
 
   return (

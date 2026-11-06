@@ -111,13 +111,20 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 
 **Tasks**
 
-- [ ] Implement the Evidence Catalogue's filtering/sorting so that the _filtered, sorted list is computed from_ the full evidence list and the current filter/sort state, every render. Never stored as its own separate piece of state that could drift out of sync.
-- [ ] Do the same for the Dashboard's bookmark count and the Workspace's bookmarked-items list: both should be derived from the same single source of truth for bookmarks, not duplicated state.
+- [x] Implement the Evidence Catalogue's filtering/sorting so that the _filtered, sorted list is computed from_ the full evidence list and the current filter/sort state, every render. Never stored as its own separate piece of state that could drift out of sync.
+- [x] Do the same for the Dashboard's bookmark count and the Workspace's bookmarked-items list: both should be derived from the same single source of truth for bookmarks, not duplicated state.
+
+  The filtered evidence list and bookmark list are calculated during render. Bookmark IDs are the shared source.
 
 **Questions** (depend on the tasks above)
 
-- [ ] What's the rule for deciding whether something belongs in `useState` versus being computed inline (or via `useMemo`) during render? Apply that rule to the filtered evidence list and justify your answer.
-- [ ] The vanilla app had two related bugs here: a dashboard bookmark count that could go stale (because it only re-rendered on a view's first visit), and a `filteredEvidence` variable that was sometimes literally the _same array reference_ as the master list. Explain, concretely, why deriving these values during render instead of storing them makes **both** of those bug classes structurally impossible, not just less likely.
+- [x] What's the rule for deciding whether something belongs in `useState` versus being computed inline (or via `useMemo`) during render? Apply that rule to the filtered evidence list and justify your answer.
+
+  Store values that change independently. Compute values that follow from current state or props. The filtered list follows from evidence and filters, so it is derived.
+
+- [x] The vanilla app had two related bugs here: a dashboard bookmark count that could go stale (because it only re-rendered on a view's first visit), and a `filteredEvidence` variable that was sometimes literally the _same array reference_ as the master list. Explain, concretely, why deriving these values during render instead of storing them makes **both** of those bug classes structurally impossible, not just less likely.
+
+  Each render recalculates the count from current bookmark IDs. Each filter calculation starts from the full evidence input and returns a new sorted result. No stored filtered array can become stale or replace the master order.
 
 ---
 
