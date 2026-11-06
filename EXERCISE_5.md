@@ -210,16 +210,29 @@ The form receives an `onSave` callback from Workspace. The callback keeps persis
 
 **Tasks**
 
-- [ ] Pick one piece of state from this exercise (bookmark state is a strong candidate, given Demo 6's prop-drilling question) and actually implement it via React Context, replacing the prop-drilled version.
-- [ ] Explain a short, honest decision: for _this specific app_, at its _current_ size, is Context actually the right call for this state, or is prop-drilling (or lifting state, without
+- [x] Pick one piece of state from this exercise (bookmark state is a strong candidate, given Demo 6's prop-drilling question) and actually implement it via React Context, replacing the prop-drilled version.
+
+  Bookmark state now uses `BookmarkProvider` and `useBookmarks`. The route pages no longer receive bookmark props.
+
+- [x] Explain a short, honest decision: for _this specific app_, at its _current_ size, is Context actually the right call for this state, or is prop-drilling (or lifting state, without
       Context) good enough? Be ready to defend whichever answer you land on.
+
+  Context is reasonable because three route pages use bookmark state. The app is still small, so Context is useful but not essential.
 
 **Questions** (depend on the tasks above)
 
-- [ ] What problem does Context actually solve? What does it _not_ solve (people sometimes expect it to behave like global state management. Where does that expectation break down)?
-- [ ] Revisit Demo 6's callback-depth question. Was prop drilling there actually a real problem
+- [x] What problem does Context actually solve? What does it _not_ solve (people sometimes expect it to behave like global state management. Where does that expectation break down)?
+
+  Context removes repeated prop forwarding through a descendant tree. It does not create state, persistence, reducers, or validation.
+
+- [x] Revisit Demo 6's callback-depth question. Was prop drilling there actually a real problem
       (annoying, error-prone, worth solving) or a manageable one? What's your threshold for reaching for Context instead of just drilling one more level?
-- [ ] "Unnecessary global state" is explicitly named as a common problem. Could using Context here be an example of that, even though Context isn't technically the same as a global variable?
+
+  The earlier two level prop path was manageable. Context became useful when Dashboard, Evidence, and Workspace all needed the same bookmark data.
+
+- [x] "Unnecessary global state" is explicitly named as a common problem. Could using Context here be an example of that, even though Context isn't technically the same as a global variable?
+
+  Yes. Context could be unnecessary for a nearby child. Here the shared route subtree gives it a clear purpose.
 
 ---
 

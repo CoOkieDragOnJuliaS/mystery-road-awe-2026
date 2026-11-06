@@ -4,6 +4,7 @@ import { EvidenceList } from "./EvidenceList.tsx";
 import { EvidenceFilters } from "./EvidenceFilters.tsx";
 import { filterEvidence } from "./evidenceFilterHelper.tsx";
 import { useReducer, useState } from "react";
+import { useBookmarks } from "../../app/BookmarkContext.tsx";
 import {
   type EvidenceFilterValues,
   type EvidenceId,
@@ -33,18 +34,16 @@ function filterReducer(
 
 //Exercise 5 - Demo 1 - changing from evidenceBasic and evidenceDetails to evidencePage
 interface EvidencePageProps {
-  bookmarkIds: EvidenceId[];
-  onToggleBookmark: (id: EvidenceId) => void;
   notes: NotesStore;
   onSaveNote: (id: EvidenceId, text: string) => void;
 }
 
 export function EvidencePage({
-  bookmarkIds,
-  onToggleBookmark,
   notes,
   onSaveNote,
 }: EvidencePageProps) {
+  //Exercise 5 - Demo 8: Evidence reads bookmark state from Context.
+  const { bookmarkIds, onToggleBookmark } = useBookmarks();
   const evidence = state.getAllEvidence();
   const people = state.getAllPeople();
   const locations = state.getAllLocations();

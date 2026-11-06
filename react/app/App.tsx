@@ -8,15 +8,10 @@ import { PersonDetailPage } from "../features/people-locations/PersonDetailPage.
 import { TimelinePage } from "../features/timeline/TimelinePage.tsx";
 import { EvidencePage } from "../features/evidence/EvidencePage.tsx";
 import { WorkspacePage } from "../features/workspace/WorkspacePage.tsx";
+import { BookmarkProvider } from "./BookmarkContext.tsx";
 import { useState } from "react";
-import {
-  saveBookmarksToStorage,
-  saveNoteForEvidence,
-} from "../../storage/localStorage.ts";
-import {
-  type EvidenceId,
-  type NotesStore,
-} from "../../types/domain.ts";
+import { saveNoteForEvidence } from "../../storage/localStorage.ts";
+import type { EvidenceId, NotesStore } from "../../types/domain.ts";
 import * as state from "../../state/globalState.ts";
 
 //Exercise 4 Demo 8: react-router-dom replaces the hand-rolled useState +
@@ -25,23 +20,9 @@ import * as state from "../../state/globalState.ts";
 // handleHashChange silently fell back to the dashboard in the same way).
 // Evidence and Workspace stay as placeholder routes
 export function App() {
-  //Exercise 5 - Demo 5: App is the lowest common owner of bookmark state.
-  const [bookmarkIds, setBookmarkIds] = useState<EvidenceId[]>(() =>
-    state.getBookmarks(),
-  );
   const [notes, setNotes] = useState<NotesStore>(() =>
     state.getNotesStore(),
   );
-
-  function handleToggleBookmark(id: EvidenceId): void {
-    const next = bookmarkIds.includes(id)
-      ? bookmarkIds.filter((currentId) => currentId !== id)
-      : [...bookmarkIds, id];
-
-    setBookmarkIds(next);
-    state.setBookmarks(next);
-    saveBookmarksToStorage();
-  }
 
   //Exercise 5 - Demo 6: App owns notes and passes the save callback downward.
   function handleSaveNote(id: EvidenceId, text: string): void {
@@ -53,43 +34,38 @@ export function App() {
     <>
       <Header />
       <main id="app" className="app-main">
-        <Routes>
-          <Route
-            path="/"
-            element={<DashboardPage bookmarkIds={bookmarkIds} />}
-          />
-          {/*Exercise 4 Demo 8: the old People/Locations tab toggle becomes two
+        <BookmarkProvider>
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            {/*Exercise 4 Demo 8: the old People/Locations tab toggle becomes two
              real nested routes rendered through <Outlet/>.*/}
-          <Route path="/team" element={<PeopleLocationsPage />}>
-            <Route index element={<Navigate to="people" replace />} />
-            <Route path="people" element={<PeopleList />} />
-            <Route path="locations" element={<LocationsList />} />
-          </Route>
-          {/*Exercise 4 Demo 9: route parameter — a specific person's page.*/}
-          <Route path="/team/people/:personId" element={<PersonDetailPage />} />
-          <Route path="/timeline" element={<TimelinePage />} />
-          <Route
-            path="/evidence"
-            element={
-              <EvidencePage
-                bookmarkIds={bookmarkIds}
-                onToggleBookmark={handleToggleBookmark}
-                notes={notes}
-                onSaveNote={handleSaveNote}
-              />
-            }
-          />
-          <Route
-            path="/workspace"
-            element={
-              <WorkspacePage
-                bookmarkIds={bookmarkIds}
-                notes={notes}
-              />
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="/team" element={<PeopleLocationsPage />}>
+              <Route index element={<Navigate to="people" replace />} />
+              <Route path="people" element={<PeopleList />} />
+              <Route path="locations" element={<LocationsList />} />
+            </Route>
+            {/*Exercise 4 Demo 9: route parameter — a specific person's page.*/}
+            <Route
+              path="/team/people/:personId"
+              element={<PersonDetailPage />}
+            />
+            <Route path="/timeline" element={<TimelinePage />} />
+            <Route
+              path="/evidence"
+              element={
+                <EvidencePage
+                  notes={notes}
+                  onSaveNote={handleSaveNote}
+                />
+              }
+            />
+            <Route
+              path="/workspace"
+              element={<WorkspacePage notes={notes} />}
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BookmarkProvider>
       </main>
     </>
   );

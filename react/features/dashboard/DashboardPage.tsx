@@ -4,21 +4,18 @@ import { StatCard } from "./components/StatCard";
 import { Progress } from "./components/Progress";
 import { RecentEvidenceList } from "./components/RecentEvidenceList";
 import { RecentTimelineList } from "./components/RecentTimelineList";
-import type { EvidenceId } from "../../../types/domain.ts";
+import { useBookmarks } from "../../app/BookmarkContext.tsx";
 
 //Exercise 4 Demo 6: moved into features/dashboard/ — the page and its private
 // components live together in one feature folder.
-interface DashboardPageProps {
-  bookmarkIds: EvidenceId[];
-}
-
-export function DashboardPage({ bookmarkIds }: DashboardPageProps) {
+export function DashboardPage() {
+  const { bookmarkIds } = useBookmarks();
   const caseData = state.getCaseData();
   const evidence = state.getAllEvidence();
   const people = state.getAllPeople();
   const locations = state.getAllLocations();
   const timeline = state.getAllTimeline();
-  //Exercise 5 - Demo 5: the page receives bookmark state from App.
+  //Exercise 5 - Demo 8: the page reads bookmark state from Context.
   const bookmarks = bookmarkIds;
 
   const reviewedCount = evidence.filter(

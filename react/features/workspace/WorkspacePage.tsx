@@ -8,19 +8,19 @@ import {
   loadHypothesisFromStorage,
   saveHypothesisDraft,
 } from "../../../storage/localStorage.ts";
-import type { EvidenceId, NotesStore } from "../../../types/domain.ts";
+import type { NotesStore } from "../../../types/domain.ts";
+import { useBookmarks } from "../../app/BookmarkContext.tsx";
 
 interface WorkspacePageProps {
-  bookmarkIds: EvidenceId[];
   notes: NotesStore;
 }
 
 export function WorkspacePage({
-  bookmarkIds,
   notes,
 }: WorkspacePageProps) {
+  const { bookmarkIds } = useBookmarks();
   const allEvidence = state.getAllEvidence();
-  //Exercise 5 - Demo 5: derive the list from bookmark props owned by App.
+  //Exercise 5 - Demo 8: derive the list from bookmark Context state.
   const bookmarkedItems = allEvidence.filter((item) =>
     bookmarkIds.includes(item.id),
   );
