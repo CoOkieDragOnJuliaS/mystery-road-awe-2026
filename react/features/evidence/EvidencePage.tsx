@@ -4,7 +4,6 @@ import { EvidenceList } from "./EvidenceList.tsx";
 import { EvidenceFilters } from "./EvidenceFilters.tsx";
 import { filterEvidence } from "./evidenceFilterHelper.tsx";
 import { useState } from "react";
-import { saveBookmarksToStorage } from "../../../storage/localStorage.ts";
 import {
   type EvidenceFilterValues,
   type EvidenceId,
@@ -12,9 +11,16 @@ import {
 } from "../../../types/domain.ts";
 
 //Exercise 5 - Demo 1 - changing from evidenceBasic and evidenceDetails to evidencePage
-export function EvidencePage() {
+interface EvidencePageProps {
+  bookmarkIds: EvidenceId[];
+  onToggleBookmark: (id: EvidenceId) => void;
+}
+
+export function EvidencePage({
+  bookmarkIds,
+  onToggleBookmark,
+}: EvidencePageProps) {
   const evidence = state.getAllEvidence();
-  const [bookmarkIds, setBookmarkIds] = useState(() => state.getBookmarks());
   const people = state.getAllPeople();
   const locations = state.getAllLocations();
   //const previewEvidence = evidence[0]; //Not implemented yet to display anything else
@@ -24,7 +30,7 @@ export function EvidencePage() {
   const [selectedEvidenceId, setSelectedEvidenceId] =
     useState<EvidenceId | null>(null);
 
-  //Exercise 5 - Demo 4: bookmark flags are derived from one ID source.
+  //Exercise 5 - Demo 5: bookmark state arrives from the common App owner.
   const evidenceWithBookmarks = evidence.map((item) => ({
     ...item,
     bookmarked: bookmarkIds.includes(item.id),
@@ -34,18 +40,7 @@ export function EvidencePage() {
     evidenceWithBookmarks.find((item) => item.id === selectedEvidenceId) ||
     null;
 
-  //Exercise 5 - Demo 4: the ID array is replaced, never mutated in place.
-  function handleToggleBookmark(id: EvidenceId): void {
-    const next = bookmarkIds.includes(id)
-      ? bookmarkIds.filter((currentId) => currentId !== id)
-      : [...bookmarkIds, id];
-
-    setBookmarkIds(next);
-    state.setBookmarks(next);
-    saveBookmarksToStorage();
-  }
-
-  //Exercise 5 - Demo 4: this list is derived on every render.
+  //Exercise 5 - Demo 5: the child receives the owner callback through props.
   const visibleEvidence = filterEvidence(evidenceWithBookmarks, filters);
 
   return (
@@ -61,7 +56,7 @@ export function EvidencePage() {
       <EvidenceList
         evidence={visibleEvidence}
         onSelectEvidence={setSelectedEvidenceId}
-        onToggleBookmark={handleToggleBookmark}
+        onToggleBookmark={onToggleBookmark}
       />
 
       {selectedEvidence && (

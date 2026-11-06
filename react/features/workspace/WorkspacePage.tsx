@@ -8,13 +8,17 @@ import {
   loadHypothesisFromStorage,
   saveHypothesisDraft,
 } from "../../../storage/localStorage.ts";
+import type { EvidenceId } from "../../../types/domain.ts";
 
-export function WorkspacePage() {
+interface WorkspacePageProps {
+  bookmarkIds: EvidenceId[];
+}
+
+export function WorkspacePage({ bookmarkIds }: WorkspacePageProps) {
   const allEvidence = state.getAllEvidence();
-  //Exercise 5 - Demo 4: derive this list from the shared bookmark IDs.
-  const bookmarkedIds = state.getBookmarks();
+  //Exercise 5 - Demo 5: derive the list from bookmark props owned by App.
   const bookmarkedItems = allEvidence.filter((item) =>
-    bookmarkedIds.includes(item.id),
+    bookmarkIds.includes(item.id),
   );
   const hypothesisDraft = loadHypothesisFromStorage();
 

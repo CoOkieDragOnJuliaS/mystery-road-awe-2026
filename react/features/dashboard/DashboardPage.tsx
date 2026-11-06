@@ -4,17 +4,22 @@ import { StatCard } from "./components/StatCard";
 import { Progress } from "./components/Progress";
 import { RecentEvidenceList } from "./components/RecentEvidenceList";
 import { RecentTimelineList } from "./components/RecentTimelineList";
+import type { EvidenceId } from "../../../types/domain.ts";
 
 //Exercise 4 Demo 6: moved into features/dashboard/ — the page and its private
 // components live together in one feature folder.
-export function DashboardPage() {
+interface DashboardPageProps {
+  bookmarkIds: EvidenceId[];
+}
+
+export function DashboardPage({ bookmarkIds }: DashboardPageProps) {
   const caseData = state.getCaseData();
   const evidence = state.getAllEvidence();
   const people = state.getAllPeople();
   const locations = state.getAllLocations();
   const timeline = state.getAllTimeline();
-  //Exercise 5 - Demo 4: the count is derived from the shared bookmark IDs.
-  const bookmarks = state.getBookmarks();
+  //Exercise 5 - Demo 5: the page receives bookmark state from App.
+  const bookmarks = bookmarkIds;
 
   const reviewedCount = evidence.filter(
     (item) => item.status === "reviewed",

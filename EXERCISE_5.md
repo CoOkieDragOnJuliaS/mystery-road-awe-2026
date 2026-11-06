@@ -132,14 +132,21 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 
 **Tasks**
 
-- [ ] Identify the lowest common ancestor component of everywhere bookmark state needs to be read or changed (at minimum: an Evidence card's bookmark button, the Dashboard's bookmark count, and the Workspace's bookmarked-items list), and move the actual `useState` for bookmarks up to live there.
-- [ ] Confirm that toggling a bookmark from the Evidence view is immediately reflected on the
+- [x] Identify the lowest common ancestor component of everywhere bookmark state needs to be read or changed (at minimum: an Evidence card's bookmark button, the Dashboard's bookmark count, and the Workspace's bookmarked-items list), and move the actual `useState` for bookmarks up to live there.
+- [x] Confirm that toggling a bookmark from the Evidence view is immediately reflected on the
       Dashboard the next time it's rendered.
+
+  Bookmark state now lives in App. App passes IDs and a toggle callback to the route pages. The Dashboard and Workspace derive their values from the same props.
 
 **Questions** (depend on the tasks above)
 
-- [ ] What does "lifting state up" actually mean, mechanically? Walk through where the bookmark state lived before you lifted it, and where it lives now.
-- [ ] What would go wrong (be specific) if you had instead kept a separate `useState` for bookmarks inside each of the Dashboard, Evidence, and Workspace components?
+- [x] What does "lifting state up" actually mean, mechanically? Walk through where the bookmark state lived before you lifted it, and where it lives now.
+
+  The state first lived inside EvidencePage. It now lives in App, the common owner of all three routes. Values and callbacks move down through props.
+
+- [x] What would go wrong (be specific) if you had instead kept a separate `useState` for bookmarks inside each of the Dashboard, Evidence, and Workspace components?
+
+  Each page would hold a different bookmark list. Evidence could show a bookmark that Dashboard and Workspace did not know about. The views would disagree.
 
 ---
 
