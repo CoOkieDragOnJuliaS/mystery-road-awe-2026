@@ -6,11 +6,13 @@ import { Card } from "../../components/Card";
 interface EvidenceCardProps {
   evidence: Evidence;
   onSelectEvidence: (id: EvidenceId) => void;
+  onToggleBookmark: (id: EvidenceId) => void;
 }
 
 export function EvidenceCard({
   evidence,
   onSelectEvidence,
+  onToggleBookmark,
 }: EvidenceCardProps) {
   //Exercise 5 - Demo 1 - needed to have onClick on an outer layer of the card, because card prop did not work with onChange
   return (
@@ -19,6 +21,20 @@ export function EvidenceCard({
       id="evidence-card-container"
     >
       <Card className="evidence-card">
+        {/* Exercise 5 - Demo 3 - bookmark with immutable bookmark toggle*/}
+        <button
+          type="button"
+          className={`bookmark-btn ${evidence.bookmarked ? "active" : ""}`}
+          onClick={(event) => {
+            //The stopPropagation() method prevents propagation of the same event from being called.
+            // Propagation means bubbling up to parent elements or capturing down to child elements.
+            event.stopPropagation();
+            onToggleBookmark(evidence.id);
+          }}
+          aria-label={`Toggle bookmark for ${evidence.title}`}
+        >
+          {evidence.bookmarked ? "★" : "☆"}
+        </button>
         <h3>{evidence.title}</h3>
 
         <div className="evidence-meta">

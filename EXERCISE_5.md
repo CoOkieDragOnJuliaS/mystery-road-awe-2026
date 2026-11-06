@@ -89,14 +89,21 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 
 **Tasks**
 
-- [ ] Find at least one place where your first instinct (or an early draft) would have mutated state directly (e.g. `evidence.bookmarked = true`, or pushing directly into a state array), and rewrite it as an immutable update.
-- [ ] Add a case to your bookmark toggle logic that specifically exercises this: toggling a bookmark must produce a _new_ array/object, not a mutated one.
+- [x] Find at least one place where your first instinct (or an early draft) would have mutated state directly (e.g. `evidence.bookmarked = true`, or pushing directly into a state array), and rewrite it as an immutable update.
+- [x] Add a case to your bookmark toggle logic that specifically exercises this: toggling a bookmark must produce a _new_ array/object, not a mutated one.
+
+  The bookmark handler uses `map` and object spread. The old array and item remain unchanged.
 
 **Questions** (depend on the tasks above)
 
-- [ ] Why does mutating state directly in React sometimes still appear to "work" on screen, but
+- [x] Why does mutating state directly in React sometimes still appear to "work" on screen, but
       cause real (possibly hard-to-track) bugs elsewhere? What is React actually comparing when it decides whether to re-render?
-- [ ] The original vanilla app had a real bug where sorting evidence mutated the master array via a shared reference, permanently losing the original order. Show how your React state update for the equivalent action (bookmark toggle, or sort, if you implement it) avoids that exact class of bug. Be specific about what's different, not just "React handles it."
+
+  Direct mutation can keep the same reference. React may not detect the expected change. Other consumers can also see the changed object unexpectedly.
+
+- [x] The original vanilla app had a real bug where sorting evidence mutated the master array via a shared reference, permanently losing the original order. Show how your React state update for the equivalent action (bookmark toggle, or sort, if you implement it) avoids that exact class of bug. Be specific about what's different, not just "React handles it."
+
+  The bookmark update creates a new array with `map`. It creates a new object only for the changed item. The original evidence array stays unchanged.
 
 ---
 

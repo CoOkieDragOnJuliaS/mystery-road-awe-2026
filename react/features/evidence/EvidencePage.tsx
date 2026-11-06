@@ -5,14 +5,14 @@ import { EvidenceFilters } from "./EvidenceFilters.tsx";
 import { filterEvidence } from "./evidenceFilterHelper.tsx";
 import { useState } from "react";
 import {
-  EvidenceFilterValues,
-  EvidenceId,
+  type EvidenceFilterValues,
+  type EvidenceId,
   initialFilters,
 } from "../../../types/domain.ts";
 
 //Exercise 5 - Demo 1 - changing from evidenceBasic and evidenceDetails to evidencePage
 export function EvidencePage() {
-  const evidence = state.getAllEvidence();
+  const [evidence, setEvidence] = useState(() => state.getAllEvidence());
   const people = state.getAllPeople();
   const locations = state.getAllLocations();
   //const previewEvidence = evidence[0]; //Not implemented yet to display anything else
@@ -24,6 +24,17 @@ export function EvidencePage() {
 
   const selectedEvidence =
     evidence.find((item) => item.id === selectedEvidenceId) || null;
+
+  //Demo 3: map creates a new array and object for the changed item.
+  function handleToggleBookmark(id: EvidenceId): void {
+    setEvidence((current) =>
+      current.map((item) =>
+        item.id === id
+          ? { ...item, bookmarked: !item.bookmarked }
+          : item,
+      ),
+    );
+  }
 
   //Demo 2 - filter the evidence based on the current filters state
   const visibleEvidence = filterEvidence(evidence, filters);
@@ -41,6 +52,7 @@ export function EvidencePage() {
       <EvidenceList
         evidence={visibleEvidence}
         onSelectEvidence={setSelectedEvidenceId}
+        onToggleBookmark={handleToggleBookmark}
       />
 
       {selectedEvidence && (
