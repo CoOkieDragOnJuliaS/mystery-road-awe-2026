@@ -9,8 +9,14 @@ import { TimelinePage } from "../features/timeline/TimelinePage.tsx";
 import { EvidencePage } from "../features/evidence/EvidencePage.tsx";
 import { WorkspacePage } from "../features/workspace/WorkspacePage.tsx";
 import { useState } from "react";
-import { saveBookmarksToStorage } from "../../storage/localStorage.ts";
-import { type EvidenceId } from "../../types/domain.ts";
+import {
+  saveBookmarksToStorage,
+  saveNoteForEvidence,
+} from "../../storage/localStorage.ts";
+import {
+  type EvidenceId,
+  type NotesStore,
+} from "../../types/domain.ts";
 import * as state from "../../state/globalState.ts";
 
 //Exercise 4 Demo 8: react-router-dom replaces the hand-rolled useState +
@@ -23,6 +29,9 @@ export function App() {
   const [bookmarkIds, setBookmarkIds] = useState<EvidenceId[]>(() =>
     state.getBookmarks(),
   );
+  const [notes, setNotes] = useState<NotesStore>(() =>
+    state.getNotesStore(),
+  );
 
   function handleToggleBookmark(id: EvidenceId): void {
     const next = bookmarkIds.includes(id)
@@ -32,6 +41,12 @@ export function App() {
     setBookmarkIds(next);
     state.setBookmarks(next);
     saveBookmarksToStorage();
+  }
+
+  //Exercise 5 - Demo 6: App owns notes and passes the save callback downward.
+  function handleSaveNote(id: EvidenceId, text: string): void {
+    saveNoteForEvidence(id, text);
+    setNotes(state.getNotesStore());
   }
 
   return (
@@ -59,12 +74,19 @@ export function App() {
               <EvidencePage
                 bookmarkIds={bookmarkIds}
                 onToggleBookmark={handleToggleBookmark}
+                notes={notes}
+                onSaveNote={handleSaveNote}
               />
             }
           />
           <Route
             path="/workspace"
-            element={<WorkspacePage bookmarkIds={bookmarkIds} />}
+            element={
+              <WorkspacePage
+                bookmarkIds={bookmarkIds}
+                notes={notes}
+              />
+            }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

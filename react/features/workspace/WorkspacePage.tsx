@@ -8,13 +8,17 @@ import {
   loadHypothesisFromStorage,
   saveHypothesisDraft,
 } from "../../../storage/localStorage.ts";
-import type { EvidenceId } from "../../../types/domain.ts";
+import type { EvidenceId, NotesStore } from "../../../types/domain.ts";
 
 interface WorkspacePageProps {
   bookmarkIds: EvidenceId[];
+  notes: NotesStore;
 }
 
-export function WorkspacePage({ bookmarkIds }: WorkspacePageProps) {
+export function WorkspacePage({
+  bookmarkIds,
+  notes,
+}: WorkspacePageProps) {
   const allEvidence = state.getAllEvidence();
   //Exercise 5 - Demo 5: derive the list from bookmark props owned by App.
   const bookmarkedItems = allEvidence.filter((item) =>
@@ -33,7 +37,7 @@ export function WorkspacePage({ bookmarkIds }: WorkspacePageProps) {
 
         <section id="workspace-notes" className="notes-list">
           <NotesList
-            notes={state.getNotesStore()}
+            notes={notes}
             evidenceItems={allEvidence}
           />
         </section>

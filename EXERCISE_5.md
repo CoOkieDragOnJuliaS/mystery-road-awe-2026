@@ -156,19 +156,24 @@ The form receives an `onSave` callback from Workspace. The callback keeps persis
 
 **Tasks**
 
-- [ ] From wherever you lifted bookmark state to (Demo 5), pass a callback (e.g. `onToggleBookmark`) down through props to every component that needs to trigger a change, rather than letting child components reach up and mutate anything themselves.
-- [ ] Do the same for at least one more interaction that needs to affect state owned by a parent (e.g. saving a note, or changing evidence review status from the detail view).
+- [x] From wherever you lifted bookmark state to (Demo 5), pass a callback (e.g. `onToggleBookmark`) down through props to every component that needs to trigger a change, rather than letting child components reach up and mutate anything themselves.
+
+  App passes `onToggleBookmark` to EvidencePage. EvidencePage passes it to EvidenceList and EvidenceCard.
+
+- [x] Do the same for at least one more interaction that needs to affect state owned by a parent (e.g. saving a note, or changing evidence review status from the detail view).
+
+  App owns the notes store. EvidenceDetailPage submits a note through `onSaveNote`.
 
 **Questions** (depend on the tasks above)
 
-- [ ] Why can't (or shouldn't) a deeply nested child component just directly modify state that lives in a distant ancestor? What does passing a callback down get you instead?
+- [x] Why can't (or shouldn't) a deeply nested child component just directly modify state that lives in a distant ancestor? What does passing a callback down get you instead?
 
   A child should not reach into distant state. A callback gives the child one typed capability and keeps ownership in the parent.
 
-- [ ] Trace one callback all the way from where it's defined (with the actual `useState` setter
+- [x] Trace one callback all the way from where it's defined (with the actual `useState` setter
       inside it) down to the component that calls it. How many component layers does it pass through, and does that feel like "too many". Is prop drilling becoming a real problem here?
 
-  The hypothesis save callback passes from Workspace to HypothesisForm. It passes through one layer. This is still manageable.
+  `onSaveNote` starts in App and updates the notes state. It passes through EvidencePage and EvidenceDetailPage. Two layers are manageable.
 
 ---
 

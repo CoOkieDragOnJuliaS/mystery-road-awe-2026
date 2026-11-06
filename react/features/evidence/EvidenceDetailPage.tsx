@@ -1,13 +1,20 @@
-import { Evidence } from "../../../types/domain";
+import { useState } from "react";
+import type { Evidence, EvidenceId } from "../../../types/domain.ts";
 import { formatDate } from "../../../utils/dateHelper";
 import { findLocationById, findPersonById } from "../../../utils/lookupHelpers";
 
 interface EvidenceDetailProps {
   evidence: Evidence;
   note: string;
+  onSaveNote: (id: EvidenceId, text: string) => void;
 }
 
-export function EvidenceDetailPage({ evidence, note }: EvidenceDetailProps) {
+export function EvidenceDetailPage({
+  evidence,
+  note: initialNote,
+  onSaveNote,
+}: EvidenceDetailProps) {
+  const [note, setNote] = useState(initialNote);
   const personNames = evidence.personIds.map(
     (id) => findPersonById(id)?.name ?? id,
   );
@@ -88,17 +95,26 @@ export function EvidenceDetailPage({ evidence, note }: EvidenceDetailProps) {
 
       <div className="detail-field">
         <strong>Investigator note</strong>
-        <textarea
-          id="evidenceNoteInput"
-          className="note-textarea"
-          rows={3}
-          data-evidence-id={evidence.id}
-          placeholder="Add a private note about this evidence..."
-        ></textarea>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            //Exercise 5 - Demo 6: the detail child requests a parent update.
+            onSaveNote(evidence.id, note);
+          }}
+        >
+          <textarea
+            id="evidenceNoteInput"
+            className="note-textarea"
+            rows={3}
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+            placeholder="Add a private note about this evidence..."
+          />
 
-        <button type="button" className="btn btn-primary btn-small">
-          Save Note
-        </button>
+          <button type="submit" className="btn btn-primary btn-small">
+            Save Note
+          </button>
+        </form>
 
         <div className="detail-field">
           <strong>Note preview</strong>

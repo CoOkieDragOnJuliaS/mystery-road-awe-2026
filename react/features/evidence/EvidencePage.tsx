@@ -7,6 +7,7 @@ import { useState } from "react";
 import {
   type EvidenceFilterValues,
   type EvidenceId,
+  type NotesStore,
   initialFilters,
 } from "../../../types/domain.ts";
 
@@ -14,11 +15,15 @@ import {
 interface EvidencePageProps {
   bookmarkIds: EvidenceId[];
   onToggleBookmark: (id: EvidenceId) => void;
+  notes: NotesStore;
+  onSaveNote: (id: EvidenceId, text: string) => void;
 }
 
 export function EvidencePage({
   bookmarkIds,
   onToggleBookmark,
+  notes,
+  onSaveNote,
 }: EvidencePageProps) {
   const evidence = state.getAllEvidence();
   const people = state.getAllPeople();
@@ -61,8 +66,10 @@ export function EvidencePage({
 
       {selectedEvidence && (
         <EvidenceDetailPage
+          key={selectedEvidence.id}
           evidence={selectedEvidence}
-          note={state.getNotesStore()[selectedEvidence.id] ?? ""}
+          note={notes[selectedEvidence.id] ?? ""}
+          onSaveNote={onSaveNote}
         />
       )}
     </section>
