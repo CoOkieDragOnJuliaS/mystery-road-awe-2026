@@ -181,15 +181,28 @@ The form receives an `onSave` callback from Workspace. The callback keeps persis
 
 **Tasks**
 
-- [ ] Identify the Evidence Catalogue's combined filter state (search term, type, person, location, status, relevance, and sort order — 7+ related values that often change together or need to be reset together) as a single non-trivial state domain, and replace its `useState` calls with a single `useReducer`.
-- [ ] Implement at least 3 distinct action types (e.g. `SET_FILTER`, `SET_SORT`, `CLEAR_FILTERS`).
+- [x] Identify the Evidence Catalogue's combined filter state (search term, type, person, location, status, relevance, and sort order — 7+ related values that often change together or need to be reset together) as a single non-trivial state domain, and replace its `useState` calls with a single `useReducer`.
+
+  The filter values now use one reducer in EvidencePage. The reducer owns all related transitions.
+
+- [x] Implement at least 3 distinct action types (e.g. `SET_FILTER`, `SET_SORT`, `CLEAR_FILTERS`).
+
+  The reducer uses `SET_FILTERS`, `SET_SORT`, and `CLEAR_FILTERS`.
 
 **Questions** (depend on the tasks above)
 
-- [ ] Why is this particular piece of state ("evidence filters") a better fit for `useReducer` than for a pile of individual `useState` calls? What specifically got easier once you switched?
-- [ ] Show your `CLEAR_FILTERS` action. How does a reducer make "reset several related values at once, consistently" easier to get right than resetting them individually?
-- [ ] Is `useReducer` fundamentally different from `useState`, or is `useState` essentially a
+- [x] Why is this particular piece of state ("evidence filters") a better fit for `useReducer` than for a pile of individual `useState` calls? What specifically got easier once you switched?
+
+  The filters change as one domain. Named actions keep updates together. Clear logic has one implementation.
+
+- [x] Show your `CLEAR_FILTERS` action. How does a reducer make "reset several related values at once, consistently" easier to get right than resetting them individually?
+
+  `CLEAR_FILTERS` returns a copy of `initialFilters`. All seven values reset in one transition.
+
+- [x] Is `useReducer` fundamentally different from `useState`, or is `useState` essentially a
       special case of the same underlying idea? Justify your answer.
+
+  Both store state and schedule renders. `useState` is the simpler form. `useReducer` adds named actions and centralized transition logic.
 
 ---
 

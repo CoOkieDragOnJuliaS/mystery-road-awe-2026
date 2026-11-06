@@ -3,7 +3,6 @@ import {
   type Person,
   type Location,
   type EvidenceFilterValues,
-  initialFilters,
 } from "../../../types/domain";
 
 interface EvidenceFiltersProps {
@@ -12,6 +11,8 @@ interface EvidenceFiltersProps {
   locations: Location[];
   filters: EvidenceFilterValues;
   onFiltersChange: (filters: EvidenceFilterValues) => void;
+  onSortChange: (sortOption: string) => void;
+  onClearFilters: () => void;
 }
 
 //Exercise 5 Demo 1 - onChange function to update the filters state in the parent component
@@ -21,6 +22,8 @@ export function EvidenceFilters({
   locations,
   filters,
   onFiltersChange,
+  onSortChange,
+  onClearFilters,
 }: EvidenceFiltersProps) {
   {
     /*Again: Why ...? Because it copies all current values into a new object*/
@@ -119,7 +122,7 @@ export function EvidenceFilters({
           aria-label="Sort evidence"
           value={filters.sortOption}
           onChange={(e) =>
-            onFiltersChange({ ...filters, sortOption: e.target.value })
+            onSortChange(e.target.value)
           }
         >
           <option value="date-desc">Newest first</option>
@@ -128,11 +131,11 @@ export function EvidenceFilters({
           <option value="title-desc">Title Z–A</option>
         </select>
 
-        {/* Exercise 5 - Demo 1 - Clear filters button with onClick implemented*/}
+        {/* Exercise 5 - Demo 7: reset all related filters through one action. */}
         <button
           type="button"
           className="btn btn-secondary"
-          onClick={() => onFiltersChange({ ...initialFilters })}
+          onClick={onClearFilters}
         >
           Clear filters
         </button>

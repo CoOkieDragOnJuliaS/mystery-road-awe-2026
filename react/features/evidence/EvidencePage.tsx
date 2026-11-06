@@ -3,13 +3,33 @@ import * as state from "../../../state/globalState.ts";
 import { EvidenceList } from "./EvidenceList.tsx";
 import { EvidenceFilters } from "./EvidenceFilters.tsx";
 import { filterEvidence } from "./evidenceFilterHelper.tsx";
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import {
   type EvidenceFilterValues,
   type EvidenceId,
   type NotesStore,
   initialFilters,
 } from "../../../types/domain.ts";
+
+type FilterAction =
+  | { type: "SET_FILTERS"; filters: EvidenceFilterValues }
+  | { type: "SET_SORT"; sortOption: string }
+  | { type: "CLEAR_FILTERS" };
+
+//Exercise 5 - Demo 7: related filter transitions live in one pure reducer.
+function filterReducer(
+  current: EvidenceFilterValues,
+  action: FilterAction,
+): EvidenceFilterValues {
+  switch (action.type) {
+    case "SET_FILTERS":
+      return action.filters;
+    case "SET_SORT":
+      return { ...current, sortOption: action.sortOption };
+    case "CLEAR_FILTERS":
+      return { ...initialFilters };
+  }
+}
 
 //Exercise 5 - Demo 1 - changing from evidenceBasic and evidenceDetails to evidencePage
 interface EvidencePageProps {
@@ -30,8 +50,11 @@ export function EvidencePage({
   const locations = state.getAllLocations();
   //const previewEvidence = evidence[0]; //Not implemented yet to display anything else
 
-  //Exercise 5 - Demo 1 - useState to use onChange for filtering evidence?
-  const [filters, setFilters] = useState<EvidenceFilterValues>(initialFilters);
+  //Exercise 5 - Demo 7: useReducer models the complete filter state domain.
+  const [filters, dispatchFilters] = useReducer(
+    filterReducer,
+    initialFilters,
+  );
   const [selectedEvidenceId, setSelectedEvidenceId] =
     useState<EvidenceId | null>(null);
 
@@ -55,7 +78,13 @@ export function EvidencePage({
         people={people}
         locations={locations}
         filters={filters}
-        onFiltersChange={setFilters}
+        onFiltersChange={(nextFilters) =>
+          dispatchFilters({ type: "SET_FILTERS", filters: nextFilters })
+        }
+        onSortChange={(sortOption) =>
+          dispatchFilters({ type: "SET_SORT", sortOption })
+        }
+        onClearFilters={() => dispatchFilters({ type: "CLEAR_FILTERS" })}
       />
 
       <EvidenceList
