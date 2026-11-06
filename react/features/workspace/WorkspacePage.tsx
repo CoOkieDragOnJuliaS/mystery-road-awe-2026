@@ -15,9 +15,7 @@ interface WorkspacePageProps {
   notes: NotesStore;
 }
 
-export function WorkspacePage({
-  notes,
-}: WorkspacePageProps) {
+export function WorkspacePage({ notes }: WorkspacePageProps) {
   const { bookmarkIds } = useBookmarks();
   const allEvidence = state.getAllEvidence();
   //Exercise 5 - Demo 8: derive the list from bookmark Context state.
@@ -36,10 +34,7 @@ export function WorkspacePage({
         </section>
 
         <section id="workspace-notes" className="notes-list">
-          <NotesList
-            notes={notes}
-            evidenceItems={allEvidence}
-          />
+          <NotesList notes={notes} evidenceItems={allEvidence} />
         </section>
 
         <section id="workspace-hypotheses" className="hypothesis-card">

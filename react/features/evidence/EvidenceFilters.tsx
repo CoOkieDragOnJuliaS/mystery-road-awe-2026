@@ -121,9 +121,7 @@ export function EvidenceFilters({
         <select
           aria-label="Sort evidence"
           value={filters.sortOption}
-          onChange={(e) =>
-            onSortChange(e.target.value)
-          }
+          onChange={(e) => onSortChange(e.target.value)}
         >
           <option value="date-desc">Newest first</option>
           <option value="date-asc">Oldest first</option>

@@ -38,10 +38,7 @@ interface EvidencePageProps {
   onSaveNote: (id: EvidenceId, text: string) => void;
 }
 
-export function EvidencePage({
-  notes,
-  onSaveNote,
-}: EvidencePageProps) {
+export function EvidencePage({ notes, onSaveNote }: EvidencePageProps) {
   //Exercise 5 - Demo 8: Evidence reads bookmark state from Context.
   const { bookmarkIds, onToggleBookmark } = useBookmarks();
   const evidence = state.getAllEvidence();
@@ -50,10 +47,7 @@ export function EvidencePage({
   //const previewEvidence = evidence[0]; //Not implemented yet to display anything else
 
   //Exercise 5 - Demo 7: useReducer models the complete filter state domain.
-  const [filters, dispatchFilters] = useReducer(
-    filterReducer,
-    initialFilters,
-  );
+  const [filters, dispatchFilters] = useReducer(filterReducer, initialFilters);
   const [selectedEvidenceId, setSelectedEvidenceId] =
     useState<EvidenceId | null>(null);
 

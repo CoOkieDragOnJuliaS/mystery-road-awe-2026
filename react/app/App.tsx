@@ -20,9 +20,7 @@ import * as state from "../../state/globalState.ts";
 // handleHashChange silently fell back to the dashboard in the same way).
 // Evidence and Workspace stay as placeholder routes
 export function App() {
-  const [notes, setNotes] = useState<NotesStore>(() =>
-    state.getNotesStore(),
-  );
+  const [notes, setNotes] = useState<NotesStore>(() => state.getNotesStore());
 
   //Exercise 5 - Demo 6: App owns notes and passes the save callback downward.
   function handleSaveNote(id: EvidenceId, text: string): void {
@@ -55,10 +53,7 @@ export function App() {
             <Route
               path="/evidence"
               element={
-                <EvidencePage
-                  notes={notes}
-                  onSaveNote={handleSaveNote}
-                />
+                <EvidencePage notes={notes} onSaveNote={handleSaveNote} />
               }
             />
             <Route

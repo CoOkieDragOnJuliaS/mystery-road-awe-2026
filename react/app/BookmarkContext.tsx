@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import { saveBookmarkIdsToStorage } from "../../storage/localStorage.ts";
 import * as state from "../../state/globalState.ts";
 import type { EvidenceId } from "../../types/domain.ts";
