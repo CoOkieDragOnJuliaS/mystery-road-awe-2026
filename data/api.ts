@@ -1,8 +1,4 @@
 import * as state from "../state/globalState.ts";
-import { renderDashboard } from "../views/dashboard.ts";
-import * as evidence from "../views/evidenceBasic.ts";
-import * as timeline from "../views/timeline.ts";
-import * as workspace from "../views/workspace.ts";
 import type {
   CaseData,
   Evidence,
@@ -55,10 +51,11 @@ export async function loadCorePeopleAndLocations(): Promise<void> {
   state.setAllLocations(locationsJson);
 
   hideLoadingStep();
-  renderDashboard();
-  populateAllDropdowns();
+  /*renderDashboard();
+  populateAllDropdowns();*/
 }
 
+//Exercise 5 - Demo 10: React owns view rendering after data loading.
 export async function loadEvidenceData(): Promise<void> {
   try {
     //Demo 6: Evidence[] commits personIds to person IDs, status to
@@ -66,12 +63,12 @@ export async function loadEvidenceData(): Promise<void> {
     const data = await fetchJson<Evidence[]>("data/evidence.json");
 
     state.setAllEvidence(data);
-    evidence.applyStoredBookmarkFlags();
+    //evidence.applyStoredBookmarkFlags();
     state.setEvidenceViewLoading(false);
     state.getFilteredEvidence();
-    renderDashboard();
-    populateAllDropdowns();
-    if (state.getCurrentPage() === "evidence") evidence.renderEvidenceList();
+    //renderDashboard();
+    //populateAllDropdowns();
+    //if (state.getCurrentPage() === "evidence") evidence.renderEvidenceList();
   } catch (error: unknown) {
     console.error("Failed to load evidence.json", error);
     alert("Evidence could not be loaded. Some views may be incomplete.");
@@ -82,11 +79,11 @@ export async function loadTimelineData(): Promise<void> {
   try {
     const data = await fetchJson<TimelineEvent[]>("data/timeline.json");
     state.setAllTimeline(data);
-    renderDashboard();
+    /*renderDashboard();
 
     if (state.getCurrentPage() === "timeline") timeline.renderTimeline();
 
-    populateAllDropdowns();
+    populateAllDropdowns();*/
   } catch (error: unknown) {
     console.log("timeline load error", error);
   } finally {
@@ -104,8 +101,8 @@ export function loadAllData(): Promise<unknown> {
   });
 }
 
-export function populateAllDropdowns(): void {
+/*export function populateAllDropdowns(): void {
   evidence.populateEvidenceDropdowns();
   timeline.populateTimelineDropdowns();
   workspace.populateHypothesisDropdowns();
-}
+}*/

@@ -10,7 +10,7 @@ import { EvidencePage } from "../features/evidence/EvidencePage.tsx";
 import { WorkspacePage } from "../features/workspace/WorkspacePage.tsx";
 import { BookmarkProvider } from "./BookmarkContext.tsx";
 import { useState } from "react";
-import { saveNoteForEvidence } from "../../storage/localStorage.ts";
+import { saveNotesStoreToStorage } from "../../storage/localStorage.ts";
 import type { EvidenceId, NotesStore } from "../../types/domain.ts";
 import * as state from "../../state/globalState.ts";
 
@@ -26,8 +26,10 @@ export function App() {
 
   //Exercise 5 - Demo 6: App owns notes and passes the save callback downward.
   function handleSaveNote(id: EvidenceId, text: string): void {
-    saveNoteForEvidence(id, text);
-    setNotes(state.getNotesStore());
+    //Exercise 5 - Demo 9: update the React notes owner immutably.
+    const nextNotes = { ...notes, [id]: text };
+    setNotes(nextNotes);
+    saveNotesStoreToStorage(nextNotes);
   }
 
   return (

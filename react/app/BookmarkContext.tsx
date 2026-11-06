@@ -4,7 +4,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { saveBookmarksToStorage } from "../../storage/localStorage.ts";
+import { saveBookmarkIdsToStorage } from "../../storage/localStorage.ts";
 import * as state from "../../state/globalState.ts";
 import type { EvidenceId } from "../../types/domain.ts";
 
@@ -31,8 +31,8 @@ export function BookmarkProvider({ children }: BookmarkProviderProps) {
       : [...bookmarkIds, id];
 
     setBookmarkIds(next);
-    state.setBookmarks(next);
-    saveBookmarksToStorage();
+    //Exercise 5 - Demo 9: Context state is the React source of truth.
+    saveBookmarkIdsToStorage(next);
   }
 
   return (

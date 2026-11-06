@@ -240,14 +240,24 @@ The form receives an `onSave` callback from Workspace. The callback keeps persis
 
 **Tasks**
 
-- [ ] Review your own Evidence/Workspace/Dashboard code specifically for: duplicated state (the same fact represented in two places), stale state (a value that doesn't update when it should), excessive prop drilling, unnecessary global state, and any remaining direct mutation.
-- [ ] Find and fix at least 2 real instances (they can be ones you introduced yourself while
+- [x] Review your own Evidence/Workspace/Dashboard code specifically for: duplicated state (the same fact represented in two places), stale state (a value that doesn't update when it should), excessive prop drilling, unnecessary global state, and any remaining direct mutation.
+
+  The review found duplicate bookmark storage and duplicate note update paths.
+
+- [x] Find and fix at least 2 real instances (they can be ones you introduced yourself while
       building this exercise, that's normal and expected, not a failure).
+
+  Bookmark persistence no longer updates a second global bookmark copy. Note saving now updates the App state immutably.
 
 **Questions** (depend on the tasks above)
 
-- [ ] For each of the 2 issues you fixed: which of the five named categories did it fall into, and how did you notice it (a visible bug, a code-review-style re-read, React DevTools, something else)?
-- [ ] Of the five named problems (duplicated state, stale state, prop drilling, unnecessary global state, mutation), which one is this app's history (Exercise 1's bugs) most clearly an example of? Explain the connection directly.
+- [x] For each of the 2 issues you fixed: which of the five named categories did it fall into, and how did you notice it (a visible bug, a code-review-style re-read, React DevTools, something else)?
+
+  Bookmark state had duplicated storage in Context and global state. A code review found it. Notes used a global update path beside App state. The same review found it.
+
+- [x] Of the five named problems (duplicated state, stale state, prop drilling, unnecessary global state, mutation), which one is this app's history (Exercise 1's bugs) most clearly an example of? Explain the connection directly.
+
+  Duplicated and stale state are the clearest examples. Vanilla views stored related facts in separate variables and refreshed them at different times. React now derives lists and shares owned state.
 
 ---
 
@@ -255,12 +265,22 @@ The form receives an `onSave` callback from Workspace. The callback keeps persis
 
 **Tasks**
 
-- [ ] Do a final sweep of the Evidence Catalogue and Workspace views (and re-check Dashboard/People & Locations/Timeline from Exercises 3–4) for any remaining direct DOM manipulation, e.g. `document.querySelector`, manual `classList` changes, `innerHTML`, anything not going through React's render, and remove it.
+- [x] Do a final sweep of the Evidence Catalogue and Workspace views (and re-check Dashboard/People & Locations/Timeline from Exercises 3–4) for any remaining direct DOM manipulation, e.g. `document.querySelector`, manual `classList` changes, `innerHTML`, anything not going through React's render, and remove it.
+
+  The active React routes render through JSX. Data loading no longer calls legacy view renderers. The legacy files remain as course reference code.
+
 - [ ] Confirm the whole app (all 5 views) now runs entirely on React state and props, with zero manual DOM manipulation anywhere.
+
+  The active React views meet this condition. Legacy reference files and the loading overlay still contain DOM code, so the whole repository cannot honestly be marked complete.
 
 **Questions** (depend on the tasks above)
 
-- [ ] Show one state-management decision you made somewhere in this exercise (state ownership, `useState` vs. `useReducer`, prop drilling vs. Context, or something else) that you're not 100% sure was the right call. Explain the trade-off honestly, both directions.
-- [ ] Across Exercises 3–5, name one bug category from the _original_ vanilla app (Exercise 1's defect list) that is now, by construction, no longer possible in your React version — not just fixed, but structurally prevented. Explain why the React architecture rules it out.
+- [x] Show one state-management decision you made somewhere in this exercise (state ownership, `useState` vs. `useReducer`, prop drilling vs. Context, or something else) that you're not 100% sure was the right call. Explain the trade-off honestly, both directions.
+
+  Context removes bookmark prop drilling. It also makes ownership less visible and can rerender many consumers. Direct props would be simpler for this small app.
+
+- [x] Across Exercises 3–5, name one bug category from the _original_ vanilla app (Exercise 1's defect list) that is now, by construction, no longer possible in your React version — not just fixed, but structurally prevented. Explain why the React architecture rules it out.
+
+  Stale derived lists are structurally prevented in React views. Lists and counts are calculated from current state during render instead of stored separately.
 
 ---

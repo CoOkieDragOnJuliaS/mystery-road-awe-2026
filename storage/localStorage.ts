@@ -47,6 +47,11 @@ export const saveBookmarksToStorage = (): void => {
   );
 };
 
+//Exercise 5 - Demo 9: React can persist its owned bookmark state directly.
+export function saveBookmarkIdsToStorage(bookmarkIds: EvidenceId[]): void {
+  localStorage.setItem(STORAGE_KEY_BOOKMARKS, JSON.stringify(bookmarkIds));
+}
+
 export function loadBookmarksFromStorage(): void {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_BOOKMARKS);
@@ -65,6 +70,11 @@ export function saveNoteForEvidence(
   const notesStore = { ...state.getNotesStore() };
   notesStore[evidenceId] = text;
   state.setNotesStore(notesStore);
+  localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(notesStore));
+}
+
+//Exercise 5 - Demo 9: React can persist its complete notes snapshot directly.
+export function saveNotesStoreToStorage(notesStore: NotesStore): void {
   localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(notesStore));
 }
 
