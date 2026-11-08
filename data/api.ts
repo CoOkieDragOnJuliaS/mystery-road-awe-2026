@@ -14,10 +14,16 @@ import type {
 //of reading the static JSON files directly.
 const API_BASE_URL = "http://localhost:3001/api";
 
+//Exercise 6 - Demo 6: forward optional delay, error, and empty controls from
+//the browser URL so the three data states can be demonstrated live.
+function getDemoQuery(): string {
+  return window.location.search;
+}
+
 //Demo 6: response.json() returns JSON data but cannot prove its shape.
 // T is the expected domain type
 async function fetchJson<T>(resource: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}/${resource}`);
+  const response = await fetch(`${API_BASE_URL}/${resource}${getDemoQuery()}`);
 
   if (!response.ok) {
     throw new Error(`${response.url}: HTTP ${response.status}`);

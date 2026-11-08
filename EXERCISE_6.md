@@ -27,7 +27,7 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 | 3   | Cleanup: timers & subscriptions                | [x]    |
 | 4   | Build the read-only Node backend               | ☐      |
 | 5   | Consume the backend from React                 | [x]    |
-| 6   | Loading, error, and empty states               | ☐      |
+| 6   | Loading, error, and empty states               | [x]    |
 | 7   | Request races & cancellation                   | ☐      |
 | 8   | Extract a reusable custom hook                 | ☐      |
 | 9   | Separate UI, application logic, and API access | ☐      |
@@ -430,14 +430,64 @@ example you found if render ran twice?
 
 **Tasks**
 
-- [ ] For at least one view, implement all three states explicitly: a loading indicator while the fetch is pending, a real error message if it fails (using your backend's on-demand error endpoint from Demo 4 to trigger it live), and a distinct "no data" empty state if the response is successful but contains nothing.
-- [ ] Make sure these three states are visually and structurally distinguishable from each other, not all three collapsing into "shows nothing."
+<!-- //Exercise 6 - Demo 6: document the explicit loading, error, and empty
+     states implemented across the App and evidence view. -->
+
+- [x] For at least one view, implement all three states explicitly: a loading indicator while the fetch is pending, a real error message if it fails (using your backend's on-demand error endpoint from Demo 4 to trigger it live), and a distinct "no data" empty state if the response is successful but contains nothing.
+
+  - `App` renders a `data-loading` message while `dataLoadState` is
+    `loading`.
+  - `App` renders a `data-error` message when the backend Promise rejects and
+    `dataLoadState` becomes `error`.
+  - `EvidenceList` renders an `empty-state` message when the backend
+    successfully returns an empty evidence collection.
+  - The backend supports `?empty=1` for successful empty array responses.
+  - The backend supports `?error=1` for deliberate HTTP 500 responses.
+  - Add `?delay=2000`, `?error=1`, or `?empty=1` to the frontend URL,
+    for example `http://localhost:5173/?delay=2000`, to demonstrate each
+    state through the same React loading flow.
+
+- [x] Make sure these three states are visually and structurally distinguishable from each other, not all three collapsing into "shows nothing."
+
+  - Loading uses the `data-loading` class and `role="status"`.
+  - Errors use the `data-error` class and `role="alert"`.
+  - Empty evidence uses the `empty-state` class and a separate message.
+  - `styles.css` gives the three classes different structure and visual
+    treatment.
+  - The changed source files contain
+    `//Exercise 6 - Demo 6:` comments.
 
 **Questions** (depend on the tasks above)
 
-- [ ] Trigger your backend's error endpoint live and show the error state appearing. What state variable(s) are you tracking to distinguish "loading," "error," and "loaded successfully but empty" from each other?
-- [ ] The original vanilla app had a bug where a failed fetch could leave a loading spinner stuck forever because the cleanup/hide-loading step was never called on the error path. Explain specifically how your React version's state management makes that particular mistake
+- [x] Trigger your backend's error endpoint live and show the error state appearing. What state variable(s) are you tracking to distinguish "loading," "error," and "loaded successfully but empty" from each other?
+
+  - Open the frontend with `?error=1` while the backend is running.
+  - The API forwards that query parameter to the backend endpoints.
+  - The backend returns HTTP 500, `fetchJson` throws, and the `catch` branch
+    stores the message in `dataLoadError`.
+  - `dataLoadState` distinguishes the states:
+    - `loading` means the Promise is still pending.
+    - `error` means the Promise rejected.
+    - `ready` means the request succeeded.
+  - An empty successful result is distinguished by the returned collection
+    length. `EvidenceList` renders `empty-state` when `evidence.length === 0`.
+
+- [x] The original vanilla app had a bug where a failed fetch could leave a loading spinner stuck forever because the cleanup/hide-loading step was never called on the error path. Explain specifically how your React version's state management makes that particular mistake
       harder to make (or show that it doesn't, and fix it).
+
+  - The React flow has an explicit `catch` branch that changes
+    `dataLoadState` from `loading` to `error`.
+  - The `finally` branch calls `hideLoadingOverlay()` for both fulfilled and
+    rejected Promises.
+  - The visible loading message is controlled by React state, so it is
+    replaced by the error message after rejection instead of remaining as the
+    only visible state.
+  - A successful empty collection is not treated as an error and does not
+    leave the loading state active. It reaches `ready`, then the evidence
+    list renders its separate empty message.
+  - This explicit Promise handling follows Chapter 6: success belongs in the
+    fulfilled path, failure belongs in the rejected path, and cleanup that
+    must happen for both belongs in `finally`.
 
 ---
 

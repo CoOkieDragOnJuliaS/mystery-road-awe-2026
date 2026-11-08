@@ -67,10 +67,17 @@ export function App() {
       <Header />
       <main id="app" className="app-main">
         {dataLoadState === "loading" && (
-          <p role="status">Loading case data...</p>
+          //Exercise 6 - Demo 6: pending backend work has an explicit UI state.
+          <p className="data-loading" role="status">
+            Loading case data...
+          </p>
         )}
         {dataLoadState === "error" && (
-          <p role="alert">Could not load case data: {dataLoadError}</p>
+          //Exercise 6 - Demo 6: rejected backend work has a separate error
+          //message and is not represented as an empty collection.
+          <p className="data-error" role="alert">
+            Could not load case data: {dataLoadError}
+          </p>
         )}
         {dataLoadState === "ready" && (
           //Exercise 6 - Demo 5: data-dependent routes render after the

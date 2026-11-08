@@ -15,7 +15,9 @@ export function EvidenceList({
   return (
     <div id="evidenceList" className="evidence-grid">
       {evidence.length === 0 ? (
-        <p>No evidence available.</p>
+        //Exercise 6 - Demo 6: a fulfilled empty collection has its own
+        //rendered state and is not confused with loading or request failure.
+        <p className="empty-state">No evidence available.</p>
       ) : (
         evidence.map((item) => (
           <EvidenceCard

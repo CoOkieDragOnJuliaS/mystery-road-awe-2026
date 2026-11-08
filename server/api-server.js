@@ -77,6 +77,16 @@ const server = createServer(async (request, response) => {
     return;
   }
 
+  //Exercise 6 - Demo 6: return a successful empty collection for the
+  //frontend empty-state demonstration without changing stored JSON files.
+  if (
+    ["1", "true"].includes(requestUrl.searchParams.get("empty") ?? "") &&
+    fileName !== "case.json"
+  ) {
+    writeJson(response, 200, []);
+    return;
+  }
+
   try {
     const contents = await readFile(path.join(dataDirectory, fileName), "utf8");
     writeJson(response, 200, JSON.parse(contents));

@@ -201,6 +201,34 @@ a:focus-visible {
   border-top-color: var(--color-accent);
 }
 
+/* //Exercise 6 - Demo 6: loading, error, and successful empty states have
+   distinct visual treatment instead of collapsing into the same blank area. */
+.data-loading,
+.data-error,
+.empty-state {
+  margin: 24px 0;
+  padding: 24px;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.data-loading {
+  background: var(--color-panel);
+  color: var(--color-text-muted);
+}
+
+.data-error {
+  background: #3b1f28;
+  color: #ffd5dc;
+  border: 1px solid #c45c70;
+}
+
+.empty-state {
+  background: var(--color-panel);
+  color: var(--color-text-muted);
+  border: 1px dashed var(--color-border);
+}
+
 /* Dashboard */
 .stat-grid {
   display: grid;
