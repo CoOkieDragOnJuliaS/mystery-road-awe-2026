@@ -25,7 +25,7 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 | # | Demo | Ready? |
 |---|---|---|
 | 1 | Render logic vs. effects | ☐ |
-| 2 | `useEffect` mental model & dependency arrays | ☐ |
+| 2 | `useEffect` mental model & dependency arrays | [x] |
 | 3 | Cleanup: timers & subscriptions | ☐ |
 | 4 | Build the read-only Node backend | ☐ |
 | 5 | Consume the backend from React | ☐ |
@@ -103,15 +103,102 @@ effect? Why or why not, and how does that distinction inform the rule you wrote?
 
 **Tasks**
 
-- [ ] Write a small `useEffect` example (can be a throwaway one first) with an empty dependency
+- [x] Write a small `useEffect` example (can be a throwaway one first) with an empty dependency
 array, one with a populated dependency array, and one with no array at all, and observe how
 often each one actually runs.
-- [ ] Find a real, justified use for `useEffect` you'll need in this app (loading data is coming in Demo 5, so pick something else — e.g. syncing the document title to the current view).
+- [x] Find a real, justified use for `useEffect` you'll need in this app (loading data is coming in Demo 5, so pick something else — e.g. syncing the document title to the current view).
 
 **Questions** (depend on the tasks above)
 
-- [ ] What does React actually compare, between renders, to decide whether to re-run an effect with a populated dependency array? What happens if you omit a value your effect actually uses from that array?
-- [ ] What's the difference, in practice, between `useEffect(fn, [])` and just writing `fn()` directly in the component body? Why doesn't the second one work the way you'd expect for "run once"?
+- [x] What does React actually compare, between renders, to decide whether to re-run an effect with a populated dependency array? What happens if you omit a value your effect actually uses from that array?
+- [x] What's the difference, in practice, between `useEffect(fn, [])` and just writing `fn()` directly in the component body? Why doesn't the second one work the way you'd expect for "run once"?
+
+---
+
+## Demo 2 - Completed answers
+
+### Task 1 - Compare the three dependency-array forms
+
+- [x] The throwaway examples are:
+
+  ```tsx
+  useEffect(() => {
+    console.log("empty dependency array");
+  }, []);
+
+  useEffect(() => {
+    console.log("populated dependency array", selectedEvidenceId);
+  }, [selectedEvidenceId]);
+
+  useEffect(() => {
+    console.log("no dependency array");
+  });
+  ```
+
+- The empty dependency array associates the effect with the component mount.
+  In development, `StrictMode` can make effect behavior appear more than once
+  during development checks, so the effect must not depend on one exact call.
+- The populated dependency array runs the effect again when one of its listed
+  values changes between renders. In the example, changing
+  `selectedEvidenceId` makes the effect run again.
+- No dependency array means that the effect runs after every render. A state
+  update or another change that causes a render can therefore run it again.
+- The logs make the difference observable. The dependency array describes when
+  synchronization is relevant; it does not turn an ordinary function call into
+  persistent state.
+
+### Task 2 - Find a justified use of useEffect in this app
+
+- [x] The evidence page synchronizes `document.title` with the current view.
+- `document.title` belongs to the browser document, which is external to the
+  JSX returned by the component. It is therefore a justified effect instead of
+  a render-time assignment.
+- The effect stores the previous title, changes the title after rendering, and
+  restores the previous title during cleanup. This keeps the external browser
+  state owned by the evidence page while that page is mounted.
+- The implementation is in
+  `react/features/evidence/EvidencePage.tsx` and is marked with
+  `//Exercise 6 - Demo 2:`.
+
+### Question 1 - What does React compare for a populated dependency array?
+
+- [x] React compares each current dependency with the corresponding dependency
+  from the previous render. The comparison is made for the values listed in
+  the dependency array, not for every value in the component.
+- If a listed value has changed, React runs the effect again after rendering.
+  If the listed values have not changed, React does not repeat that
+  synchronization.
+- If an effect reads a value but that value is omitted from the dependency
+  array, the dependency list no longer describes everything that can make the
+  effect relevant. The effect can continue using an older value from the
+  render in which its function was created.
+- For example, an effect that reads `selectedEvidenceId` but uses `[]` would
+  not be scheduled again when the selected evidence changes. The external
+  result could remain based on an old selection.
+- This matters for asynchronous work from Chapter 6. A late result must still
+  be relevant to the current owner and current inputs. Omitting a value can
+  prevent the effect from responding when the operation should be restarted or
+  synchronized again.
+
+### Question 2 - How is useEffect(fn, []) different from calling fn() directly?
+
+- [x] `useEffect(fn, [])` registers an effect with React. React runs it after
+  the component render has completed and uses the empty dependency list to
+  describe that it has no changing dependencies.
+- Calling `fn()` directly in the component body executes immediately during
+  every render. It is not a run-once instruction.
+- Components can render again after state updates, parent updates, route
+  changes, development checks, or other React work. A direct call would
+  therefore run again on those renders.
+- The direct call also runs during the render calculation, where the component
+  should calculate the UI instead of performing unrelated external work. This
+  can cause repeated document changes, requests, logs, or other external
+  actions.
+- The empty dependency array does not mean React will never call the component
+  again. It means that the registered effect has no changing dependencies that
+  should cause another ordinary effect run. React can still perform development
+  checks, so the effect must remain safe if it is set up and cleaned up more
+  than once during development.
 
 ---
 

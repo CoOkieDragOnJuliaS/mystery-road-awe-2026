@@ -39,7 +39,7 @@ interface EvidencePageProps {
 }
 
 export function EvidencePage({ notes, onSaveNote }: EvidencePageProps) {
-  //Exercise 6 - Demo 1: document.title is external browser state, so it is
+  //Exercise 6 - Demo 2: document.title is external browser state, so it is
   //synchronized in an effect instead of being changed during render.
   useEffect(() => {
     const previousTitle = document.title;
