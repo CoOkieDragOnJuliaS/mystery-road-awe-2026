@@ -281,20 +281,76 @@ example you found if render ran twice?
 
 ---
 
-## Demo 4 — Build the read-only Node backend
+## Demo 4 - Build the read-only Node backend
+
+<!-- //Exercise 6 - Demo 4: record the backend implementation and its
+     development-only verification status directly under this demo. -->
 
 **Tasks**
 
-- [ ] Set up a minimal Node.js server (Express or equivalent) with one GET endpoint per data
+- [x] Set up a minimal Node.js server (Express or equivalent) with one GET endpoint per data
       resource (case, evidence, people, locations, timeline), each returning the same shape of data
       as the corresponding `data/*.json` file does today.
-- [ ] Add a way to deliberately simulate real-world conditions for testing later demos: an artificial delay (configurable, e.g. via a query param or env var) on at least one endpoint, and a way to make one endpoint return an error response (e.g. a 500) on demand.
+
+  - Added `server/api-server.js` using Node's built-in `node:http` server.
+  - Added read-only GET endpoints for `/api/case`, `/api/evidence`,
+    `/api/people`, `/api/locations`, and `/api/timeline`.
+  - Each endpoint reads the matching JSON file from `public/data/` and returns
+    its parsed contents without changing the data shape.
+  - The implementation is marked with
+    `//Exercise 6 - Demo 4:` in `server/api-server.js`.
+
+- [x] Add a way to deliberately simulate real-world conditions for testing later demos: an artificial delay (configurable, e.g. via a query param or env var) on at least one endpoint, and a way to make one endpoint return an error response (e.g. a 500) on demand.
+
+  - Every endpoint accepts `?delay=2000`, which waits before returning.
+  - The delay is capped at thirty seconds so the test control remains bounded.
+  - Every endpoint accepts `?error=1` or `?error=true` and returns HTTP 500.
+  - These controls create pending and failure states for later effect,
+    error-handling, and cancellation demonstrations.
+
 - [ ] Confirm the server runs locally alongside `vite dev` and is documented (a README section is enough) as dev-only (not part of the Exercise 2 deploy pipeline).
+
+  - The server uses port `3001` by default and can use `PORT` when supplied.
+  - Vite can serve the frontend on its own port while this Node process serves
+    the API on port `3001`.
+  - The setup instructions and dev-only scope are documented in the
+    `Demo 4 development backend` section of `README.md`.
+  - No deployment workflow was changed. The backend is intentionally local
+    development infrastructure.
+  - I did not run the server or Vite because the requested verification commands
+    were explicitly left for you.
 
 **Questions** (depend on the tasks above)
 
-- [ ] Why does this exercise ask for artificial delay/error controls on the backend, instead of just pointing the frontend at the static JSON files directly (as it already could)? What could you _not_ teach convincingly without them?
-- [ ] What is CORS, and did you have to deal with it running your frontend (from Vite's dev server) against this separate backend server? If yes, what did you configure and why? If no, why not?
+- [x] Why does this exercise ask for artificial delay/error controls on the backend, instead of just pointing the frontend at the static JSON files directly (as it already could)? What could you _not_ teach convincingly without them?
+
+  - Static JSON files normally respond too quickly to make the pending state
+    visible in a useful way.
+  - A deliberate delay creates a real interval between request initiation and
+    completion. That makes asynchronous ordering visible.
+  - A deliberate error creates a rejected request and a real HTTP failure path.
+  - Without these controls, it would be difficult to demonstrate loading
+    indicators, error handling, `try` and `catch` behavior, cleanup,
+    cancellation, request races, and stale-result protection convincingly.
+  - The backend controls let later demos reproduce the same conditions instead
+    of waiting for an accidental slow network or accidental server failure.
+  - This follows the Chapter 6 distinction between a pending Promise, a
+    fulfilled result, and a rejected result. Static data can show the
+    fulfilled path, but it does not reliably expose the other paths.
+
+- [x] What is CORS, and did you have to deal with it running your frontend (from Vite's dev server) against this separate backend server? If yes, what did you configure and why? If no, why not?
+
+  - CORS is the browser rule that controls whether a page from one origin may
+    read a response from another origin.
+  - Vite and the Node backend use different local ports, so they are separate
+    origins even when both use `localhost`.
+  - The backend sends `Access-Control-Allow-Origin: *` on JSON responses.
+  - It also answers `OPTIONS` requests with allowed `GET` and `OPTIONS`
+    methods and the `Content-Type` header.
+  - This configuration allows the browser frontend to read the API responses
+    during local development.
+  - The CORS behavior is implemented in `server/api-server.js` and documented
+    in `README.md` as part of the Demo 4 local backend.
 
 ---
 

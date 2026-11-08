@@ -35,6 +35,32 @@ npx serve .
 
 Then open `http://localhost:8080` (or whatever port your server prints) in your browser.
 
+## Demo 4 development backend
+
+<!-- //Exercise 6 - Demo 4: document the local backend separately from the
+     static frontend deployment. -->
+
+The read-only Demo 4 backend is a local development server and is not part of
+the Exercise 2 GitHub Pages deployment. Start it from the project root with:
+
+```bash
+node server/api-server.js
+```
+
+It listens on `http://localhost:3001` and exposes:
+
+- `GET /api/case`
+- `GET /api/evidence`
+- `GET /api/people`
+- `GET /api/locations`
+- `GET /api/timeline`
+
+The endpoints read the matching JSON files from `public/data/` and do not
+provide write operations or persistence. For later effect and request demos,
+append `?delay=2000` to delay a response or `?error=1` to return a deliberate
+HTTP 500 response. The server allows cross-origin requests from the Vite
+frontend through its CORS response headers.
+
 ## Features
 
 - **Dashboard** — case summary and key statistics calculated from the loaded case data.
