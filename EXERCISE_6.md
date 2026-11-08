@@ -495,15 +495,62 @@ example you found if render ran twice?
 
 **Tasks**
 
+<!-- //Exercise 6 - Demo 7: document the reload trigger and AbortController
+     ownership that prevent obsolete backend results from being applied. -->
+
 - [ ] Using your backend's artificial-delay control, construct a request race: trigger a request, then trigger another one (for the same data) before the first resolves, and observe
       what happens if you do nothing special about it. Does the UI ever show a result from the
       _older_ request after a newer one already resolved?
-- [ ] Fix it using `AbortController` (or a request-id/"ignore stale response" guard, your choice), so the UI can never show a stale result.
+
+  - The `Reload case data` button provides the second request trigger.
+  - Add `?delay=5000` to the frontend URL so the first Promise remains pending
+    long enough to start a second request.
+  - The unprotected sequence would be: request one starts, request two starts,
+    request two resolves, and request one resolves later.
+  - If both results are allowed to commit, the older completion can overwrite
+    the result that came from the newer request.
+  - The live race has not been run because server and frontend verification
+    were left for you.
+
+- [x] Fix it using `AbortController` (or a request-id/"ignore stale response" guard, your choice), so the UI can never show a stale result.
+
+  - `App` now has a `Reload case data` button that starts another load.
+  - The effect creates one `AbortController` for each load.
+  - The effect cleanup calls `controller.abort()` before the next effect
+    instance starts.
+  - The API functions pass the signal into every backend `fetch()`.
+  - Aborted requests are ignored instead of being shown as errors.
+  - The `isCurrent` guard also prevents an obsolete Promise from updating
+    React state after cleanup.
+  - The changed code is marked with `//Exercise 6 - Demo 7:` in
+    `react/app/App.tsx` and `data/api.ts`.
 
 **Questions** (depend on the tasks above)
 
 - [ ] Reproduce the race live (with artificial delay dialed up) before your fix, then show the fix preventing it. What exact sequence of events causes the stale result to win without the fix?
-- [ ] `AbortController` cancels the _request_. Does the effect's cleanup function run separately, or is aborting the fetch itself what you're doing inside the cleanup? Explain how the two connect in your implementation.
+
+  - To demonstrate the timing, start the backend and frontend with a delayed
+    URL such as `?delay=5000`.
+  - Click `Reload case data` twice before the first request settles.
+  - Without cancellation, the first request can settle after the second
+    request and its older result can overwrite the newer result.
+  - In the fixed version, the second click causes the first effect cleanup to
+    abort the first request before the newer request becomes current.
+  - I did not run this live because server and frontend verification were left
+    for you.
+
+- [x] `AbortController` cancels the _request_. Does the effect's cleanup function run separately, or is aborting the fetch itself what you're doing inside the cleanup? Explain how the two connect in your implementation.
+
+  - The effect cleanup runs because the component unmounts or because
+    `reloadVersion` changes and React replaces the previous effect instance.
+  - The cleanup calls `controller.abort()`. Aborting the fetch does not call
+    the cleanup by itself.
+  - The cleanup owns the decision to abort. The controller then signals the
+    fetch that the request is no longer relevant.
+  - The rejected AbortError is ignored by the effect catch branch.
+  - This connects the two operations: React cleanup identifies that the old
+    effect is obsolete, and `AbortController` cancels the asynchronous request
+    created by that effect.
 
 ---
 

@@ -26,17 +26,25 @@ export function App() {
     "loading" | "ready" | "error"
   >("loading");
   const [dataLoadError, setDataLoadError] = useState<string | null>(null);
+  const [reloadVersion, setReloadVersion] = useState(0);
 
-  //Exercise 6 - Demo 5: the effect starts the backend request after the
-  //component mounts and updates local state when the Promise settles.
+  //Exercise 6 - Demo 7: each effect instance owns one controller and aborts
+  //its request during cleanup before a newer reload can become current.
   useEffect(() => {
     let isCurrent = true;
+    const controller = new AbortController();
+    setDataLoadState("loading");
+    setDataLoadError(null);
 
-    loadAllData()
+    loadAllData(controller.signal)
       .then(() => {
         if (isCurrent) setDataLoadState("ready");
       })
       .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+
         console.error("Could not load case data from the backend:", error);
         if (isCurrent) {
           setDataLoadError(
@@ -46,13 +54,14 @@ export function App() {
         }
       })
       .finally(() => {
-        hideLoadingOverlay();
+        if (isCurrent) hideLoadingOverlay();
       });
 
     return () => {
       isCurrent = false;
+      controller.abort();
     };
-  }, []);
+  }, [reloadVersion]);
 
   //Exercise 5 - Demo 6: App owns notes and passes the save callback downward.
   function handleSaveNote(id: EvidenceId, text: string): void {
@@ -66,6 +75,15 @@ export function App() {
     <>
       <Header />
       <main id="app" className="app-main">
+        {/*Exercise 6 - Demo 7: clicking quickly starts a new request and
+           causes the previous effect cleanup to abort the older request.*/}
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => setReloadVersion((version) => version + 1)}
+        >
+          Reload case data
+        </button>
         {dataLoadState === "loading" && (
           //Exercise 6 - Demo 6: pending backend work has an explicit UI state.
           <p className="data-loading" role="status">
