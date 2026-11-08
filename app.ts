@@ -3,7 +3,9 @@ import * as storage from "./storage/localStorage.ts";
 import { navigateTo } from "./navigation/router.ts";
 import * as router from "./navigation/router.ts";
 import { setupEventListeners } from "./utils/setup.ts";
-import * as api from "./data/api.ts";
+//Exercise 6 - Demo 9: the superseded vanilla entry keeps its compatibility
+//loader separate from the thin backend API used by the React application.
+import * as api from "./data/legacyLoader.ts";
 import * as people from "./views/people.ts";
 import * as evidence from "./views/evidenceBasic.ts";
 import type { PeopleTab, ViewName } from "./types/domain.ts";

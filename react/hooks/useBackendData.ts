@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { hideLoadingOverlay } from "../../data/api.ts";
 
 export type BackendDataStatus =
   "loading" | "ready" | "empty" | "error" | "idle";
@@ -16,6 +15,11 @@ export interface UseBackendDataResult<T> {
 }
 
 type BackendLoader<T> = (signal: AbortSignal) => Promise<T>;
+
+function hideLoadingOverlay(): void {
+  const overlay = document.getElementById("loadingOverlay");
+  if (overlay) overlay.classList.add("hidden");
+}
 
 //Exercise 6 - Demo 8: this hook owns the shared asynchronous lifecycle,
 //including loading, errors, cleanup, cancellation, and stale-result guards.

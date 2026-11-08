@@ -30,7 +30,7 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 | 6   | Loading, error, and empty states               | [x]    |
 | 7   | Request races & cancellation                   | ☐      |
 | 8   | Extract a reusable custom hook                 | [x]    |
-| 9   | Separate UI, application logic, and API access | ☐      |
+| 9   | Separate UI, application logic, and API access | [x]    |
 | 10  | Data-flow wrap-up & a written UX decision      | ☐      |
 
 ---
@@ -590,8 +590,8 @@ example you found if render ran twice?
 
 - [x] Show the two places using your hook. What did extracting it save you from duplicating, and is there anything about the two usages that _couldn't_ be shared and had to stay specific to each call site?
 
-  - `App` calls `useBackendData(loadAllData)` for the initial complete
-    application load and the `Reload case data` action.
+  - `App` calls `useCaseData()` for the initial complete application load and
+    the `Reload case data` action.
   - `EvidencePage` calls `useBackendData(loadEvidenceForRefresh, ...)` for
     the user-triggered `Refresh evidence` action.
   - Both call sites share loading, error, empty, cancellation, cleanup, and
@@ -608,13 +608,61 @@ example you found if render ran twice?
 
 **Tasks**
 
-- [ ] Organize your data-fetching code into distinct layers: a thin API-access layer (raw `fetch` calls, knows the backend's URLs/shapes and nothing else), your custom hook(s) from Demo 8 (application logic: loading/error/cancellation), and your components (UI only, no direct `fetch` calls anywhere in a component).
-- [ ] Confirm no component in the app calls `fetch` directly anymore.
+<!-- //Exercise 6 - Demo 9: document the separation between raw backend access,
+     asynchronous application logic, and React UI components. -->
+
+- [x] Organize your data-fetching code into distinct layers: a thin API-access layer (raw `fetch` calls, knows the backend's URLs/shapes and nothing else), your custom hook(s) from Demo 8 (application logic: loading/error/cancellation), and your components (UI only, no direct `fetch` calls anywhere in a component).
+
+  - `data/api.ts` is the thin API-access layer. It knows the backend base URL,
+    endpoint names, response types, response validation, and `fetch`.
+  - `react/hooks/useBackendData.ts` owns Promise lifecycle behavior, loading,
+    error, empty, cancellation, cleanup, and stale-result handling.
+  - `react/hooks/useCaseData.ts` coordinates the API functions and commits the
+    complete data bundle to application state.
+  - `App` and `EvidencePage` only use hooks and render UI. They do not know
+    backend URLs and do not call `fetch`.
+  - The old vanilla entry uses `data/legacyLoader.ts` as a compatibility
+    path. It is separate from the active React API and hook layers.
+  - The changed files contain `//Exercise 6 - Demo 9:` comments.
+
+- [x] Confirm no component in the app calls `fetch` directly anymore.
+
+  - The only active raw `fetch` call is in `data/api.ts`.
+  - React components call `useCaseData` or `useBackendData` instead.
+  - The hook receives Promise-producing loaders and keeps asynchronous
+    control flow outside the component UI.
+  - This keeps initiation, completion, rejection, cancellation, and
+    relevance decisions out of presentational component code.
 
 **Questions** (depend on the tasks above)
 
-- [ ] If your backend's endpoint URLs or response shape changed tomorrow, how many files would you need to touch, and which ones? Would any component need to change?
-- [ ] What's the argument _against_ this separation for a small app like this one? E.g. when would the extra layering be overkill rather than helpful? Do you think it's justified here?
+- [x] If your backend's endpoint URLs or response shape changed tomorrow, how many files would you need to touch, and which ones? Would any component need to change?
+
+  - For a URL change or response-shape change, the main active file to update
+    would be `data/api.ts`.
+  - If the domain shape changed, the related types in `types/domain.ts` might
+    also need updating.
+  - `react/hooks/useCaseData.ts` would only need changes if the application
+    mapping from the new response into global state changed.
+  - The reusable lifecycle hook and UI components would not need to know about
+    endpoint URLs or raw response shapes.
+  - Therefore, no component should need to change for a backend URL change
+    alone.
+
+- [x] What's the argument _against_ this separation for a small app like this one? E.g. when would the extra layering be overkill rather than helpful? Do you think it's justified here?
+
+  - The argument against it is additional indirection. A small application
+    can be easier to understand when one component performs one request and
+    handles its result locally.
+  - Extra API modules, hooks, loaders, and type boundaries can make a simple
+    request harder to trace.
+  - The separation can be overkill when there is only one short-lived view,
+    one request, no repeated loading behavior, and no expected backend change.
+  - It is justified here because the application has several resources,
+    multiple views, delayed and failed requests, cancellation, and repeated
+    asynchronous lifecycle behavior.
+  - The layers give each concern one owner: API communication, Promise
+    lifecycle, application state, and visible UI.
 
 ---
 

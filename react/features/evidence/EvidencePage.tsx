@@ -4,7 +4,7 @@ import { EvidenceList } from "./EvidenceList.tsx";
 import { EvidenceFilters } from "./EvidenceFilters.tsx";
 import { filterEvidence } from "./evidenceFilterHelper.tsx";
 import { useCallback, useEffect, useReducer, useState } from "react";
-import { loadEvidenceData } from "../../../data/api.ts";
+import { fetchEvidenceData } from "../../../data/api.ts";
 import { useBackendData } from "../../hooks/useBackendData.ts";
 import { useBookmarks } from "../../app/BookmarkContext.tsx";
 import {
@@ -68,7 +68,6 @@ export function EvidencePage({ notes, onSaveNote }: EvidencePageProps) {
 
   //Exercise 5 - Demo 8: Evidence reads bookmark state from Context.
   const { bookmarkIds, onToggleBookmark } = useBookmarks();
-  const evidence = state.getAllEvidence();
   const people = state.getAllPeople();
   const locations = state.getAllLocations();
   //const previewEvidence = evidence[0]; //Not implemented yet to display anything else
@@ -79,15 +78,16 @@ export function EvidencePage({ notes, onSaveNote }: EvidencePageProps) {
     useState<EvidenceId | null>(null);
   const [evidenceRefreshEnabled, setEvidenceRefreshEnabled] = useState(false);
   const loadEvidenceForRefresh = useCallback(
-    (signal: AbortSignal) => loadEvidenceData(signal),
+    (signal: AbortSignal) => fetchEvidenceData(signal),
     [],
   );
 
-  //Exercise 6 - Demo 8: Evidence reuses the same hook for an optional,
-  //user-triggered refresh without duplicating effect or cancellation logic.
+  //Exercise 6 - Demo 9: the component supplies UI-specific intent to the
+  //application hook while the API layer remains outside the component.
   const evidenceRefresh = useBackendData(loadEvidenceForRefresh, {
     enabled: evidenceRefreshEnabled,
   });
+  const evidence = evidenceRefresh.data ?? state.getAllEvidence();
 
   //Exercise 5 - Demo 5: bookmark state arrives from the common App owner.
   const evidenceWithBookmarks = evidence.map((item) => ({

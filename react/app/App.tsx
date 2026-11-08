@@ -10,8 +10,7 @@ import { EvidencePage } from "../features/evidence/EvidencePage.tsx";
 import { WorkspacePage } from "../features/workspace/WorkspacePage.tsx";
 import { BookmarkProvider } from "./BookmarkContext.tsx";
 import { useState } from "react";
-import { loadAllData } from "../../data/api.ts";
-import { useBackendData } from "../hooks/useBackendData.ts";
+import { useCaseData } from "../hooks/useCaseData.ts";
 import { saveNotesStoreToStorage } from "../../storage/localStorage.ts";
 import type { EvidenceId, NotesStore } from "../../types/domain.ts";
 import * as state from "../../state/globalState.ts";
@@ -24,9 +23,9 @@ import * as state from "../../state/globalState.ts";
 export function App() {
   const [notes, setNotes] = useState<NotesStore>(() => state.getNotesStore());
 
-  //Exercise 6 - Demo 8: App reuses the custom hook for the complete backend
-  //load instead of owning a second copy of effect and cancellation logic.
-  const dataLoad = useBackendData(loadAllData);
+  //Exercise 6 - Demo 9: App uses the application-logic hook; raw backend
+  //requests stay outside the component.
+  const dataLoad = useCaseData();
 
   //Exercise 5 - Demo 6: App owns notes and passes the save callback downward.
   function handleSaveNote(id: EvidenceId, text: string): void {
