@@ -3,7 +3,7 @@ import * as state from "../../../state/globalState.ts";
 import { EvidenceList } from "./EvidenceList.tsx";
 import { EvidenceFilters } from "./EvidenceFilters.tsx";
 import { filterEvidence } from "./evidenceFilterHelper.tsx";
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useBookmarks } from "../../app/BookmarkContext.tsx";
 import {
   type EvidenceFilterValues,
@@ -39,6 +39,17 @@ interface EvidencePageProps {
 }
 
 export function EvidencePage({ notes, onSaveNote }: EvidencePageProps) {
+  //Exercise 6 - Demo 1: document.title is external browser state, so it is
+  //synchronized in an effect instead of being changed during render.
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = "Evidence | Project ReMotion";
+
+    return () => {
+      document.title = previousTitle;
+    };
+  }, []);
+
   //Exercise 5 - Demo 8: Evidence reads bookmark state from Context.
   const { bookmarkIds, onToggleBookmark } = useBookmarks();
   const evidence = state.getAllEvidence();
@@ -61,7 +72,8 @@ export function EvidencePage({ notes, onSaveNote }: EvidencePageProps) {
     evidenceWithBookmarks.find((item) => item.id === selectedEvidenceId) ||
     null;
 
-  //Exercise 5 - Demo 5: the child receives the owner callback through props.
+  //Exercise 6 - Demo 1: this pure derived value belongs in render; it only
+  //reads current inputs and returns the evidence that should be displayed.
   const visibleEvidence = filterEvidence(evidenceWithBookmarks, filters);
 
   return (
