@@ -92,7 +92,11 @@ export async function loadCorePeopleAndLocations(
 
 //Exercise 6 - Demo 5: backend failures remain rejected so the React owner can
 //represent loading and error state separately.
-export async function loadEvidenceData(signal?: AbortSignal): Promise<void> {
+//Exercise 6 - Demo 8: the evidence loader can be supplied to the reusable
+//hook as a typed Promise-producing operation.
+export async function loadEvidenceData(
+  signal?: AbortSignal,
+): Promise<Evidence[]> {
   //Demo 6: Evidence[] commits personIds to person IDs, status to
   // "unreviewed" | "reviewed" | "flagged", and relevance to a restricted union.
   const data = await fetchJson<Evidence[]>("evidence", signal);
@@ -105,6 +109,7 @@ export async function loadEvidenceData(signal?: AbortSignal): Promise<void> {
   //renderDashboard();
   //populateAllDropdowns();
   //if (state.getCurrentPage() === "evidence") evidence.renderEvidenceList();
+  return data;
 }
 
 export async function loadTimelineData(signal?: AbortSignal): Promise<void> {

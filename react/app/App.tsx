@@ -9,8 +9,9 @@ import { TimelinePage } from "../features/timeline/TimelinePage.tsx";
 import { EvidencePage } from "../features/evidence/EvidencePage.tsx";
 import { WorkspacePage } from "../features/workspace/WorkspacePage.tsx";
 import { BookmarkProvider } from "./BookmarkContext.tsx";
-import { useEffect, useState } from "react";
-import { hideLoadingOverlay, loadAllData } from "../../data/api.ts";
+import { useState } from "react";
+import { loadAllData } from "../../data/api.ts";
+import { useBackendData } from "../hooks/useBackendData.ts";
 import { saveNotesStoreToStorage } from "../../storage/localStorage.ts";
 import type { EvidenceId, NotesStore } from "../../types/domain.ts";
 import * as state from "../../state/globalState.ts";
@@ -22,46 +23,10 @@ import * as state from "../../state/globalState.ts";
 // Evidence and Workspace stay as placeholder routes
 export function App() {
   const [notes, setNotes] = useState<NotesStore>(() => state.getNotesStore());
-  const [dataLoadState, setDataLoadState] = useState<
-    "loading" | "ready" | "error"
-  >("loading");
-  const [dataLoadError, setDataLoadError] = useState<string | null>(null);
-  const [reloadVersion, setReloadVersion] = useState(0);
 
-  //Exercise 6 - Demo 7: each effect instance owns one controller and aborts
-  //its request during cleanup before a newer reload can become current.
-  useEffect(() => {
-    let isCurrent = true;
-    const controller = new AbortController();
-    setDataLoadState("loading");
-    setDataLoadError(null);
-
-    loadAllData(controller.signal)
-      .then(() => {
-        if (isCurrent) setDataLoadState("ready");
-      })
-      .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-
-        console.error("Could not load case data from the backend:", error);
-        if (isCurrent) {
-          setDataLoadError(
-            error instanceof Error ? error.message : "Unknown loading error",
-          );
-          setDataLoadState("error");
-        }
-      })
-      .finally(() => {
-        if (isCurrent) hideLoadingOverlay();
-      });
-
-    return () => {
-      isCurrent = false;
-      controller.abort();
-    };
-  }, [reloadVersion]);
+  //Exercise 6 - Demo 8: App reuses the custom hook for the complete backend
+  //load instead of owning a second copy of effect and cancellation logic.
+  const dataLoad = useBackendData(loadAllData);
 
   //Exercise 5 - Demo 6: App owns notes and passes the save callback downward.
   function handleSaveNote(id: EvidenceId, text: string): void {
@@ -80,24 +45,24 @@ export function App() {
         <button
           type="button"
           className="btn btn-secondary"
-          onClick={() => setReloadVersion((version) => version + 1)}
+          onClick={dataLoad.reload}
         >
           Reload case data
         </button>
-        {dataLoadState === "loading" && (
+        {dataLoad.status === "loading" && (
           //Exercise 6 - Demo 6: pending backend work has an explicit UI state.
           <p className="data-loading" role="status">
             Loading case data...
           </p>
         )}
-        {dataLoadState === "error" && (
+        {dataLoad.status === "error" && (
           //Exercise 6 - Demo 6: rejected backend work has a separate error
           //message and is not represented as an empty collection.
           <p className="data-error" role="alert">
-            Could not load case data: {dataLoadError}
+            Could not load case data: {dataLoad.error}
           </p>
         )}
-        {dataLoadState === "ready" && (
+        {dataLoad.status === "ready" && (
           //Exercise 6 - Demo 5: data-dependent routes render after the
           //backend Promise has fulfilled and global state has been populated.
           <BookmarkProvider>

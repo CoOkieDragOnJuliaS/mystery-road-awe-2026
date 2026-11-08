@@ -29,7 +29,7 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 | 5   | Consume the backend from React                 | [x]    |
 | 6   | Loading, error, and empty states               | [x]    |
 | 7   | Request races & cancellation                   | ☐      |
-| 8   | Extract a reusable custom hook                 | ☐      |
+| 8   | Extract a reusable custom hook                 | [x]    |
 | 9   | Separate UI, application logic, and API access | ☐      |
 | 10  | Data-flow wrap-up & a written UX decision      | ☐      |
 
@@ -558,12 +558,49 @@ example you found if render ran twice?
 
 **Tasks**
 
-- [ ] Extract the data-fetching logic (loading/error/empty state, the effect, cancellation) you've built across Demos 5–7 into at least one reusable custom hook (e.g. `useFetch<T>(url)` or a more specific `useEvidence()`), and use it in at least two different places.
+<!-- //Exercise 6 - Demo 8: document the shared hook and the two component
+     call sites that use the same asynchronous lifecycle. -->
+
+- [x] Extract the data-fetching logic (loading/error/empty state, the effect, cancellation) you've built across Demos 5–7 into at least one reusable custom hook (e.g. `useFetch<T>(url)` or a more specific `useEvidence()`), and use it in at least two different places.
+
+  - Added `react/hooks/useBackendData.ts`.
+  - The hook owns the effect, loading status, error state, empty collection
+    detection, `AbortController`, cleanup, and stale-result guard.
+  - `App` uses the hook for the complete case-data load.
+  - `EvidencePage` uses the same hook for its optional evidence refresh.
+  - The implementation is marked with
+    `//Exercise 6 - Demo 8:` in the hook and both call sites.
 
 **Questions** (depend on the tasks above)
 
-- [ ] What makes something a legitimate custom hook rather than just a regular helper function? What rule(s) does React enforce about how/where hooks (including your custom one) can be called?
-- [ ] Show the two places using your hook. What did extracting it save you from duplicating, and is there anything about the two usages that _couldn't_ be shared and had to stay specific to each call site?
+- [x] What makes something a legitimate custom hook rather than just a regular helper function? What rule(s) does React enforce about how/where hooks (including your custom one) can be called?
+
+  - `useBackendData` is a custom hook because it is a function named with the
+    `use` prefix and it calls React hooks such as `useState` and `useEffect`.
+  - It packages reusable React stateful behavior, not only a normal
+    calculation. Its result changes as the Promise changes from pending to
+    fulfilled, empty, rejected, or cancelled.
+  - A custom hook must follow the same Rules of Hooks as built-in hooks.
+  - It must be called only at the top level of a React function component or
+    another custom hook.
+  - It must not be called inside conditions, loops, nested functions, event
+    handlers, or ordinary non-React helper functions.
+  - Calling hooks in a stable order lets React associate each hook state with
+    the correct call between renders.
+
+- [x] Show the two places using your hook. What did extracting it save you from duplicating, and is there anything about the two usages that _couldn't_ be shared and had to stay specific to each call site?
+
+  - `App` calls `useBackendData(loadAllData)` for the initial complete
+    application load and the `Reload case data` action.
+  - `EvidencePage` calls `useBackendData(loadEvidenceForRefresh, ...)` for
+    the user-triggered `Refresh evidence` action.
+  - Both call sites share loading, error, empty, cancellation, cleanup, and
+    stale-result behavior.
+  - The hook prevents the effect and Promise handlers from being duplicated.
+  - The loader is specific to each call site. `App` loads all resources and
+    populates global state, while `EvidencePage` reloads only evidence.
+  - The UI is also specific. `App` controls the application routes, while
+    `EvidencePage` controls the evidence refresh button and evidence list.
 
 ---
 

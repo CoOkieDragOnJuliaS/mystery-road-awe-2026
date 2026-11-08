@@ -3,7 +3,9 @@ import * as state from "../../../state/globalState.ts";
 import { EvidenceList } from "./EvidenceList.tsx";
 import { EvidenceFilters } from "./EvidenceFilters.tsx";
 import { filterEvidence } from "./evidenceFilterHelper.tsx";
-import { useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
+import { loadEvidenceData } from "../../../data/api.ts";
+import { useBackendData } from "../../hooks/useBackendData.ts";
 import { useBookmarks } from "../../app/BookmarkContext.tsx";
 import {
   type EvidenceFilterValues,
@@ -75,6 +77,17 @@ export function EvidencePage({ notes, onSaveNote }: EvidencePageProps) {
   const [filters, dispatchFilters] = useReducer(filterReducer, initialFilters);
   const [selectedEvidenceId, setSelectedEvidenceId] =
     useState<EvidenceId | null>(null);
+  const [evidenceRefreshEnabled, setEvidenceRefreshEnabled] = useState(false);
+  const loadEvidenceForRefresh = useCallback(
+    (signal: AbortSignal) => loadEvidenceData(signal),
+    [],
+  );
+
+  //Exercise 6 - Demo 8: Evidence reuses the same hook for an optional,
+  //user-triggered refresh without duplicating effect or cancellation logic.
+  const evidenceRefresh = useBackendData(loadEvidenceForRefresh, {
+    enabled: evidenceRefreshEnabled,
+  });
 
   //Exercise 5 - Demo 5: bookmark state arrives from the common App owner.
   const evidenceWithBookmarks = evidence.map((item) => ({
@@ -105,6 +118,28 @@ export function EvidencePage({ notes, onSaveNote }: EvidencePageProps) {
         }
         onClearFilters={() => dispatchFilters({ type: "CLEAR_FILTERS" })}
       />
+
+      <button
+        type="button"
+        className="btn btn-secondary"
+        onClick={() => {
+          setEvidenceRefreshEnabled(true);
+          evidenceRefresh.reload();
+        }}
+      >
+        Refresh evidence
+      </button>
+
+      {evidenceRefresh.status === "loading" && (
+        <p className="data-loading" role="status">
+          Refreshing evidence...
+        </p>
+      )}
+      {evidenceRefresh.status === "error" && (
+        <p className="data-error" role="alert">
+          Could not refresh evidence: {evidenceRefresh.error}
+        </p>
+      )}
 
       <EvidenceList
         evidence={visibleEvidence}
