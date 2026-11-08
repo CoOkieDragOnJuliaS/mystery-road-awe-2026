@@ -30,6 +30,8 @@ async function fetchJson<T>(
 }
 
 export function fetchCaseData(signal?: AbortSignal): Promise<CaseData> {
+  //Exercise 6 - Demo 10: this is the first step after public/data/case.json
+  //has been served by the backend.
   return fetchJson<CaseData>("case", signal);
 }
 

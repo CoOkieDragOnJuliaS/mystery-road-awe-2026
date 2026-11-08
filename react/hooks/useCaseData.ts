@@ -41,6 +41,8 @@ async function loadCaseData(signal: AbortSignal): Promise<CaseDataBundle> {
   ]);
 
   throwIfAborted(signal);
+  //Exercise 6 - Demo 10: the resolved API response crosses into application
+  //state before components derive the visible UI.
   state.setCaseData(caseData);
   state.setAllEvidence(evidence);
   state.setAllPeople(people);

@@ -670,12 +670,79 @@ example you found if render ran twice?
 
 **Tasks**
 
-- [ ] Illustrate the full data flow for one piece of data, end to end: the JSON file -> your backend endpoint -> the API-access layer -> your custom hook -> the component -> what's on screen.
-- [ ] Explain a short, honest justification for one loading/error/empty-state UX decision you made (e.g. what your loading indicator looks like, how errors are worded, what "empty" looks like) and note one thing you'd do differently with more time.
+<!-- //Exercise 6 - Demo 10: record the complete data path and the UX
+     decision that should be explained during the live walkthrough. -->
+
+- [x] Illustrate the full data flow for one piece of data, end to end: the JSON file -> your backend endpoint -> the API-access layer -> your custom hook -> the component -> what's on screen.
+
+  - Example data item: the evidence collection from `public/data/evidence.json`.
+  - The Node backend reads the JSON file and serves it through
+    `GET /api/evidence`.
+  - `data/api.ts` calls the endpoint through `fetchEvidenceData`.
+  - `useCaseData` coordinates the evidence request and uses
+    `useBackendData`, which starts the request inside `useEffect`, tracks the
+    Promise status, and handles cancellation and stale results.
+  - `EvidencePage` reads the loaded evidence from application state during the
+    normal route flow, or receives the hook result through its refresh flow.
+    It combines the evidence with bookmark state and derives `visibleEvidence`.
+  - `EvidenceList` maps the visible evidence to cards, so the final result is
+    the evidence catalogue on screen.
+  - The complete flow is:
+
+    `public/data/evidence.json`
+    -> `server/api-server.js`
+    -> `data/api.ts`
+    -> `useCaseData` / `useBackendData`
+    -> `EvidencePage`
+    -> `EvidenceList`
+    -> evidence cards on screen
+
+  - The flow is marked in the relevant source files with
+    `//Exercise 6 - Demo 10:`.
+
+- [x] Explain a short, honest justification for one loading/error/empty-state UX decision you made (e.g. what your loading indicator looks like, how errors are worded, what "empty" looks like) and note one thing you'd do differently with more time.
+
+  - The loading state uses a clear text message, `Loading case data...`, with
+    `role="status"` so the user can tell that the application is waiting for a
+    Promise to settle.
+  - The error state uses a separate alert message with the request error. This
+    is more honest than showing an empty list when the backend request failed.
+  - The empty state uses `No evidence available.` with a separate dashed panel
+    style. This communicates successful loading with zero records.
+  - The decision is justified because pending, rejected, and fulfilled-empty
+    states represent different facts and should not look identical.
+  - With more time, I would improve the error UX with a dedicated retry action
+    and more user-focused wording while keeping the technical error available
+    for debugging.
 
 **Questions** (depend on the tasks above)
 
 - [ ] Walk through your diagram/illustration live, and for one step, explain what would break (and how you'd notice) if that step silently stopped happening.
-- [ ] Across Exercises 3–6, this app went from "read static files instantly" to "fetch from a real, sometimes-slow, sometimes-failing server". What did that change force you to add that wasn't needed before and was any of it needed _conceptually_ even back when the data source was a static file, just less visible?
+
+  - Walk from left to right through the evidence flow.
+  - If the backend stopped serving `/api/evidence`, the API Promise would
+    reject with an HTTP error.
+  - The hook would move to `error`, and the error UI would appear instead of
+    evidence cards.
+  - The Network tab would show the failed request, and the API error would
+    identify the broken boundary.
+  - I did not perform the live walkthrough because runtime verification was
+    left for you.
+
+- [x] Across Exercises 3–6, this app went from "read static files instantly" to "fetch from a real, sometimes-slow, sometimes-failing server". What did that change force you to add that wasn't needed before and was any of it needed _conceptually_ even back when the data source was a static file, just less visible?
+
+  - The app needed explicit loading, success, error, and empty states.
+  - It needed Promise error propagation instead of treating every result as
+    immediately available.
+  - It needed ownership for intermediate state while requests were pending.
+  - It needed cleanup and cancellation when requests became obsolete.
+  - It needed stale-result protection when a newer request superseded an older
+    request.
+  - It needed a backend API layer and a hook layer so network behavior did not
+    become UI code.
+  - These concerns were conceptually present even with static files. A static
+    file could still fail, be unavailable, return unexpected data, or complete
+    later than expected. The backend makes those cases visible and repeatable,
+    rather than creating them conceptually for the first time.
 
 ---

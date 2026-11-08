@@ -44,6 +44,8 @@ export function useBackendData<T>(
     let isCurrent = true;
     const controller = new AbortController();
 
+    //Exercise 6 - Demo 10: this status controls the loading/error/empty UX
+    //that the component presents while the Promise changes state.
     setStatus("loading");
     setError(null);
 

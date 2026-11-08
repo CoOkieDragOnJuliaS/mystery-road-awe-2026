@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
+import process from "node:process";
 import path from "node:path";
 
 const port = Number(process.env.PORT) || 3001;

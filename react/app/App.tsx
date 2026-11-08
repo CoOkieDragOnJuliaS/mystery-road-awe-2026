@@ -50,6 +50,8 @@ export function App() {
         </button>
         {dataLoad.status === "loading" && (
           //Exercise 6 - Demo 6: pending backend work has an explicit UI state.
+          //Exercise 6 - Demo 10: the user sees a clear loading message while
+          //the backend Promise is still pending.
           <p className="data-loading" role="status">
             Loading case data...
           </p>
@@ -64,6 +66,8 @@ export function App() {
         {dataLoad.status === "ready" && (
           //Exercise 6 - Demo 5: data-dependent routes render after the
           //backend Promise has fulfilled and global state has been populated.
+          //Exercise 6 - Demo 10: route components now derive the visible
+          //screen from the loaded application state.
           <BookmarkProvider>
             <Routes>
               <Route path="/" element={<DashboardPage />} />
