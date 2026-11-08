@@ -3,8 +3,7 @@
 This is the sixth exercise in Advanced Web Engineering Course (CSDC). It builds on Exercises 3–5. All 5 views should already be fully working in React, reading their data from the static `data/*.json` files. This exercise replaces those static files with a small **Node.js backend**, and uses that to properly teach effects, loading/error/empty states, and request cancellation. Things that are hard to demonstrate convincingly against files that can only ever be "instant" or
 "404."
 
-**Scope of the backend, deliberately kept small:** a minimal Node server (Express or equivalent) that serves the same 5 JSON files as **read-only** REST endpoints. No write endpoints, no persistence. Bookmarks, notes, and the hypothesis draft stay in `localStorage` exactly as before. Only *reading* the case data moves to the network. **The backend runs locally in development only, it is not deployed.** Exercise 2's GitHub Pages workflow still builds and deploys the static frontend. Wiring up a real deployed backend is out of scope here.
-
+**Scope of the backend, deliberately kept small:** a minimal Node server (Express or equivalent) that serves the same 5 JSON files as **read-only** REST endpoints. No write endpoints, no persistence. Bookmarks, notes, and the hypothesis draft stay in `localStorage` exactly as before. Only _reading_ the case data moves to the network. **The backend runs locally in development only, it is not deployed.** Exercise 2's GitHub Pages workflow still builds and deploys the static frontend. Wiring up a real deployed backend is out of scope here.
 
 ## Corresponding manuscript reading
 
@@ -15,25 +14,25 @@ The closest corresponding sections in the course manuscript:
 - **Chapter 15, React Foundations** — “Function components and purity” and “React owns its root DOM,” PDF pp. 104 and 108
 - **Chapter 16, React Component Design and Routing** — “Conditional rendering,” PDF p. 110
 
-
 ## Self-Check
 
 The exercise is organized into 10 individual tasks with corresponding questions, that are
 presented in class.
 These checkboxes are for self-checking. Don't forget to do the actual checking of tasks you are able to present in the Moodle course. **Before class, tick only what you can genuinely demonstrate or answer on the spot, live.**
 
-| # | Demo | Ready? |
-|---|---|---|
-| 1 | Render logic vs. effects | ☐ |
-| 2 | `useEffect` mental model & dependency arrays | [x] |
-| 3 | Cleanup: timers & subscriptions | ☐ |
-| 4 | Build the read-only Node backend | ☐ |
-| 5 | Consume the backend from React | ☐ |
-| 6 | Loading, error, and empty states | ☐ |
-| 7 | Request races & cancellation | ☐ |
-| 8 | Extract a reusable custom hook | ☐ |
-| 9 | Separate UI, application logic, and API access | ☐ |
-| 10 | Data-flow wrap-up & a written UX decision | ☐ |
+| #   | Demo                                           | Ready? |
+| --- | ---------------------------------------------- | ------ |
+| 1   | Render logic vs. effects                       | ☐      |
+| 2   | `useEffect` mental model & dependency arrays   | [x]    |
+| 3   | Cleanup: timers & subscriptions                | [x]    |
+| 4   | Build the read-only Node backend               | ☐      |
+| 5   | Consume the backend from React                 | ☐      |
+| 6   | Loading, error, and empty states               | ☐      |
+| 7   | Request races & cancellation                   | ☐      |
+| 8   | Extract a reusable custom hook                 | ☐      |
+| 9   | Separate UI, application logic, and API access | ☐      |
+| 10  | Data-flow wrap-up & a written UX decision      | ☐      |
+
 ---
 
 ## Demo 1 — Render logic vs. effects
@@ -41,61 +40,52 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 **Tasks**
 
 - [x] Find (or deliberately write, then remove) an example of a **side effect performed directly
-during a component's render**. For example, mutating a variable outside the component,
-calling `console.log` for debugging on every render, or reading `localStorage` inline in the
-function body instead of in an effect, and explain why it's a side effect even though it
-"seems to work."
+      during a component's render**. For example, mutating a variable outside the component,
+      calling `console.log` for debugging on every render, or reading `localStorage` inline in the
+      function body instead of in an effect, and explain why it's a side effect even though it
+      "seems to work."
 
-    What it means:
-        - Render-time side effect happens when a component does more than calculate UI, e.g. 
-        let renderCount = 0;
- 
+  What it means: - Render-time side effect happens when a component does more than calculate UI, e.g.
+  let renderCount = 0;
+
         function RecordTitle({ title }: { title: string }) {
         renderCount += 1;
         return <h2>{title}</h2>;
         }
 
-    The component in the example also changes renderCount, which exists outside the component. Rendering changes external states!
-    Change was visibleEvidence, and because document.title is a external browser state --> synchronized in effect instead of changed with render. With useEffect the title is returned with the previous one.
+  The component in the example also changes renderCount, which exists outside the component. Rendering changes external states!
+  Change was visibleEvidence, and because document.title is a external browser state --> synchronized in effect instead of changed with render. With useEffect the title is returned with the previous one.
 
-    - Component reads its inputs
-    - Component returns a description of what the UI should look like
-    - React is responsible for DOM changes later
+  - Component reads its inputs
+  - Component returns a description of what the UI should look like
+  - React is responsible for DOM changes later
 
 - [x] Write, in your own words, a short rule for what belongs in render versus what belongs in an effect.
 
-    What belongs in render or effect?
-    - in Render: Reading props, state and contexts, calculating UI 
-    - in Effect is used for communicating with external changes, like the document.title I changed in Task 1. 
+  What belongs in render or effect?
+  - in Render: Reading props, state and contexts, calculating UI
+  - in Effect is used for communicating with external changes, like the document.title I changed in Task 1.
 
-    Short rule:
-        Render is for reading inputs and returning JSX calculations, while an effect helps with communicating outside of the React environment?
+  Short rule:
+  Render is for reading inputs and returning JSX calculations, while an effect helps with communicating outside of the React environment?
 
 **Questions** (depend on the tasks above)
 
 - [x] Why can React call a component's render function more than once, or at times you don't
-expect (e.g. in development with Strict Mode)? What would go wrong with the side-effect
+      expect (e.g. in development with Strict Mode)? What would go wrong with the side-effect
 
-    Why?
-        - UI update starts with an initial state and React calls components to calculate the next UI description.
-        - It also compares the current and previous version before commiting DOM changes.
-        - Rendering can happen more than once before the DOM change is commited
-    What is a side-effect?
-        - The UI could be correct, but in the background it could have run something twice or more
-        - Rendering can be repeated or interrupted - so it should not depend on being called once
-        - A console.log could be rendered twice (asynchronous work?)
-
+  Why? - UI update starts with an initial state and React calls components to calculate the next UI description. - It also compares the current and previous version before commiting DOM changes. - Rendering can happen more than once before the DOM change is commited
+  What is a side-effect? - The UI could be correct, but in the background it could have run something twice or more - Rendering can be repeated or interrupted - so it should not depend on being called once - A console.log could be rendered twice (asynchronous work?)
 
 example you found if render ran twice?
 
 - [x] Is calculating a derived value (like the filtered evidence list from Exercise 5) a side
-effect? Why or why not, and how does that distinction inform the rule you wrote?
+      effect? Why or why not, and how does that distinction inform the rule you wrote?
 
-    - Derived value like the filterEvidence in evidence is not a side effect - i calculate the inputs and return a result. 
-    - If I store a second state value for the filtered list that would create 2 tates and could have problems updating the second value. Calculating the list from the current inputs avoids that
-    - Distinction with the rule?
-        Render logic, because my filtering of evidence acts with current inputs. If I would change the DOM or write it to localStorage this is an effect.
-
+  - Derived value like the filterEvidence in evidence is not a side effect - i calculate the inputs and return a result.
+  - If I store a second state value for the filtered list that would create 2 tates and could have problems updating the second value. Calculating the list from the current inputs avoids that
+  - Distinction with the rule?
+    Render logic, because my filtering of evidence acts with current inputs. If I would change the DOM or write it to localStorage this is an effect.
 
 ---
 
@@ -104,8 +94,8 @@ effect? Why or why not, and how does that distinction inform the rule you wrote?
 **Tasks**
 
 - [x] Write a small `useEffect` example (can be a throwaway one first) with an empty dependency
-array, one with a populated dependency array, and one with no array at all, and observe how
-often each one actually runs.
+      array, one with a populated dependency array, and one with no array at all, and observe how
+      often each one actually runs.
 - [x] Find a real, justified use for `useEffect` you'll need in this app (loading data is coming in Demo 5, so pick something else — e.g. syncing the document title to the current view).
 
 **Questions** (depend on the tasks above)
@@ -163,8 +153,8 @@ often each one actually runs.
 ### Question 1 - What does React compare for a populated dependency array?
 
 - [x] React compares each current dependency with the corresponding dependency
-  from the previous render. The comparison is made for the values listed in
-  the dependency array, not for every value in the component.
+      from the previous render. The comparison is made for the values listed in
+      the dependency array, not for every value in the component.
 - If a listed value has changed, React runs the effect again after rendering.
   If the listed values have not changed, React does not repeat that
   synchronization.
@@ -183,8 +173,8 @@ often each one actually runs.
 ### Question 2 - How is useEffect(fn, []) different from calling fn() directly?
 
 - [x] `useEffect(fn, [])` registers an effect with React. React runs it after
-  the component render has completed and uses the empty dependency list to
-  describe that it has no changing dependencies.
+      the component render has completed and uses the empty dependency list to
+      describe that it has no changing dependencies.
 - Calling `fn()` directly in the component body executes immediately during
   every render. It is not a run-once instruction.
 - Components can render again after state updates, parent updates, route
@@ -206,14 +196,88 @@ often each one actually runs.
 
 **Tasks**
 
-- [ ] Implement at least one effect that sets up something needing cleanup (a `setTimeout`/
-`setInterval`, a `window` event listener, or similar) and returns a proper cleanup function.
-- [ ] Demonstrate what happens (e.g. via a console log in both the effect and its cleanup) when the component unmounts or the dependencies change, with and without the cleanup function present.
+- [x] Implement at least one effect that sets up something needing cleanup (a `setTimeout`/
+      `setInterval`, a `window` event listener, or similar) and returns a proper cleanup function.
+- [x] Demonstrate what happens (e.g. via a console log in both the effect and its cleanup) when the component unmounts or the dependencies change, with and without the cleanup function present.
 
 **Questions** (depend on the tasks above)
 
-- [ ] What actually calls your cleanup function, and when? Name at least two distinct situations that trigger it.
-- [ ] What real, observable bug would you get in this app if you set up a subscription/timer in an effect but forgot the cleanup function? Be specific, not just "a memory leak."
+- [x] What actually calls your cleanup function, and when? Name at least two distinct situations that trigger it.
+- [x] What real, observable bug would you get in this app if you set up a subscription/timer in an effect but forgot the cleanup function? Be specific, not just "a memory leak."
+
+## Demo 3 - Completed answers
+
+### Task 1 - Set up an effect that needs cleanup
+
+- [x] `EvidencePage.tsx` now starts a five second timer inside an effect.
+- The effect logs when the timer is started.
+- The timer callback logs when the delayed operation completes.
+- The effect returns a cleanup function.
+- The cleanup function calls `window.clearTimeout(timerId)` and logs that the
+  cleanup completed.
+- The timer is owned by the evidence page. When the page is no longer mounted,
+  the timer is cancelled instead of continuing without its owner.
+- The changed code is marked with
+  `//Exercise 6 - Demo 3:` in
+  `react/features/evidence/EvidencePage.tsx`.
+
+### Task 2 - Observe setup and cleanup
+
+- [x] The effect log and cleanup log make the lifecycle observable.
+- When the evidence page mounts, the console shows
+  `Demo 3: timer effect started`.
+- If the page remains mounted for five seconds, the console then shows
+  `Demo 3: timer callback completed`.
+- If the user leaves the evidence page before five seconds, the cleanup
+  function runs and the console shows
+  `Demo 3: timer cleanup completed`.
+- The callback should not run after the timer has been cleared.
+- The unsafe version without cleanup would keep the timer active after the
+  page had been removed. It is described here as a comparison and is not left
+  in the application.
+- In development, `StrictMode` can make setup and cleanup appear during
+  development checks. That is useful evidence that the effect must be safe to
+  start and stop more than once.
+
+### Question 1 - What calls cleanup and when?
+
+- [x] React calls the cleanup function returned by the effect.
+- One situation is component unmounting. When the evidence page is removed
+  because navigation changes the rendered route, React calls the cleanup
+  function and the timer is cancelled.
+- A second situation is a dependency change. If an effect has a populated
+  dependency array and one of those dependencies changes, React cleans up the
+  previous effect before running the effect again for the new dependency
+  values.
+- Development checks can also cause an effect to be cleaned up and set up
+  again. This checks whether the effect correctly releases what it created.
+- Cleanup is therefore connected to ownership and relevance. The code that
+  starts a delayed operation also defines how that operation is stopped when
+  the owner disappears or the previous operation is no longer current.
+
+### Question 2 - What bug appears without cleanup?
+
+- [x] Without `window.clearTimeout(timerId)`, the timer would remain pending
+      after the user navigated away from the evidence page.
+- The delayed callback could still log after the evidence page had disappeared.
+  In a real application, that callback could also try to update state or
+  coordinate with an external system belonging to a page that no longer owns
+  the operation.
+- Repeated navigation could create multiple pending timers. Each visit could
+  start another timer, and the callbacks could later run together. The user
+  could see repeated notifications, repeated requests, repeated calculations,
+  or logs from views that are no longer visible.
+- Without cleanup, an event subscription could similarly remain attached after
+  unmounting. Each later mount could add another subscription, so one event
+  could be handled multiple times.
+- This is more specific than saying only memory leak. The observable bug is
+  that late asynchronous work continues after its owner is gone, and repeated
+  mounts can multiply the number of callbacks handling the same event.
+- Chapter 6 describes this as an ownership and relevance problem. Every
+  asynchronous operation needs a clear owner that handles completion, failure,
+  cleanup, and obsolescence.
+
+---
 
 ---
 
@@ -222,14 +286,14 @@ often each one actually runs.
 **Tasks**
 
 - [ ] Set up a minimal Node.js server (Express or equivalent) with one GET endpoint per data
-resource (case, evidence, people, locations, timeline), each returning the same shape of data
-as the corresponding `data/*.json` file does today.
+      resource (case, evidence, people, locations, timeline), each returning the same shape of data
+      as the corresponding `data/*.json` file does today.
 - [ ] Add a way to deliberately simulate real-world conditions for testing later demos: an artificial delay (configurable, e.g. via a query param or env var) on at least one endpoint, and a way to make one endpoint return an error response (e.g. a 500) on demand.
 - [ ] Confirm the server runs locally alongside `vite dev` and is documented (a README section is enough) as dev-only (not part of the Exercise 2 deploy pipeline).
 
 **Questions** (depend on the tasks above)
 
-- [ ] Why does this exercise ask for artificial delay/error controls on the backend, instead of just pointing the frontend at the static JSON files directly (as it already could)? What could you *not* teach convincingly without them?
+- [ ] Why does this exercise ask for artificial delay/error controls on the backend, instead of just pointing the frontend at the static JSON files directly (as it already could)? What could you _not_ teach convincingly without them?
 - [ ] What is CORS, and did you have to deal with it running your frontend (from Vite's dev server) against this separate backend server? If yes, what did you configure and why? If no, why not?
 
 ---
@@ -245,8 +309,8 @@ as the corresponding `data/*.json` file does today.
 
 - [ ] Walk through exactly what happens, in order, from the component mounting to the data actually being available to render: what does the effect do, when does it run, and what causes the component to re-render once the data arrives?
 - [ ] What's different about your component now compared to before (when data came from a static
-import/fetch of a local file). Specifically in terms of what state it needs to track that it
-didn't need before?
+      import/fetch of a local file). Specifically in terms of what state it needs to track that it
+      didn't need before?
 
 ---
 
@@ -261,7 +325,7 @@ didn't need before?
 
 - [ ] Trigger your backend's error endpoint live and show the error state appearing. What state variable(s) are you tracking to distinguish "loading," "error," and "loaded successfully but empty" from each other?
 - [ ] The original vanilla app had a bug where a failed fetch could leave a loading spinner stuck forever because the cleanup/hide-loading step was never called on the error path. Explain specifically how your React version's state management makes that particular mistake
-harder to make (or show that it doesn't, and fix it).
+      harder to make (or show that it doesn't, and fix it).
 
 ---
 
@@ -270,14 +334,14 @@ harder to make (or show that it doesn't, and fix it).
 **Tasks**
 
 - [ ] Using your backend's artificial-delay control, construct a request race: trigger a request, then trigger another one (for the same data) before the first resolves, and observe
-what happens if you do nothing special about it. Does the UI ever show a result from the
-*older* request after a newer one already resolved?
+      what happens if you do nothing special about it. Does the UI ever show a result from the
+      _older_ request after a newer one already resolved?
 - [ ] Fix it using `AbortController` (or a request-id/"ignore stale response" guard, your choice), so the UI can never show a stale result.
 
 **Questions** (depend on the tasks above)
 
 - [ ] Reproduce the race live (with artificial delay dialed up) before your fix, then show the fix preventing it. What exact sequence of events causes the stale result to win without the fix?
-- [ ] `AbortController` cancels the *request*. Does the effect's cleanup function run separately, or is aborting the fetch itself what you're doing inside the cleanup? Explain how the two connect in your implementation.
+- [ ] `AbortController` cancels the _request_. Does the effect's cleanup function run separately, or is aborting the fetch itself what you're doing inside the cleanup? Explain how the two connect in your implementation.
 
 ---
 
@@ -290,7 +354,7 @@ what happens if you do nothing special about it. Does the UI ever show a result 
 **Questions** (depend on the tasks above)
 
 - [ ] What makes something a legitimate custom hook rather than just a regular helper function? What rule(s) does React enforce about how/where hooks (including your custom one) can be called?
-- [ ] Show the two places using your hook. What did extracting it save you from duplicating, and is there anything about the two usages that *couldn't* be shared and had to stay specific to each call site?
+- [ ] Show the two places using your hook. What did extracting it save you from duplicating, and is there anything about the two usages that _couldn't_ be shared and had to stay specific to each call site?
 
 ---
 
@@ -304,7 +368,7 @@ what happens if you do nothing special about it. Does the UI ever show a result 
 **Questions** (depend on the tasks above)
 
 - [ ] If your backend's endpoint URLs or response shape changed tomorrow, how many files would you need to touch, and which ones? Would any component need to change?
-- [ ] What's the argument *against* this separation for a small app like this one? E.g. when would the extra layering be overkill rather than helpful? Do you think it's justified here?
+- [ ] What's the argument _against_ this separation for a small app like this one? E.g. when would the extra layering be overkill rather than helpful? Do you think it's justified here?
 
 ---
 
@@ -318,6 +382,6 @@ what happens if you do nothing special about it. Does the UI ever show a result 
 **Questions** (depend on the tasks above)
 
 - [ ] Walk through your diagram/illustration live, and for one step, explain what would break (and how you'd notice) if that step silently stopped happening.
-- [ ] Across Exercises 3–6, this app went from "read static files instantly" to "fetch from a real, sometimes-slow, sometimes-failing server". What did that change force you to add that wasn't needed before and was any of it needed *conceptually* even back when the data source was a static file, just less visible?
+- [ ] Across Exercises 3–6, this app went from "read static files instantly" to "fetch from a real, sometimes-slow, sometimes-failing server". What did that change force you to add that wasn't needed before and was any of it needed _conceptually_ even back when the data source was a static file, just less visible?
 
 ---

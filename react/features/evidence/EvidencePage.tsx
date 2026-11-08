@@ -50,6 +50,20 @@ export function EvidencePage({ notes, onSaveNote }: EvidencePageProps) {
     };
   }, []);
 
+  //Exercise 6 - Demo 3: the timer belongs to this page and is cancelled when
+  //the page unmounts, so a late callback cannot outlive its owner.
+  useEffect(() => {
+    console.log("Demo 3: timer effect started");
+    const timerId = window.setTimeout(() => {
+      console.log("Demo 3: timer callback completed");
+    }, 5000);
+
+    return () => {
+      window.clearTimeout(timerId);
+      console.log("Demo 3: timer cleanup completed");
+    };
+  }, []);
+
   //Exercise 5 - Demo 8: Evidence reads bookmark state from Context.
   const { bookmarkIds, onToggleBookmark } = useBookmarks();
   const evidence = state.getAllEvidence();
