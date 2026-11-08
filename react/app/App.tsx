@@ -9,7 +9,8 @@ import { TimelinePage } from "../features/timeline/TimelinePage.tsx";
 import { EvidencePage } from "../features/evidence/EvidencePage.tsx";
 import { WorkspacePage } from "../features/workspace/WorkspacePage.tsx";
 import { BookmarkProvider } from "./BookmarkContext.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { hideLoadingOverlay, loadAllData } from "../../data/api.ts";
 import { saveNotesStoreToStorage } from "../../storage/localStorage.ts";
 import type { EvidenceId, NotesStore } from "../../types/domain.ts";
 import * as state from "../../state/globalState.ts";
@@ -21,6 +22,37 @@ import * as state from "../../state/globalState.ts";
 // Evidence and Workspace stay as placeholder routes
 export function App() {
   const [notes, setNotes] = useState<NotesStore>(() => state.getNotesStore());
+  const [dataLoadState, setDataLoadState] = useState<
+    "loading" | "ready" | "error"
+  >("loading");
+  const [dataLoadError, setDataLoadError] = useState<string | null>(null);
+
+  //Exercise 6 - Demo 5: the effect starts the backend request after the
+  //component mounts and updates local state when the Promise settles.
+  useEffect(() => {
+    let isCurrent = true;
+
+    loadAllData()
+      .then(() => {
+        if (isCurrent) setDataLoadState("ready");
+      })
+      .catch((error: unknown) => {
+        console.error("Could not load case data from the backend:", error);
+        if (isCurrent) {
+          setDataLoadError(
+            error instanceof Error ? error.message : "Unknown loading error",
+          );
+          setDataLoadState("error");
+        }
+      })
+      .finally(() => {
+        hideLoadingOverlay();
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
 
   //Exercise 5 - Demo 6: App owns notes and passes the save callback downward.
   function handleSaveNote(id: EvidenceId, text: string): void {
@@ -34,35 +66,45 @@ export function App() {
     <>
       <Header />
       <main id="app" className="app-main">
-        <BookmarkProvider>
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            {/*Exercise 4 Demo 8: the old People/Locations tab toggle becomes two
+        {dataLoadState === "loading" && (
+          <p role="status">Loading case data...</p>
+        )}
+        {dataLoadState === "error" && (
+          <p role="alert">Could not load case data: {dataLoadError}</p>
+        )}
+        {dataLoadState === "ready" && (
+          //Exercise 6 - Demo 5: data-dependent routes render after the
+          //backend Promise has fulfilled and global state has been populated.
+          <BookmarkProvider>
+            <Routes>
+              <Route path="/" element={<DashboardPage />} />
+              {/*Exercise 4 Demo 8: the old People/Locations tab toggle becomes two
              real nested routes rendered through <Outlet/>.*/}
-            <Route path="/team" element={<PeopleLocationsPage />}>
-              <Route index element={<Navigate to="people" replace />} />
-              <Route path="people" element={<PeopleList />} />
-              <Route path="locations" element={<LocationsList />} />
-            </Route>
-            {/*Exercise 4 Demo 9: route parameter — a specific person's page.*/}
-            <Route
-              path="/team/people/:personId"
-              element={<PersonDetailPage />}
-            />
-            <Route path="/timeline" element={<TimelinePage />} />
-            <Route
-              path="/evidence"
-              element={
-                <EvidencePage notes={notes} onSaveNote={handleSaveNote} />
-              }
-            />
-            <Route
-              path="/workspace"
-              element={<WorkspacePage notes={notes} />}
-            />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BookmarkProvider>
+              <Route path="/team" element={<PeopleLocationsPage />}>
+                <Route index element={<Navigate to="people" replace />} />
+                <Route path="people" element={<PeopleList />} />
+                <Route path="locations" element={<LocationsList />} />
+              </Route>
+              {/*Exercise 4 Demo 9: route parameter — a specific person's page.*/}
+              <Route
+                path="/team/people/:personId"
+                element={<PersonDetailPage />}
+              />
+              <Route path="/timeline" element={<TimelinePage />} />
+              <Route
+                path="/evidence"
+                element={
+                  <EvidencePage notes={notes} onSaveNote={handleSaveNote} />
+                }
+              />
+              <Route
+                path="/workspace"
+                element={<WorkspacePage notes={notes} />}
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BookmarkProvider>
+        )}
       </main>
     </>
   );

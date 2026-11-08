@@ -26,7 +26,7 @@ These checkboxes are for self-checking. Don't forget to do the actual checking o
 | 2   | `useEffect` mental model & dependency arrays   | [x]    |
 | 3   | Cleanup: timers & subscriptions                | [x]    |
 | 4   | Build the read-only Node backend               | ☐      |
-| 5   | Consume the backend from React                 | ☐      |
+| 5   | Consume the backend from React                 | [x]    |
 | 6   | Loading, error, and empty states               | ☐      |
 | 7   | Request races & cancellation                   | ☐      |
 | 8   | Extract a reusable custom hook                 | ☐      |
@@ -358,15 +358,71 @@ example you found if render ran twice?
 
 **Tasks**
 
-- [ ] Replace at least one view's data source (previously the static `data/*.json` fetch/import) with a real `fetch()` call to your new backend, wired up inside a `useEffect`.
-- [ ] Do the same for the rest of the app's data sources, so the whole app now reads from your backend rather than static files.
+<!-- //Exercise 6 - Demo 5: connect the React application to the local backend
+     through an effect-owned asynchronous loading flow. -->
+
+- [x] Replace at least one view's data source (previously the static `data/*.json` fetch/import) with a real `fetch()` call to your new backend, wired up inside a `useEffect`.
+
+  - `App` starts `loadAllData()` inside `useEffect` after the React component
+    mounts.
+  - The API module performs the real `fetch()` call against the backend
+    endpoint instead of reading `data/*.json` directly.
+  - The changed React code is marked with
+    `//Exercise 6 - Demo 5:` in `react/app/App.tsx`.
+  - The backend URL and fetch conversion are marked with
+    `//Exercise 6 - Demo 5:` in `data/api.ts`.
+
+- [x] Do the same for the rest of the app's data sources, so the whole app now reads from your backend rather than static files.
+
+  - Case data now comes from `/api/case`.
+  - Evidence data now comes from `/api/evidence`.
+  - People data now comes from `/api/people`.
+  - Location data now comes from `/api/locations`.
+  - Timeline data now comes from `/api/timeline`.
+  - `react/main.tsx` no longer waits for a static loading call before
+    mounting React. `App` owns the backend loading lifecycle.
+  - The entry-point change is marked with
+    `//Exercise 6 - Demo 5:` in `react/main.tsx`.
 
 **Questions** (depend on the tasks above)
 
-- [ ] Walk through exactly what happens, in order, from the component mounting to the data actually being available to render: what does the effect do, when does it run, and what causes the component to re-render once the data arrives?
-- [ ] What's different about your component now compared to before (when data came from a static
+- [x] Walk through exactly what happens, in order, from the component mounting to the data actually being available to render: what does the effect do, when does it run, and what causes the component to re-render once the data arrives?
+
+  - React mounts `App` immediately from `react/main.tsx`.
+  - The initial `dataLoadState` is `loading`, so the component renders a
+    loading message instead of data-dependent routes.
+  - After the first render, the `useEffect` callback starts `loadAllData()`.
+  - `loadAllData()` requests the case, people, and locations resources, then
+    requests evidence and timeline through the backend API.
+  - Each `fetch()` returns a Promise. The response is checked for success and
+    then parsed with `response.json()`.
+  - The resolved values are placed into the existing global state through the
+    typed setters.
+  - When the Promise fulfills, the effect calls `setDataLoadState("ready")`.
+  - That state update requests a new render of `App`. The ready branch then
+    renders the routes, whose components read the populated global state.
+  - If a request rejects, the catch branch stores an error message and changes
+    the state to `error`, which causes a render of the error message instead.
+  - The `finally` branch hides the old loading overlay for both fulfilment and
+    rejection.
+
+- [x] What's different about your component now compared to before (when data came from a static
       import/fetch of a local file). Specifically in terms of what state it needs to track that it
       didn't need before?
+
+  - Before Demo 5, the entry point waited for the data-loading Promise before
+    mounting the React tree. The component did not need to represent the
+    network lifecycle.
+  - Now `App` tracks `dataLoadState` with `loading`, `ready`, and `error`
+    values.
+  - It also tracks `dataLoadError` so a rejected Promise can be shown as an
+    error instead of being confused with an empty result.
+  - The component needs an effect because the request is asynchronous and
+    communicates with the backend outside the render calculation.
+  - The effect keeps an `isCurrent` ownership guard so a completion from an
+    obsolete effect instance cannot change React state after cleanup.
+  - This additional state exists because backend data can remain pending or
+    fail. A local static file made those intermediate states much less visible.
 
 ---
 
