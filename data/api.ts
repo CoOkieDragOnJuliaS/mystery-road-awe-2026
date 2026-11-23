@@ -14,6 +14,15 @@ function getDemoQuery(): string {
   return window.location.search;
 }
 
+export class ApiError extends Error {
+  constructor(
+    public statusCode: number,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
 async function fetchJson<T>(
   resource: string,
   signal?: AbortSignal,
@@ -23,8 +32,14 @@ async function fetchJson<T>(
   });
 
   if (!response.ok) {
-    throw new Error(`${response.url}: HTTP ${response.status}`);
-  }
+  const body = (await response.json().catch(() => null)) as {
+    error?: string;
+  } | null;
+  throw new ApiError(
+    response.status,
+    body?.error ?? `HTTP ${response.status}`,
+  );
+}
 
   return (await response.json()) as T;
 }
